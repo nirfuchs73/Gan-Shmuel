@@ -60,9 +60,9 @@ class MyDb(object):
     def describe(self, app, table):
         # describe containers_registered;
         # describe transactions;
-        query = "DESCRIBE ?"
+        query = "DESCRIBE {}".format(table)
         cur = self.__get_cursor(current_app)
-        cur.execute(query, (table,))
+        cur.execute(query)
         return cur.fetchall()
 
     # a few general SQL command execution methods
