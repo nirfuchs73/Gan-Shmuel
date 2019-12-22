@@ -1,8 +1,8 @@
 FROM python
 WORKDIR /app
-COPY ./requirments.txt ./
-RUN pip install -r requirments.txt
-COPY . . 
+COPY ./requirements.txt ./
+RUN pip install -r requirements.txt
+COPY ./ ./
 RUN apt-get upgrade
 RUN apt-get install git
 ENTRYPOINT ["python3"]

@@ -1,20 +1,20 @@
-Skip to content
+-- Skip to content
  
-Search or jump to…
+-- SSearch or jump to…
 
-Pull requests
-Issues
-Marketplace
-Explore
+-- SPull requests
+-- SIssues
+-- SMarketplace
+-- SExplore
  
-@saarice 
-5
-0 3 argamanza/gan-shmuel
- Code  Issues 0  Pull requests 1  Projects 1  Wiki  Security  Insights
-gan-shmuel/docker/db/db_create.sql
-@argamanza argamanza change whole structure to act as CI Server
-9774e22 on Apr 18
-118 lines (89 sloc)  4.3 KB
+-- S@saarice 
+-- S5
+-- S0 3 argamanza/gan-shmuel
+-- S Code  Issues 0  Pull requests 1  Projects 1  Wiki  Security  Insights
+-- Sgan-shmuel/docker/db/db_create.sql
+-- S@argamanza argamanza change whole structure to act as CI Server
+-- S9774e22 on Apr 18
+-- S118 lines (89 sloc)  4.3 KB
   
 CREATE DATABASE  IF NOT EXISTS `db` /* Blue's db! */;
 USE `db`;
