@@ -5,38 +5,30 @@ import requests
 
 app = Flask(__name__)
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="12345678",
-    auth_plugin='mysql_native_password'
-)
-
-
-@app.route('/health', methods=['GET'])
-def health():
-    return "empty"
-
-
-@app.route('/provider', methods=['POST'])
-def provider():
-    return "empty"
-
-
-@app.route('/rates', methods=['POST', 'GET'])
-def rates():
-    return "empty"
-
 
 @app.route('/truck', methods=['POST'])
 def truck():
-    if request.method == 'POST':
-        return "empty"
+    """Receives a truck id(licence plate number) and a provider from the user and insert
+    the data into the truck table in the db database.
+    """
+    # Get form data.
+    truckid = request.post['id']
+    providerid = request.form['provider']
 
+    # Connect to the db database in the mysql container.
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="12345678",
+        auth_plugin='mysql_native_password',
+        database='db'
+    )
+    cursor = db.cursor()
 
-@app.route('/bill', methods=['GET'])
-def bill():
-    return "empy"
+    # Insert the truck data in to the trucks table.
+    cursor.execute(f"INSERT INTO trucks (truckid, providerid) VALUES ('{truckid}', '{providerid}');")
+
+    return
 
 
 if __name__ == '__main__':
