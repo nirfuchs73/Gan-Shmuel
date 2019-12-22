@@ -1,0 +1,8 @@
+version: "3"
+services:
+    providers:
+        build: ./providers
+        container_name: providers
+    weight:
+        build: ./weight
+        container_name: weight 
