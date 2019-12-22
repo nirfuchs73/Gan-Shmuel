@@ -12,10 +12,13 @@ def post_git():
     data = request.get_json(force=True)
     # print (data)
     ref = data['ref']
+    repository = data['repository']
+    repo_name = repository['name']
     pusher = data['pusher']
     name = pusher['name']
     email = pusher['email']
     print(ref)
+    print(repo_name)
     print(pusher)
     print(name)
     print(email)
