@@ -15,7 +15,7 @@ class MyDb(object):
         self.db.close()
 
     @staticmethod
-    def __get_db(self, app):
+    def __get_db(app):
         try:
             db_config = app.config.get_namespace('DATABASE_')
             db = connect(

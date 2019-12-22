@@ -12,7 +12,7 @@ COPY weights/ /app/weights/
 # RUN env FLASK_APP="weights:create_app()" flask init-db
 
 
-# ENTRYPOINT [ "gunicorn", "--bind=:8090", "weights:create_app()" ]
-ENTRYPOINT [ "env", "FLASK_APP='weights:create_app()'", "flask", "run", "--port", "8090"  ] 
+ENTRYPOINT [ "gunicorn", "--bind=:8090", "weights:create_app()" ]
+# ENTRYPOINT [ "env", "FLASK_APP='weights:create_app()'", "flask", "run", "--port", "8090"  ] 
 
 
