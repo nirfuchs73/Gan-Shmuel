@@ -9,8 +9,10 @@ def root():
 @app.route("/", methods=['POST'])
 def post_git():
     print (request.is_json)
-    content = request.get_json()
-    print (content)
+    content = request.get_json(force=True)
+    # print (content)
+    ref = req_data['ref']
+    print (ref)
     return 'JSON posted'
 
 if __name__ == "__main__":
