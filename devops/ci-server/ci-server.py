@@ -9,10 +9,17 @@ def root():
 @app.route("/", methods=['POST'])
 def post_git():
     print (request.is_json)
-    content = request.get_json(force=True)
-    # print (content)
-    ref = req_data['ref']
-    print (ref)
+    data = request.get_json(force=True)
+    # print (data)
+    ref = data['ref']
+    pusher = data['pusher']
+    name = pusher['name']
+    email = pusher['email']
+    print(ref)
+    print(pusher)
+    print(name)
+    print(email)
+    
     return 'JSON posted'
 
 if __name__ == "__main__":
