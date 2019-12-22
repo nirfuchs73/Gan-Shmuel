@@ -1,9 +1,6 @@
 from flask import Flask, request
 import requests
 
-LOGDIR = "chatlogs/"
-LOGEXT = ".txt"
-
 app = Flask(__name__)
 
 @app.route('/health', methods=['GET'])
