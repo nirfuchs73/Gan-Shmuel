@@ -3,10 +3,19 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
+  weight_be:
+    container_name: weight_be
+    build: 
+      context: ./weight_be
+      dockerfile: Dockerfile.gunicorn
+    ports: 
+      - "8090:8090"
+    restart: always
+
   db:
     container_name: weight_db
     build: 
-      context: .
+      context: ./weight_database
       dockerfile: Dockerfile
     restart: always
     volumes:

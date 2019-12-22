@@ -20,11 +20,11 @@ def create_app(test_config=None):
     my_app.config.from_mapping(
         SECRET_KEY=s_key,
         # DATABASE=os.path.join(my_app.instance_path, 'chatr.sqlite'),
-        DATABASE_HOST='mysql',
+        DATABASE_HOST='weight_db',
         DATABASE_PORT='3306',
-        DATABASE_DATABASE='mysql',
-        DATABASE_USER='mysql',
-        DATABASE_PASSWORD='mysql',
+        DATABASE_DATABASE='weight',
+        DATABASE_USER='dodo',
+        DATABASE_PASSWORD='1111',
         # FAKER_JSON=os.path.join(my_app.instance_path, 'weights.json')
     )
 
