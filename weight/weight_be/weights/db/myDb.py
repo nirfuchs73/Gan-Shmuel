@@ -36,7 +36,7 @@ class MyDb(object):
             return self.db
         except Error as e:
             raise
-
+        
     def __get_cursor(self, app):
         try:
             self.__set_db(app)
