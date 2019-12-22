@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 
-import sqlite3
+from mysql.connector import connect, errorcode, Error
 from flask import current_app, g
 from datetime import datetime, timezone
 
@@ -14,17 +14,36 @@ class MyDb(object):
         self.__set_db(current_app)
         self.db.close()
 
+    @staticmethod
     def __get_db(self, app):
-        db = sqlite3.connect(
-            app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        db.row_factory = sqlite3.Row
-        return db
+        try:
+            db_config = app.config.get_namespace('DATABASE_')
+            db = connect(
+                host=db_config['host'],
+                port=db_config['port'],
+                database=db_config['database'],
+                user=db_config['user'],
+                password=db_config['password']
+            )
+            # db.row_factory = sqlite3.Row
+            return db
+        except Error as e:
+            raise
     
     def __set_db(self, app):
-        self.db = self.__get_db(app)
-        return self.db
+        try:
+            self.db = self.__get_db(app)
+            return self.db
+        except Error as e:
+            raise
+
+    def __get_cursor(self, app):
+        try:
+            self.__set_db(app)
+            self.cur = self.db.cursor(prepared=True, dictionary=True)
+            return self.cur
+        except Error as e:
+            raise
 
     # def init(app, filename):
     #     self.db = self.__get_db(app)
@@ -32,17 +51,29 @@ class MyDb(object):
     #         self.db.executescript(f.read().decode('utf8'))
         
     def show_tables(self):
-        self.__set_db(current_app)
         query = 'SHOW TABLES'
-        return self.db.execute(query).fetchall()
+        cur = self.__get_cursor(current_app)
+        return cur.execute(query).fetchall()
+
+    def describe(self, app, table):
+        # describe containers_registered;
+        # describe transactions;
+        query = "DESCRIBE ?"
+        cur = self.__get_cursor(current_app)
+        return cur.execute(query, (table,)).fetchall()
+
+    # a few general SQL command execution methods
 
     def execute_and_get_all(self, query, params=[]):
-        self.__set_db(current_app)
-        return self.db.execute(query, params).fetchall()
+        cur = self.__get_cursor(current_app)
+        try:
+            return cur.execute(query, params).fetchall()
+        except Error as e:
+            raise
 
     def execute_and_get_one(self, query, params=[]):
-        self.__set_db(current_app)
+        cur = self.__get_cursor(current_app)
         try:
-            return self.db.execute(query, params).fetchone()
-        except Exception as e:
+            return cur.execute(query, params).fetchone()
+        except Error as e:
             raise
