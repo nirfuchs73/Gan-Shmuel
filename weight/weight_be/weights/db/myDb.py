@@ -40,7 +40,8 @@ class MyDb(object):
     def __get_cursor(self, app):
         try:
             self.__set_db(app)
-            self.cur = self.db.cursor(prepared=True, dictionary=True)
+            # self.cur = self.db.cursor(prepared=True, dictionary=True)
+            self.cur = self.db.cursor(dictionary=True)
             return self.cur
         except Error as e:
             raise
@@ -53,27 +54,31 @@ class MyDb(object):
     def show_tables(self):
         query = 'SHOW TABLES'
         cur = self.__get_cursor(current_app)
-        return cur.execute(query).fetchall()
+        cur.execute(query)
+        return cur.fetchall()
 
     def describe(self, app, table):
         # describe containers_registered;
         # describe transactions;
         query = "DESCRIBE ?"
         cur = self.__get_cursor(current_app)
-        return cur.execute(query, (table,)).fetchall()
+        cur.execute(query, (table,))
+        return cur.fetchall()
 
     # a few general SQL command execution methods
 
     def execute_and_get_all(self, query, params=[]):
         cur = self.__get_cursor(current_app)
         try:
-            return cur.execute(query, params).fetchall()
+            cur.execute(query, params)
+            return cur.fetchall()
         except Error as e:
             raise
 
     def execute_and_get_one(self, query, params=[]):
         cur = self.__get_cursor(current_app)
         try:
-            return cur.execute(query, params).fetchone()
+            cur.execute(query, params)
+            return cur.fetchone()
         except Error as e:
             raise
