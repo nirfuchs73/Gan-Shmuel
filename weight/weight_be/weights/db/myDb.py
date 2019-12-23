@@ -60,6 +60,7 @@ class MyDb(object):
     #         self.db.executescript(f.read().decode('utf8'))
         
     def show_tables(self):
+        '''Retrieves a list of all tables in the database.'''
         query = 'SHOW TABLES'
         cur = self.__get_cursor(current_app)
         cur.execute(query)
@@ -80,6 +81,13 @@ class MyDb(object):
     # a few general SQL command execution methods
 
     def execute(self, query, params=[]):
+        '''
+            Run a non-"Select" or other Data Retrival Query with optional parameters.
+            usage: 
+            cdb.execute("<some_query_string_>", [<some_list_or_tuple_of_parameters>])
+
+
+        '''
         cur = self.__get_cursor(current_app)
         try:
             cur.execute(query, self.__check__params(params))
