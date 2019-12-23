@@ -20,6 +20,8 @@ def create_app(
     user='dodo', password='1111', 
     gen_s_key=False, config_file=None
         ):
+    debug = True
+    
     s_key = token_urlsafe(35) if gen_s_key else 'dev'
     my_app = Flask(__name__)
     my_app.config.from_mapping(
@@ -31,12 +33,16 @@ def create_app(
         DATABASE_PASSWORD=password
     )
 
+    utils.dbg_print(my_app.config, debug)
+
     if config_file is None:
         # load the instance config, if it exists, when not testing
         my_app.config.from_pyfile(
             os.path.join(my_app.root_path,'config.py'), 
             silent=True
         )
+        utils.dbg_print(my_app.config, debug)
+
     else:
         # load the test config if passed in
         my_app.config.from_mapping(config_file)
