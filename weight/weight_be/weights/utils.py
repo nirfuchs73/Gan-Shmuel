@@ -45,10 +45,11 @@ def dbg_print(data, debug=False, file=sys.stdout):
 
 def check_field_in_dict(key, arg_dict, val_type):
     return key in arg_dict and \
-            isinstance(arg_dict[key], val_type)
+            isinstance(arg_dict.get(key), val_type)
 
 def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
+    res_tmp = val_type() if default is None else default
     if check_field_in_dict(key, arg_dict, val_type):
-        return arg_dict[key]
+        return arg_dict.get(key, res_tmp)
     else:
-        return val_type() if default is None else default
+        return res_tmp
