@@ -57,21 +57,18 @@ def create_views_blueprint():
             query = "DELETE * FROM container_registered"
             cdb.execut(query)
             file_data = ""
-            first_line_check=0
             try:
                 with open(csvFile) as f:
                     file_data = f.read().splitlines(True)
-                    for line in file_data
+                    first_line = file_data[0] 
+                    units = first_line.split(',') #we're only intrested in units[1].
+                    for line in file_data[1:]:
                         lineSplit = line.split(',')
-                        if first_line_check == 0:              #checks the first line if the data is in kg/lbs
-                        head_lines = file_data[1]
-                        first_line_check+=1
+                        if units[1] == 'kg' or units[1] == 'lbs': #could add functionality for capital letters 
+                            query = "INSERT INTO container_registered VALUES (%s, %s, %s);"
+                            cdb.execut(query,[lineSplit[0],lineSplit[1], units[1]])
                         else:
-                            if head_lines == 'kg' or head_lines == 'lbs': #could add functionality for capital letters 
-                                query = "INSERT INTO container_registered VALUES (%s, %s, %s);"
-                                cdb.execut(query,[lineSplit[0],lineSplit[1], head_lines])
-                            else:
-                                return jsonify({'message':"no specified data (kg,lbs)", 'status':404})
+                            return jsonify({'message':"no specified data (kg,lbs)", 'status':404})
             except:
                 return jsonify({'message':"could not read file!", 'status':404})
         else:
