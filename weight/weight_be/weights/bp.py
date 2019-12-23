@@ -12,7 +12,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
-from api/unknown import my_func as get_container_with_no_weight
+from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
     bp = Blueprint('views', __name__)
