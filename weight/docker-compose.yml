@@ -8,9 +8,17 @@ services:
     build: 
       context: ./weight_be
       dockerfile: Dockerfile.gunicorn
+      args: 
+        - DB_HOST='weight_db'
+        - BD_PORT='3306'
+        - DB_DB='weight'
+        - DB_USER='dodo'
+        - DB_PW='1111'
     ports: 
       - "8090:8090"
     restart: always
+    networks: 
+      - weight_net
 
   db:
     container_name: weight_db
@@ -33,6 +41,13 @@ services:
       # Opens port 3306 on the container
       - '3306'
       # Where our data will be persisted
+    networks: 
+      - weight_net
+
 volumes: 
   db_save:
+
+networks: 
+  weight_net:
+
 

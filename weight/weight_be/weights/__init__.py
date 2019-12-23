@@ -14,35 +14,39 @@ from . import db
 from . import utils
 
 
-def create_app(test_config=None):
-    s_key = 'dev' if True else token_urlsafe(35)
+def create_app(
+    host='weight_db', port='3306', 
+    database='weight', 
+    user='dodo', password='1111', 
+    gen_s_key=False, config_file=None
+        ):
+    debug = True
+    
+    s_key = token_urlsafe(35) if gen_s_key else 'dev'
     my_app = Flask(__name__)
     my_app.config.from_mapping(
         SECRET_KEY=s_key,
-        # DATABASE=os.path.join(my_app.instance_path, 'chatr.sqlite'),
-        DATABASE_HOST='weight_db',
-        DATABASE_PORT='3306',
-        DATABASE_DATABASE='weight',
-        DATABASE_USER='dodo',
-        DATABASE_PASSWORD='1111',
-        # FAKER_JSON=os.path.join(my_app.instance_path, 'weights.json')
+        DATABASE_HOST=host,
+        DATABASE_PORT=port,
+        DATABASE_DATABASE=database,
+        DATABASE_USER=user,
+        DATABASE_PASSWORD=password
     )
 
-    if test_config is None:
+    utils.dbg_print(my_app.config, debug)
+
+    if config_file is None:
         # load the instance config, if it exists, when not testing
         my_app.config.from_pyfile(
             os.path.join(my_app.root_path,'config.py'), 
             silent=True
         )
+        utils.dbg_print(my_app.config, debug)
+
     else:
         # load the test config if passed in
-        my_app.config.from_mapping(test_config)
-
-    # # ensure the instance folder exists
-    # try:
-    #     os.makedirs(my_app.instance_path)
-    # except OSError:
-    #     pass
+        my_app.config.from_mapping(config_file)
+        
 
     
     db.init_app(my_app)
