@@ -3,7 +3,8 @@
 
 from datetime import datetime, timezone
 from io import StringIO
-from sys import stdin, stderr
+# from sys import stdin, stderr, stdout
+import sys
 
 
 def get_dt_format_str():
@@ -37,7 +38,7 @@ def dbg_format(data,debug=False):
     else:
         return ''
 
-def dbg_print(data, debug=False):
+def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
-        print(dbg_format(data,debug))
+        print(dbg_format(data,debug), file=file)
 
