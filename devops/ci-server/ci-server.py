@@ -2,6 +2,7 @@ from flask import Flask, request
 import subprocess
 import os
 import smtplib
+from email.mime.text import MIMEText as text
 
 app = Flask(__name__)
 
@@ -98,24 +99,17 @@ def send_notification(success, pusher_email):
         message = 'Build failed'
     subject = message
     body = message
-    email_text = """\
-    From: %s
-    To: %s
-    Subject: %s
 
-    %s
-    """ % (sent_from, ", ".join(to), subject, body)
-
-    print(email_text)
+    msg = text(body)
+    msg['Subject'] = subject
+    msg['From'] = sent_from
+    msg['To'] = ", ".join(to)
 
     try:
-        # server = smtplib.SMTP('smtp.gmail.com', 587)
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
         server.login(gmail_user, gmail_password)
-        server.sendmail(sent_from, to, email_text)
-        # server.sendmail(sent_from, to, 'test email')
-
+        server.sendmail(sent_from, to, msg.as_string())
         server.close()
     except Exception as err:
         print(err)
@@ -176,5 +170,4 @@ def run_process(command, arguments):
 
 
 if __name__ == "__main__":
-    send_notification(True, 'nirfuchs@hotmail.com')
     app.run(host='0.0.0.0', debug=True, threaded=True, port=8081)
