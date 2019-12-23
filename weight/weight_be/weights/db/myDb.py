@@ -45,15 +45,6 @@ class MyDb(object):
         except Error as e:
             raise
 
-    def __check__params(self, params):
-        if isinstance(params, list):
-            return tuple(params)
-        elif isinstance(params, tuple) or isinstance(params, dict):
-            return params
-        else:
-            raise TypeError("Error! Params must be a Tuple, a List or a Dict!")
-            
-
     # def init(app, filename):
     #     self.db = self.__get_db(app)
     #     with app.open_resource(filename) as f:
@@ -80,6 +71,7 @@ class MyDb(object):
 
     # a few general SQL command execution methods
 
+<<<<<<< HEAD
     def execute(self, query, params=[]):
         '''
             Run a non-"Select" or other Data Retrival Query with optional parameters.
@@ -99,26 +91,24 @@ class MyDb(object):
             raise
         
 
+=======
+>>>>>>> master
     def execute_and_get_all(self, query, params=[]):
         cur = self.__get_cursor(current_app)
         try:
-            cur.execute(query, self.__check__params(params))
+            cur.execute(query, params)
             res = cur.fetchall()
             cur.close()
             return res
         except Error as e:
             raise
-        except TypeError as t:
-            raise
 
     def execute_and_get_one(self, query, params=[]):
         cur = self.__get_cursor(current_app)
         try:
-            cur.execute(query, self.__check__params(params))
+            cur.execute(query, params)
             res = cur.fetchone()
             cur.close()
             return res
         except Error as e:
-            raise
-        except TypeError as t:
             raise
