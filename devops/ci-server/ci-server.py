@@ -16,6 +16,7 @@ def post_git():
     data = request.get_json(force=True)
     # print (data)
     ref = data['ref']
+    branch = ref.rsplit('/', 1)[1]
     repository = data['repository']
     repo_name = repository['name']
     pusher = data['pusher']
@@ -29,7 +30,7 @@ def post_git():
 
     success = True
 
-    success = run_checkout(ref)
+    success = run_checkout(branch)
     if success:
         success = run_build()
     if success:
@@ -37,17 +38,22 @@ def post_git():
 
     send_notification(success)
 
-    if success and ref == 'refs/heads/master':
+    if success and branch == 'master':
         run_deploy()
 
     return 'JSON posted'
 
 
-def run_checkout(ref):
-    result = True
+def run_checkout(branch):
     print('run_checkout')
+    arguments = 'checkout '+ branch
+    command = 'git'
+    try:
+        if not run_process(command, arguments):
+            result = False
+    except:
+        result = False
     return result
-
 
 def run_build():
     print('Run Build')
@@ -82,6 +88,28 @@ def send_notification(success):
 def run_deploy():
     result = True
     print('run_deploy')
+    docker_compose_file = os.path.join('../../', 'docker-compose.yml')
+    if os.path.exists(docker_compose_file):
+        command = 'docker-compose'
+        arguments = '--file ' + docker_compose_file + ' down -d '
+        try:
+            if not run_process(command, arguments):
+                result = False
+        except:
+            result = False
+
+        argumentsForUp = '--file ' + docker_compose_file + ' up -d '
+        try:
+            if not run_process(command, argumentsForUp):
+                result = False
+        except:
+            result = False
+
+    else:
+        print(docker_compose_file + ' does not exist')
+        result = False
+        return result
+
     return result
 
 

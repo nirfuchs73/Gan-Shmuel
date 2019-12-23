@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 import requests
 import mysql.connector
 import csv
@@ -8,11 +8,12 @@ app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
-    host="localhost",
+    host="providers_db",
+    port = 3306,
     user="root",
     passwd="12345678",
-    auth_plugin='mysql_native_password',
-    database='db'
+    # auth_plugin='mysql_native_password',
+    database='billdb'
 )
 cursor = db.cursor()
 
@@ -22,9 +23,9 @@ def health():
     try:
         cursor.execute("SELECT 1;")
     except Exception as e:
-        return Response(status=500)
+        return jsonify({'message':"I'M NOT OK", 'status':500})
     else:
-        return Response(status=200)
+        return jsonify({'message':"OK", 'status':200})
     return
 
 @app.route('/provider', methods=['POST'])
@@ -85,7 +86,7 @@ def bill():
     return '', 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8080)
 
 cursor.close()
 db.close()
