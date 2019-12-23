@@ -18,15 +18,14 @@ class MyDb(object):
     def __get_db(app):
         try:
             db_config = app.config.get_namespace('DATABASE_')
-            db = connect(
-                host=db_config['host'],
-                port=db_config['port'],
-                database=db_config['database'],
-                user=db_config['user'],
-                password=db_config['password']
-            )
-            # db.row_factory = sqlite3.Row
-            return db
+            db_nconfig = {
+                'host':      str(db_config['host']),
+                'port':      int(db_config['port']),
+                'database':  str(db_config['database']),
+                'user':      str(db_config['user']),
+                'password':  str(db_config['password'])
+            }
+            return connect(**db_nconfig)
         except Error as e:
             raise
     
