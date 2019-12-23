@@ -53,6 +53,9 @@ def run_checkout(branch):
     try:
         if not run_process(command, arguments):
             result = False
+        arguments = 'pull'
+        if not run_process(command, arguments):
+            result = False
     except:
         result = False
     return result
