@@ -28,9 +28,12 @@ def create_views_blueprint():
         res_t = cdb.show_tables()
         if len(res_t) > 0:
             # check the description of the db tables
-            return jsonify({'message':"OK", 'status':200})
-        else:
-            return jsonify({'message':"No Database Tables!", 'status':404})
+            res = cdb.describe(current_app, 'containers_registered')
+            if len(res) == 3:
+                res = cdb.describe(current_app, 'transactions')
+                if len(res) == 9:
+                    return jsonify({'message':"OK", 'status':200})
+        return jsonify({'message':"Error Checking Database Tables!", 'status':404})
 
     @bp.route('/batch-weight', methods=['POST'])
     def batch-weight():
@@ -74,6 +77,6 @@ def create_views_blueprint():
         else:
             return jsonify({'message':"found no existing file!", 'status':404})
         #res_t = cdb.show_tables()
-        
+   
 
     return bp

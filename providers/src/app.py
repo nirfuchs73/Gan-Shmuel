@@ -1,18 +1,31 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import requests
 import mysql.connector
 import csv
+import xlrd
 
 app = Flask(__name__)
 
-sql = mysql.connector.connect(user='root', password='12345678',
-                            host='localhost',
-                            database='db')
-cursor = sql.cursor()
+# Connect to the db database in the mysql container.
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="12345678",
+    auth_plugin='mysql_native_password',
+    database='db'
+)
+cursor = db.cursor()
+
 
 @app.route('/health', methods=['GET'])
 def health():
-    return "empty"
+    try:
+        cursor.execute("SELECT 1;")
+    except Exception as e:
+        return Response(status=500)
+    else:
+        return Response(status=200)
+    return
 
 @app.route('/provider', methods=['POST'])
 def provider():
@@ -20,48 +33,59 @@ def provider():
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
-    if request.method == 'POST':
-        path = "/in/" + str(request.form.get("file"))
-        # TODO save file in mysql volume?
-        with open(path, 'rb') as csvfile:
-            
-        cursor.execute('insert into test_table ...')
+
+    if request.method == 'GET':
         return "empty"
         
-    elif request.method == 'GET':
-        return "empty"
+    elif request.method == 'POST':
+        rf = request.form
+        path = "in/" + str(rf.get("file"))
+        # TODO save file in mysql volume?
+        wb = xlrd.open_workbook(path)
+        sheet = wb.sheet_by_index(0)
+        cursor.execute("delete from Rates;")
+        for i in range(1, sheet.nrows):
+            #print(str(sheet.row_values(i))[1:-1])
+            cursor.execute("INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + ");")
+
     return "empy"
 
 @app.route('/truck', methods=['POST'])
-def truck():
+def truck_post():
     """Receives a truck id(licence plate number) and a provider from the user and insert
     the data into the truck table in the db database.
     """
+    
     # Get form data.
-    truckid = request.post['id']
+    truckid = request.form['id']
     providerid = request.form['provider']
 
-    # Connect to the db database in the mysql container.
-    db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        passwd="12345678",
-        auth_plugin='mysql_native_password',
-        database='db'
-    )
-    cursor = db.cursor()
+    query = "INSERT INTO db.trucks (truckid, providerid) VALUES (%s, %s);"
+    data = (truckid, providerid)
 
     # Insert the truck data in to the trucks table.
-    cursor.execute(f"INSERT INTO trucks (truckid, providerid) VALUES ('{truckid}', '{providerid}');")
+    cursor.execute(query, data)
 
-    return
+    db.commit()
+
+    return '', 200
+
+
+@app.route('/truck/<truckid>/', methods=['GET'])
+def truck_get(truckid):
+    _from = request.args.get('from')
+    _to = request.args.get('to')
+
+    return '', 200
+
 
 @app.route('/bill', methods=['GET'])
+@app.route('/')
 def bill():
-    return "empy"
-
+    return '', 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
-conn.close()
+cursor.close()
+db.close()
