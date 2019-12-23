@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def root():
-    return 'root'
+    return 'CI Server is running'
 
 
 @app.route("/", methods=['POST'])
@@ -47,6 +47,7 @@ def post_git():
 
 def run_checkout(branch):
     print('Run Checkout')
+    result = True
     arguments = 'checkout ' + branch
     command = 'git'
     try:
