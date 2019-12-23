@@ -47,6 +47,7 @@ def post_git():
 
 def run_checkout(branch):
     print('Run Checkout')
+    result = True
     arguments = 'checkout ' + branch
     command = 'git'
     try:
