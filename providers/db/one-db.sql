@@ -25,7 +25,7 @@ USE `db`;
 -- Server version	8.0.15
 
 
-DROP TABLE IF EXISTS `containers`;
+--DROP TABLE IF EXISTS `containers`;
 CREATE TABLE `containers` (
   `id` varchar(45) NOT NULL,
   `weight` float NOT NULL,

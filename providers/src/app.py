@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 import mysql.connector
 import csv
@@ -44,6 +44,7 @@ def truck_post():
         user="root",
         passwd="12345678",
         auth_plugin='mysql_native_password',
+        port=3307,
         database='db'
     )
     cursor = db.cursor()
@@ -65,10 +66,32 @@ def truck_post():
 
 @app.route('/truck/<truckid>/', methods=['GET'])
 def truck_get(truckid):
+    """Returns a json file containing all the trucks between the
+     1st of the month to the current date.
+     Returns 404 if the database does not contain trucks between the specified dates"""
+
+    # Connect to the db database in the mysql container.
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="12345678",
+        auth_plugin='mysql_native_password',
+        port=3307,
+        database='db'
+    )
+    cursor = db.cursor()
+
     _from = request.args.get('from')
     _to = request.args.get('to')
 
-    return '', 200
+    # Query database for trucks between the specified dates.
+    query = 'SELECT * FROM trucks WHERE timestamp=%s;'
+    args = ['2022-03-05 18:27:32']
+    cursor.execute(query, args)
+
+    report = jsonify()
+
+    return cursor.fetchall().__str__(), 200
 
 
 @app.route('/bill', methods=['GET'])
