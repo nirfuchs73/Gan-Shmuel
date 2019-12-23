@@ -4,7 +4,7 @@ version: '3'
 
 services:
 
-#### from weight team ### 
+#### weight team ### 
   weight_be:
     container_name: weight_be
     build: 
@@ -47,18 +47,41 @@ services:
       - weight_net
 
 
-### from providers team ###
+### providers team ###
+
+  providers-db:
+    container_name: providers-db
+    image: mysql:8.0.18
+    ports:
+      - "3307:3306"
+    volumes:
+      - "db_provider:/var/lib/mysql"
+    environment:
+        MYSQL_ROOT_PASSWORD: '12345678'
+        MYSQL_DATABASE: 'db'
+        MYSQL_USER: 'root'
+        MYSQL_PASSWORD: '12345678'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    networks: 
+      - providers_net
+
   providers:
     container_name: providers
     build: 
         context: ./providers
         dockerfile: Dockerfile
+    ports: 
+       - 8080:5050
+    networks: 
+      - providers_net
 
 ### Shared by both teams. 
 volumes: 
   db_save: #weight
+  db_provider: #provider
 
 networks: 
   weight_net: #weight
-
+  providers_net: #weight
 
