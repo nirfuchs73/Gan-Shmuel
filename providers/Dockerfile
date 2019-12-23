@@ -5,4 +5,6 @@ RUN pip install Flask
 RUN pip install requests
 RUN pip install mysql-connector-python
 
-ENTRYPOINT ["python3", "app.py"] 
+CMD bash ./run_db.sh
+
+ENTRYPOINT ["python3", "/src/app.py"] 
