@@ -6,16 +6,6 @@ import csv
 
 app = Flask(__name__)
 
-# Connect to the db database in the mysql container.
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="12345678",
-    auth_plugin='mysql_native_password',
-    database='db'
-)
-cursor = db.cursor()
-
 
 # @app.route('/health', methods=['GET'])
 # def health():
@@ -47,6 +37,17 @@ def truck_post():
     """Receives a truck id(licence plate number) and a provider from the user and insert
     the data into the truck table in the db database.
     """
+
+    # Connect to the db database in the mysql container.
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="12345678",
+        auth_plugin='mysql_native_password',
+        database='db'
+    )
+    cursor = db.cursor()
+
     # Get form data.
     truckid = request.form['id']
     providerid = request.form['provider']
