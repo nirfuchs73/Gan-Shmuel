@@ -8,10 +8,11 @@ app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
-    host="localhost",
+    host="providers_db",
+    port = 3306,
     user="root",
     passwd="12345678",
-    auth_plugin='mysql_native_password',
+    # auth_plugin='mysql_native_password',
     database='db'
 )
 cursor = db.cursor()
