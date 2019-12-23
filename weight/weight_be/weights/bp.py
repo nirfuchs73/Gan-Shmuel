@@ -35,7 +35,7 @@ def create_views_blueprint():
                     return jsonify({'message':"OK", 'status':200})
         return jsonify({'message':"Error Checking Database Tables!", 'status':404})
 
-    @bp.route('/batch-weight', methods=['POST'])
+    @bp.route('/batch_weight', methods=['POST'])
     def batch-weight():
         title = "Batch"
         cdb = db.get_db()
