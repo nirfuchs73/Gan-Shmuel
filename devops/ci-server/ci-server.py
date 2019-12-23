@@ -1,6 +1,7 @@
 from flask import Flask, request
 import subprocess
 import os
+import smtplib
 
 app = Flask(__name__)
 
@@ -19,13 +20,13 @@ def post_git():
     repository = data['repository']
     repo_name = repository['name']
     pusher = data['pusher']
-    name = pusher['name']
-    email = pusher['email']
+    pusher_name = pusher['name']
+    pusher_email = pusher['email']
     print(ref)
     print(repo_name)
     print(pusher)
-    print(name)
-    print(email)
+    print(pusher_name)
+    print(pusher_email)
 
     success = True
 
@@ -35,7 +36,7 @@ def post_git():
     if success:
         success = run_tests()
 
-    send_notification(success)
+    send_notification(success, pusher_email)
 
     if success and ref == 'refs/heads/master':
         run_deploy()
@@ -73,9 +74,43 @@ def run_tests():
     return result
 
 
-def send_notification(success):
+def send_notification(success, pusher_email):
+    print('Run Notification')
     result = True
-    print('send_notification')
+    gmail_user = 'ci.server73@gmail.com'
+    gmail_password = '1q2w#E$R'
+    sent_from = gmail_user
+    to = [pusher_email, 'nirfuchs73@gmail.com']
+
+    message = 'Build completed successfully'
+    if not success:
+        message = 'Build failed'
+    subject = message
+    body = message
+    email_text = """\
+    From: %s
+    To: %s
+    Subject: %s
+
+    %s
+    """ % (sent_from, ", ".join(to), subject, body)
+
+    print(email_text)
+
+    try:
+        # server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(gmail_user, gmail_password)
+        # server.sendmail(sent_from, to, email_text)
+        server.sendmail(sent_from, to, 'test email')
+
+        server.close()
+    except Exception as err:
+        print(err)
+        print('Something went wrong...')
+        result = False
+
     return result
 
 
@@ -102,4 +137,5 @@ def run_process(command, arguments):
 
 
 if __name__ == "__main__":
+    send_notification(True, 'nirfuchs@hotmail.com')
     app.run(host='0.0.0.0', debug=True, threaded=True, port=8081)
