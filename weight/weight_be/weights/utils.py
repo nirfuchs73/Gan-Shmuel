@@ -10,12 +10,13 @@ import sys
 def get_dt_format_str():
     return '%Y-%m-%d %H:%M:%S'
 
-def get_dt(as_str=False):
+def get_dt(as_str=False, format_str=None):
     dt = datetime.now(timezone.utc)
-    return format_dt(dt) if as_str else dt
+    return format_dt(dt, format_str) if as_str else dt
 
-def format_dt(dt):
-    return dt.strftime(get_dt_format_str())
+def format_dt(dt, format_str=None):
+    fs = get_dt_format_str() if format_str is None else format_str
+    return dt.strftime(fs)
 
 def dbg_format(data,debug=False):
     if debug:
@@ -45,3 +46,9 @@ def dbg_print(data, debug=False, file=sys.stdout):
 def check_field_in_dict(key, arg_dict, val_type):
     return key in arg_dict and \
             isinstance(arg_dict[key], val_type)
+
+def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
+    if check_field_in_dict(key, arg_dict, val_type):
+        return arg_dict[key]
+    else:
+        return val_type() if default is None else default
