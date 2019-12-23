@@ -16,6 +16,7 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
+
 @app.route('/health', methods=['GET'])
 def health():
     try:
@@ -50,25 +51,38 @@ def rates():
     return "empy"
 
 @app.route('/truck', methods=['POST'])
-def truck():
+def truck_post():
     """Receives a truck id(licence plate number) and a provider from the user and insert
     the data into the truck table in the db database.
     """
+    
     # Get form data.
-    truckid = request.post['id']
+    truckid = request.form['id']
     providerid = request.form['provider']
 
-    
+    query = "INSERT INTO db.trucks (truckid, providerid) VALUES (%s, %s);"
+    data = (truckid, providerid)
 
     # Insert the truck data in to the trucks table.
-    cursor.execute(f"INSERT INTO trucks (truckid, providerid) VALUES ('{truckid}', '{providerid}');")
+    cursor.execute(query, data)
 
-    return
+    db.commit()
+
+    return '', 200
+
+
+@app.route('/truck/<truckid>/', methods=['GET'])
+def truck_get(truckid):
+    _from = request.args.get('from')
+    _to = request.args.get('to')
+
+    return '', 200
+
 
 @app.route('/bill', methods=['GET'])
+@app.route('/')
 def bill():
-    return "empy"
-
+    return '', 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
