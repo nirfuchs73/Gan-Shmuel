@@ -108,6 +108,9 @@ def send_notification(success, pusher_email):
     msg['Subject'] = subject
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
+    print(sent_from)
+    print(to)
+    print(msg.as_string())
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
