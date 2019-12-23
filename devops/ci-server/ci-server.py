@@ -1,5 +1,6 @@
 from flask import Flask, request
 import subprocess
+import os
 
 app = Flask(__name__)
 
@@ -39,7 +40,6 @@ def post_git():
     if success and ref == 'refs/heads/master':
         run_deploy()
 
-
     return 'JSON posted'
 
 
@@ -50,9 +50,20 @@ def run_checkout(ref):
 
 
 def run_build():
+    print('Run Build')
     result = True
-    print('run_build')
-    print('docker-compose up --build')
+    docker_compose_file = os.path.join('../../', 'docker-compose-test.yml')
+    if os.path.exists(docker_compose_file):
+        command = 'docker-compose'
+        arguments = '--file ' + docker_compose_file + ' up --build'
+        try:
+            if not run_process(command, arguments):
+                result = False
+        except:
+            result = False
+    else:
+        print(docker_compose_file + ' does not exist')
+        result = False
     return result
 
 
