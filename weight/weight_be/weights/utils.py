@@ -42,3 +42,6 @@ def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
         print(dbg_format(data,debug), file=file)
 
+def check_field_in_dict(key, arg_dict, val_type):
+    return key in arg_dict and \
+            isinstance(arg_dict[key], val_type)
