@@ -1,6 +1,6 @@
 FROM python:3.6.9-alpine3.10
 
-COPY requirements.txt /app/
+COPY requirements.txt make_config.sh /app/
 
 WORKDIR /app
 
@@ -17,14 +17,9 @@ ARG DB_DB='weight'
 ARG DB_USER='dodo'
 ARG DB_PW='1111'
 
-# host='weight_db', port='3306', 
-#     database='weight', 
-#     user='dodo', password='1111', 
+RUN sh make_config.sh ${DB_HOST} ${BD_PORT} ${DB_DB} ${DB_USER} ${DB_PW}
 
-ENTRYPOINT [ 
-    "gunicorn", "--bind=:8090", "'weights:create_app(", 
-    ${DB_HOST}, ${BD_PORT}, ${DB_DB}, ${DB_USER}, ${DB_PW}, ")'" 
-]
+ENTRYPOINT [ "gunicorn", "--bind=:8090", "weights:create_app()"]
 # ENTRYPOINT [ "env", "FLASK_APP='weights:create_app()'", "flask", "run", "--port", "8090"  ] 
 
 
