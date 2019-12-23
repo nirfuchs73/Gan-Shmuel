@@ -3,3 +3,8 @@ providers/src/venv
 providers/src/.idea
 weight
 devops
+venv/
+.vscode/
+__pycache__/
+providers/src/venv/
+providers/src/.idea/

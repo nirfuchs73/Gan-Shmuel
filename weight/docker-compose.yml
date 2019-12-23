@@ -3,12 +3,10 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
-
-#### from weight team ### 
   weight_be:
     container_name: weight_be
     build: 
-      context: ./weight/weight_be
+      context: ./weight_be
       dockerfile: Dockerfile.gunicorn
       args: 
         - DB_HOST='weight_db'
@@ -25,7 +23,7 @@ services:
   db:
     container_name: weight_db
     build: 
-      context: ./weight/weight_database
+      context: ./weight_database
       dockerfile: Dockerfile
     restart: always
     volumes:
@@ -46,19 +44,10 @@ services:
     networks: 
       - weight_net
 
-
-### from providers team ###
-  providers:
-    container_name: providers
-    build: 
-        context: ./providers
-        dockerfile: Dockerfile
-
-### Shared by both teams. 
 volumes: 
-  db_save: #weight
+  db_save:
 
 networks: 
-  weight_net: #weight
+  weight_net:
 
 
