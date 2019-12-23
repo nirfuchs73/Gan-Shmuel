@@ -13,7 +13,7 @@ db = mysql.connector.connect(
     user="root",
     passwd="12345678",
     # auth_plugin='mysql_native_password',
-    database='billdb'
+    # database='billdb'
 )
 cursor = db.cursor()
 
