@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def root():
-    return 'CI Server is running'
+    return 'CI Server is running !!!'
 
 
 @app.route("/", methods=['POST'])
