@@ -1,4 +1,5 @@
 from flask import Flask, request
+import subprocess
 
 app = Flask(__name__)
 
@@ -38,6 +39,7 @@ def post_git():
     if success and ref == 'refs/heads/master':
         run_deploy()
 
+
     return 'JSON posted'
 
 
@@ -70,6 +72,22 @@ def run_deploy():
     result = True
     print('run_deploy')
     return result
+
+
+# run process
+def run_process(command, arguments):
+    args = [command]
+    arguments_list = arguments.split(' ')
+    args.extend(arguments_list)
+    print('Running: ' + command + ' ' + arguments)
+    # file = open(globals.log_file, 'a')
+    result = subprocess.call(args)
+    if result == 0:
+        print(command + ' ' + arguments + ' succeeded')
+        return True
+    else:
+        print(command + ' ' + arguments + ' failed')
+        return False
 
 
 if __name__ == "__main__":
