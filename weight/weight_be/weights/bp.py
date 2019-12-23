@@ -30,5 +30,14 @@ def create_views_blueprint():
                     return jsonify({'message':"OK", 'status':200})
         return jsonify({'message':"Error Checking Database Tables!", 'status':404})
         
+  #return list id of containers without weight
+    @bp.route('/unknown', methods=['GET'])
+    def unknown():
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})  
+       # return jsonify({'hi':'bi'})
+
 
     return bp
