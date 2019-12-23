@@ -16,6 +16,7 @@ def post_git():
     data = request.get_json(force=True)
     # print (data)
     ref = data['ref']
+    branch = ref.rsplit('/', 1)[1]
     repository = data['repository']
     repo_name = repository['name']
     pusher = data['pusher']
@@ -29,7 +30,7 @@ def post_git():
 
     success = True
 
-    success = run_checkout(ref)
+    success = run_checkout(branch)
     if success:
         success = run_build()
     if success:
@@ -43,11 +44,11 @@ def post_git():
     return 'JSON posted'
 
 
-def run_checkout(ref):
-    result = True
+def run_checkout(branch):
+    full_args = 'checkout '+ branch
+    result = run_process('git', full_args)
     print('run_checkout')
     return result
-
 
 def run_build():
     print('Run Build')
