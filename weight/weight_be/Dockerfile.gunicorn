@@ -11,8 +11,20 @@ COPY weights/ /app/weights/
 
 # RUN env FLASK_APP="weights:create_app()" flask init-db
 
+ARG DB_HOST='weight_db'
+ARG BD_PORT='3306'
+ARG DB_DB='weight'
+ARG DB_USER='dodo'
+ARG DB_PW='1111'
 
-ENTRYPOINT [ "gunicorn", "--bind=:8090", "weights:create_app()" ]
+# host='weight_db', port='3306', 
+#     database='weight', 
+#     user='dodo', password='1111', 
+
+ENTRYPOINT [ 
+    "gunicorn", "--bind=:8090", "'weights:create_app(", 
+    ${DB_HOST}, ${BD_PORT}, ${DB_DB}, ${DB_USER}, ${DB_PW}, ")'" 
+]
 # ENTRYPOINT [ "env", "FLASK_APP='weights:create_app()'", "flask", "run", "--port", "8090"  ] 
 
 

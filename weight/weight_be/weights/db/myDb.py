@@ -55,7 +55,9 @@ class MyDb(object):
         query = 'SHOW TABLES'
         cur = self.__get_cursor(current_app)
         cur.execute(query)
-        return cur.fetchall()
+        res = cur.fetchall()
+        cur.close()
+        return res
 
     def describe(self, app, table):
         # describe containers_registered;
@@ -63,7 +65,9 @@ class MyDb(object):
         query = "DESCRIBE {}".format(table)
         cur = self.__get_cursor(current_app)
         cur.execute(query)
-        return cur.fetchall()
+        res = cur.fetchall()
+        cur.close()
+        return res
 
     # a few general SQL command execution methods
 
@@ -71,7 +75,9 @@ class MyDb(object):
         cur = self.__get_cursor(current_app)
         try:
             cur.execute(query, params)
-            return cur.fetchall()
+            res = cur.fetchall()
+            cur.close()
+            return res
         except Error as e:
             raise
 
@@ -79,6 +85,8 @@ class MyDb(object):
         cur = self.__get_cursor(current_app)
         try:
             cur.execute(query, params)
-            return cur.fetchone()
+            res = cur.fetchone()
+            cur.close()
+            return res
         except Error as e:
             raise
