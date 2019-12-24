@@ -1,3 +1,4 @@
+import random
 from flask import Flask, request, Response, jsonify
 import requests
 import mysql.connector
@@ -9,7 +10,7 @@ app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
-    host="providers_db",
+    host="localhost",
     port=3306,
     user="root",
     passwd="12345678",
@@ -32,7 +33,30 @@ def health():
 
 @app.route('/provider', methods=['POST'])
 def provider():
-    return "empty"
+    """Insert a provider to the Provider table in the billdb database."""
+
+
+    def id_in_db(id):
+        """Return true if the id number is in the table."""
+        query = 'SELECT EXISTS (SELECT id FROM Provider WHERE id=%s);'
+        cursor.execute(query, [id])
+
+        return cursor.fetchone()[0]
+
+
+    name = request.form['name']
+    id = int(random.random() * 999)
+
+    cursor.execute('USE billdb;')
+
+    # If the id number is in the table already, generate another and try again.
+    while id_in_db(id):
+        id = int(random.random() * 999)
+
+    cursor.execute('INSERT INTO Provider VALUES (%s, %s)', [id, name])
+    db.commit()
+
+    return jsonify(id=id), 200
 
 
 @app.route('/rates', methods=['POST', 'GET'])
