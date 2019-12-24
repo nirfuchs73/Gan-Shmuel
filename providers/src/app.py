@@ -9,7 +9,8 @@ app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
-    host="providers_db",
+    host="localhost",
+    # host="providers_db",
     port=3306,
     user="root",
     passwd="12345678",
@@ -84,14 +85,17 @@ def truck_get(truckid):
     _from = request.args.get('from')
     _to = request.args.get('to')
 
-    # Query database for trucks between the specified dates.
-    query = 'SELECT * FROM trucks WHERE timestamp=%s;'
-    args = ['2022-03-05 18:27:32']
+    cursor.execute('USE db')
+
+    # Query database for sessions between the specified dates.
+    query = 'SELECT * FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
+
+    args = [truckid, _from, _to]
     cursor.execute(query, args)
 
-    report = jsonify()
+    report = jsonify(id=truckid, tara=0, sessions=[row[0] for row in cursor.fetchone()])
 
-    return cursor.fetchall().__str__(), 200
+    return report, 200
 
 
 @app.route('/bill', methods=['GET'])
