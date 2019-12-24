@@ -45,7 +45,7 @@ services:
     volumes: 
        - "./src/in:/in"
     depends_on:
-        - db
+        - providers_db_test
     restart: always
     networks: 
       - providers_net_test
