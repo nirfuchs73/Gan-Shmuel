@@ -66,17 +66,17 @@ def run_build():
     result = True
     command = 'docker'
     # arguments = 'stop providers_db_test'
-    try:
-        if not run_process(command, 'stop providers_db_test'):
-            result = False
-        if not run_process(command, 'stop providers_be_test'):
-            result = False
-        if not run_process(command, 'stop weight_be_test'):
-            result = False
-        if not run_process(command, 'stop weight_db_test'):
-            result = False
-    except Exception as err:
-        print(err)
+    # try:
+    #     if not run_process(command, 'stop providers_db_test'):
+    #         result = False
+    #     if not run_process(command, 'stop providers_be_test'):
+    #         result = False
+    #     if not run_process(command, 'stop weight_be_test'):
+    #         result = False
+    #     if not run_process(command, 'stop weight_db_test'):
+    #         result = False
+    # except Exception as err:
+    #     print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose-test.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose-test.yml')
@@ -155,17 +155,17 @@ def run_deploy():
     print('Run Deploy')
     result = True
     command = 'docker'
-    try:
-        if not run_process(command, 'stop providers_db'):
-            result = False
-        if not run_process(command, 'stop providers_be'):
-            result = False
-        if not run_process(command, 'stop weight_be'):
-            result = False
-        if not run_process(command, 'stop weight_db'):
-            result = False
-    except Exception as err:
-        print(err)
+    # try:
+    #     if not run_process(command, 'stop providers_db'):
+    #         result = False
+    #     if not run_process(command, 'stop providers_be'):
+    #         result = False
+    #     if not run_process(command, 'stop weight_be'):
+    #         result = False
+    #     if not run_process(command, 'stop weight_db'):
+    #         result = False
+    # except Exception as err:
+    #     print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
