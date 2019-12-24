@@ -87,18 +87,20 @@ def run_build():
         except:
             result = False
 
-        arguments_we = '-f ' + docker_compose_we + ' down'
-        arguments_pr = '-f ' + docker_compose_pr + ' down'
-        try:
-            run_process(command, arguments_we)
-            run_process(command, arguments_pr)
-            # if not run_process(command, arguments_we):
-            #     result = False
-            # if not run_process(command, arguments_pr):
-            #     result = False
-        except Exception as err:
-            # result = False
-            print(err)
+        # arguments_we = '-f ' + docker_compose_we + ' down'
+        # arguments_pr = '-f ' + docker_compose_pr + ' down'
+        # try:
+        #     run_process(command, arguments_we)
+        #     run_process(command, arguments_pr)
+        #     # if not run_process(command, arguments_we):
+        #     #     result = False
+        #     # if not run_process(command, arguments_pr):
+        #     #     result = False
+        # except Exception as err:
+        #     # result = False
+        #     print(err)
+        run_process('docker','logs weight_be_test')
+        run_process('docker','logs providers_be_test')
     else:
         print('docker-compose file does not exist')
         result = False
