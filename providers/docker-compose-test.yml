@@ -22,9 +22,9 @@ services:
       MYSQL_USER: 'root'
       MYSQL_PASSWORD: '12345678'
       MYSQL_ROOT_PASSWORD: '12345678'
-    expose:
+    ###expose:
       # Opens port 3307 on the container
-      - '3307'
+    ###  - '3307'
       # Where our data will be persisted
 
   providers_be:
@@ -45,4 +45,4 @@ services:
     restart: always
       
 volumes: 
-  db_save:
+  db_save_test:
