@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-
 # global (system) imports
 import functools
 
@@ -13,6 +12,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
+from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
     bp = Blueprint('views', __name__)
@@ -30,5 +30,14 @@ def create_views_blueprint():
                     return jsonify({'message':"OK", 'status':200})
         return jsonify({'message':"Error Checking Database Tables!", 'status':404})
         
+  #return list id of containers without weight
+    @bp.route('/unknown', methods=['GET'])
+    def unknown():
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify([ix['id'] for ix in res])
+        # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
+    #    get_container_with_no_weight
 
     return bp
