@@ -64,8 +64,8 @@ def run_checkout(branch):
 def run_build():
     print('Run Build')
     result = True
-    command = 'docker'
-    # arguments = 'stop providers_db_test'
+    # command = 'docker'
+    # # arguments = 'stop providers_db_test'
     # try:
     #     if not run_process(command, 'stop providers_db_test'):
     #         result = False
@@ -83,26 +83,30 @@ def run_build():
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-    #     arguments_we = '--file ' + docker_compose_we + ' down'
-    #     arguments_pr = '--file ' + docker_compose_pr + ' down'
-    #     try:
-    #         if not run_process(command, arguments_we):
-    #             result = False
-    #         if not run_process(command, arguments_pr):
-    #             result = False
-    #     except Exception as err:
-    #         # result = False
-    #         print(err)
-
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
         try:
-            if not run_process(command, arguments_we):
-                result = False
-            if not run_process(command, arguments_pr):
-                result = False
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
         except:
             result = False
+
+        arguments_we = '-f ' + docker_compose_we + ' down'
+        arguments_pr = '-f ' + docker_compose_pr + ' down'
+        try:
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
+        except Exception as err:
+            # result = False
+            print(err)
     else:
         print('docker-compose file does not exist')
         result = False
@@ -171,23 +175,27 @@ def run_deploy():
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        # arguments_we = '--file ' + docker_compose_we + ' down'
-        # arguments_pr = '--file ' + docker_compose_pr + ' down'
-        # try:
-        #     if not run_process(command, arguments_we):
-        #         result = False
-        #     if not run_process(command, arguments_pr):
-        #         result = False
-        # except:
-        #     result = False
+        arguments_we = '--file ' + docker_compose_we + ' down'
+        arguments_pr = '--file ' + docker_compose_pr + ' down'
+        try:
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
+        except:
+            result = False
 
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
         try:
-            if not run_process(command, arguments_we):
-                result = False
-            if not run_process(command, arguments_pr):
-                result = False
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
         except:
             result = False
     else:
