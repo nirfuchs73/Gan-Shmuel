@@ -24,6 +24,8 @@ services:
       # Opens port 3307 on the container
       - '3307'
       # Where our data will be persisted
+    networks: 
+      - providers_net
 
   providers_be:
     container_name: providers_be
@@ -38,9 +40,15 @@ services:
         - DB_PW='12345678'
     ports: 
       - "8080:8080"
+    volumes: 
+       - "./src/in:/in"
     depends_on:
         - db
     restart: always
+    networks: 
+      providers_net
       
 volumes: 
   db_save:
+networks: 
+  providers_net: 
