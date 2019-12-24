@@ -46,7 +46,7 @@ services:
         - db
     restart: always
     networks: 
-      providers_net
+      - providers_net
       
 volumes: 
   db_save:
