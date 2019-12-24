@@ -18,24 +18,16 @@ def post_git():
     data = request.get_json(force=True)
     ref = data['ref']
     branch = ref.rsplit('/', 1)[1]
-    # repository = data['repository']
-    # repo_name = repository['name']
     pusher = data['pusher']
-    # pusher_name = pusher['name']
     pusher_email = pusher['email']
-    # print(ref)
-    # print(repo_name)
-    # print(pusher)
-    # print(pusher_name)
-    # print(pusher_email)
-
+    
     success = True
 
     success = run_checkout(branch)
     if success:
         success = run_build()
-    if success:
-        success = run_tests()
+    # if success:
+    #     success = run_tests()
 
     send_notification(success, pusher_email)
 
@@ -46,7 +38,9 @@ def post_git():
 
 
 def run_checkout(branch):
-    print('Run Checkout')
+    print('-----------------------------------------------')
+    print('Running Checkout')
+    print('-----------------------------------------------')
     result = True
     arguments = 'checkout ' + branch
     command = 'git'
@@ -65,24 +59,19 @@ def run_checkout(branch):
 
 
 def run_build():
-    print('Run Build')
+    print('-----------------------------------------------')
+    print('Running Build and Test')
+    print('-----------------------------------------------')
     result = True
-    # command = 'docker'
-    # # arguments = 'stop providers_db_test'
-    # try:
-    #     if not run_process(command, 'stop providers_db_test'):
-    #         result = False
-    #     if not run_process(command, 'stop providers_be_test'):
-    #         result = False
-    #     if not run_process(command, 'stop weight_be_test'):
-    #         result = False
-    #     if not run_process(command, 'stop weight_db_test'):
-    #         result = False
-    # except Exception as err:
-    #     print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose-test.yml')
-    docker_compose_pr = os.path.join('../../providers', 'docker-compose-test.yml')
+    if not os.path.exists(docker_compose_we):
+        docker_compose_we = os.path.join('weight', 'docker-compose-test.yml')
+    docker_compose_pr = os.path.join(
+        '../../providers', 'docker-compose-test.yml')
+    if not os.path.exists(docker_compose_pr):
+        docker_compose_pr = os.path.join(
+            'providers', 'docker-compose-test.yml')
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
@@ -116,14 +105,16 @@ def run_build():
     return result
 
 
-def run_tests():
-    print('Run Tests')
-    result = True
-    return result
+# def run_tests():
+#     print('Run Tests')
+#     result = True
+#     return result
 
 
 def send_notification(success, pusher_email):
-    print('Run Notification')
+    print('-----------------------------------------------')
+    print('Running Notification')
+    print('-----------------------------------------------')
     result = True
     gmail_user = 'ci.server73@gmail.com'
     gmail_password = '1q2w#E$R'
@@ -159,23 +150,19 @@ def send_notification(success, pusher_email):
 
 
 def run_deploy():
-    print('Run Deploy')
+    print('-----------------------------------------------')
+    print('Running Deploy')
+    print('-----------------------------------------------')
     result = True
     command = 'docker'
-    # try:
-    #     if not run_process(command, 'stop providers_db'):
-    #         result = False
-    #     if not run_process(command, 'stop providers_be'):
-    #         result = False
-    #     if not run_process(command, 'stop weight_be'):
-    #         result = False
-    #     if not run_process(command, 'stop weight_db'):
-    #         result = False
-    # except Exception as err:
-    #     print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose.yml')
+    if not os.path.exists(docker_compose_we):
+        docker_compose_we = os.path.join('weight', 'docker-compose.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
+    if not os.path.exists(docker_compose_pr):
+        docker_compose_pr = os.path.join('providers', 'docker-compose.yml')
+
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
         arguments_we = '--file ' + docker_compose_we + ' down'
@@ -214,9 +201,9 @@ def run_process(command, arguments):
     args = [command]
     arguments_list = arguments.split(' ')
     args.extend(arguments_list)
-    print('-----------------------------------------------')    
+    print('-----------------------------------------------')
     print('Running: ' + command + ' ' + arguments)
-    print('-----------------------------------------------')    
+    print('-----------------------------------------------')
     # file = open(globals.log_file, 'a')
     result = subprocess.call(args)
     if result == 0:
