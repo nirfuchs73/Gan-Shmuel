@@ -12,7 +12,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
-from .api.unknown import my_func as get_container_with_no_weight
+# from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
     bp = Blueprint('views', __name__)
@@ -39,5 +39,21 @@ def create_views_blueprint():
         return jsonify([ix['id'] for ix in res])
         # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
     #    get_container_with_no_weight
+
+    
+    @bp.route('/session/<id>', methods=['GET'])
+    def session(id):
+        cdb = db.get_db()
+        query="select * from transactions where id={}".format(id)
+        res = cdb.execute_and_get_one(query)
+        if res == None:
+            return jsonify({'message':"session non-existent",'status':404})
+        
+        res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
+        #ONLY for OUT:
+        if res['direction']=="out":
+            res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
+
+        return res_json
 
     return bp
