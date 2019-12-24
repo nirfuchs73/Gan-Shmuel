@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-
 # global (system) imports
 import functools
 
@@ -20,6 +19,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest
 
 from . import db
+from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
     bp = Blueprint('views', __name__)
@@ -36,6 +36,7 @@ def create_views_blueprint():
                 if len(res) == 9:
                     return jsonify({'message':"OK", 'status':200})
         return jsonify({'message':"Failure", 'status':500})
+        
         
     @bp.route('/weight', methods=['GET', 'POST'])
     def weight():
@@ -113,5 +114,15 @@ def create_views_blueprint():
             raise BadRequest 
         except BadRequest as e:
             raise
+            
+    #return list id of containers without weight
+    @bp.route('/unknown', methods=['GET'])
+    def unknown():
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify([ix['id'] for ix in res])
+        # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
+    #    get_container_with_no_weight
 
     return bp
