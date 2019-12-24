@@ -53,3 +53,19 @@ def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
         return arg_dict.get(key, res_tmp)
     else:
         return res_tmp
+
+def build_query_str_from_seq(seq):
+    query_str = ''
+    if isinstance(seq, list) or isinstance(seq, tuple):
+        if len(seq) > 0:
+            for i in seq:
+                query_str = str().join([query_str, '%s,'])
+            query_str = query_str.rstrip(',')
+    elif isinstance(seq, dict):
+        if len(seq) > 0:
+            for k,v in seq.items():
+                query_str = str().join([query_str, '%({})s,'.format(k)])
+            query_str = query_str.rstrip(',')
+    else:
+        raise TypeError
+    return query_str
