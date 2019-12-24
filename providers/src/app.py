@@ -4,12 +4,13 @@ import mysql.connector
 import csv
 import xlrd
 
+
 app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
     host="providers_db",
-    port = 3306,
+    port=3306,
     user="root",
     passwd="12345678",
     # auth_plugin='mysql_native_password',
@@ -23,21 +24,22 @@ def health():
     try:
         cursor.execute("SELECT 1;")
     except Exception as e:
-        return jsonify({'message':"I'M NOT OK", 'status':500})
+        return jsonify({'message': "I'M NOT OK", 'status': 500})
     else:
-        return jsonify({'message':"OK", 'status':200})
+        return jsonify({'message': "OK", 'status': 200})
     return
+
 
 @app.route('/provider', methods=['POST'])
 def provider():
     return "empty"
 
+
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
-
     if request.method == 'GET':
         return "empty"
-        
+
     elif request.method == 'POST':
         rf = request.form
         path = "in/" + str(rf.get("file"))
@@ -46,17 +48,18 @@ def rates():
         sheet = wb.sheet_by_index(0)
         cursor.execute("delete from Rates;")
         for i in range(1, sheet.nrows):
-            #print(str(sheet.row_values(i))[1:-1])
+            # print(str(sheet.row_values(i))[1:-1])
             cursor.execute("INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + ");")
 
     return "empy"
+
 
 @app.route('/truck', methods=['POST'])
 def truck_post():
     """Receives a truck id(licence plate number) and a provider from the user and insert
     the data into the truck table in the db database.
     """
-    
+
     # Get form data.
     truckid = request.form['id']
     providerid = request.form['provider']
@@ -74,16 +77,35 @@ def truck_post():
 
 @app.route('/truck/<truckid>/', methods=['GET'])
 def truck_get(truckid):
-    _from = request.args.get('from')
-    _to = request.args.get('to')
+    """Returns a json file containing all the trucks between the
+     1st of the month to the current date.
+     Returns 404 if the database does not contain trucks between the specified dates"""
 
-    return '', 200
+    _from = request.args['from']
+    _to = request.args['to']
+
+    cursor.execute('USE db;')
+
+    # Query database for sessions between the specified dates.
+    query = 'SELECT id, date, bruto, neto, trucks_id FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
+
+    args = [truckid, _from, _to]
+    cursor.execute(query, args)
+
+    response = cursor.fetchall()
+    last_know_tara = response[-1][2] - response[-1][3]
+    sessions = [session[0] for session in response]
+
+    report = jsonify(id=truckid, tara=last_know_tara, sessions=sessions)
+
+    return report, 200
 
 
 @app.route('/bill', methods=['GET'])
 @app.route('/')
 def bill():
     return '', 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)

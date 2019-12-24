@@ -2,6 +2,7 @@
 
 from mysql.connector import errors, errorcode
 from functools import partialmethod
+from io import StringIO
 
 from gan_shmuel.weight.weight_be.weights.utils import check_field_in_dict
 
@@ -46,3 +47,9 @@ class ModelBase(object):
 
     def toTuple(self):
         return tuple(self._row_dict.values())
+
+    # def getQueryStr(self):
+    #     res = StringIO('')
+    #     for k in self._row_dict.keys():
+    #         res.write("%({})s,".format(k))
+    #     return res.getvalue()
