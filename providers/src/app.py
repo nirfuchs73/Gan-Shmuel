@@ -4,6 +4,7 @@ import requests
 import mysql.connector
 import csv
 import xlrd
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -106,24 +107,12 @@ def truck_get(truckid):
      1st of the month to the current date.
      Returns 404 if the database does not contain trucks between the specified dates"""
 
-    _from = request.args['from']
-    _to = request.args['to']
+    _from = datetime.now().strftime('%Y%m01000000')
+    _to = datetime.now().strftime('%Y%m%d%H%M%S')
 
-    cursor.execute('USE db;')
+    item = requests.get(f'localhost:8090/unit/{truckid}', {'from': _from, 'to': _to})
 
-    # Query database for sessions between the specified dates.
-    query = 'SELECT id, date, bruto, neto, trucks_id FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
-
-    args = [truckid, _from, _to]
-    cursor.execute(query, args)
-
-    response = cursor.fetchall()
-    last_know_tara = response[-1][2] - response[-1][3]
-    sessions = [session[0] for session in response]
-
-    report = jsonify(id=truckid, tara=last_know_tara, sessions=sessions)
-
-    return report, 200
+    return item, 200
 
 
 @app.route('/bill', methods=['GET'])
