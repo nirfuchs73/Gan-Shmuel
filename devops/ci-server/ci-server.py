@@ -69,8 +69,8 @@ def run_build():
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        arguments_we = '--file ' + docker_compose_we + ' down -d'
-        arguments_pr = '--file ' + docker_compose_pr + ' down -d'
+        arguments_we = '--file ' + docker_compose_we + ' down'
+        arguments_pr = '--file ' + docker_compose_pr + ' down'
         try:
             if not run_process(command, arguments_we):
                 result = False
@@ -144,8 +144,8 @@ def run_deploy():
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        arguments_we = '--file ' + docker_compose_we + ' down -d'
-        arguments_pr = '--file ' + docker_compose_pr + ' down -d'
+        arguments_we = '--file ' + docker_compose_we + ' down'
+        arguments_pr = '--file ' + docker_compose_pr + ' down'
         try:
             if not run_process(command, arguments_we):
                 result = False
