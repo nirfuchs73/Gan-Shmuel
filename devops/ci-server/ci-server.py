@@ -87,11 +87,11 @@ def run_build():
         except:
             result = False
         
-        run_process('docker', 'logs weight_be_test')
-        run_process('docker', 'logs providers_be_test')
-        run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
-        # run_process('docker', 'exec -it weight_be_test ')
-        run_process('docker', 'exec -it providers_be_test echo "hello from container!"')
+        # run_process('docker', 'logs weight_be_test')
+        # run_process('docker', 'logs providers_be_test')
+        # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
+        run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
+        # run_process('docker', 'exec -it providers_be_test echo "hello from container!"')
 
         arguments_we = '-f ' + docker_compose_we + ' down'
         arguments_pr = '-f ' + docker_compose_pr + ' down'
@@ -137,9 +137,9 @@ def send_notification(success, pusher_email):
     msg['Subject'] = subject
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
-    print(sent_from)
-    print(to)
-    print(msg.as_string())
+    # print(sent_from)
+    # print(to)
+    # print(msg.as_string())
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -213,10 +213,15 @@ def run_process(command, arguments):
     # file = open(globals.log_file, 'a')
     result = subprocess.call(args)
     if result == 0:
-        print(command + ' ' + arguments + ' succeeded')
+        print('-----------------------------------------------')
+        print(command + ' ' + arguments + ' SUCCEEDED')
+        print('-----------------------------------------------')
+
         return True
     else:
-        print(command + ' ' + arguments + ' failed')
+        print('-----------------------------------------------')
+        print(command + ' ' + arguments + ' FAILED')
+        print('-----------------------------------------------')
         return False
 
 
