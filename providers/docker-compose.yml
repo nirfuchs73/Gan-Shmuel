@@ -3,6 +3,28 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
+  db:
+    container_name: providers_db
+    image: mysql:8.0.18
+    ports:
+        - "3306:3306"
+    volumes:
+        - "./sql_scripts:/docker-entrypoint-initdb.d"
+        # - "./db:/var/lib/mysql"
+    restart: always
+    #volumes:
+    #  - "db_save:/var/lib/mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      # MYSQL_DATABASE: 'billdb'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: '12345678'
+      MYSQL_ROOT_PASSWORD: '12345678'
+    expose:
+      # Opens port 3307 on the container
+      - '3307'
+      # Where our data will be persisted
+
   providers_be:
     container_name: providers_be
     build: 
@@ -19,28 +41,6 @@ services:
     depends_on:
         - db
     restart: always
-
-  db:
-    container_name: providers_db
-    image: mysql:8.0.18
-    ports:
-        - "3306:3306"
-    volumes:
-        - "./db:/var/lib/mysql"
-    restart: always
-    #volumes:
-    #  - "db_save:/var/lib/mysql"
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: 'billdb'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: '12345678'
-      MYSQL_ROOT_PASSWORD: '12345678'
-    expose:
-      # Opens port 3307 on the container
-      - '3307'
-      # Where our data will be persisted
-    
+      
 volumes: 
   db_save:
-
