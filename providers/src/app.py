@@ -6,6 +6,7 @@ import xlrd
 
 
 app = Flask(__name__)
+updated_rates_file = ""
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
@@ -14,7 +15,7 @@ db = mysql.connector.connect(
     user="root",
     passwd="12345678",
     # auth_plugin='mysql_native_password',
-    # database='billdb'
+    database='billdb'
 )
 cursor = db.cursor()
 
@@ -23,6 +24,7 @@ cursor = db.cursor()
 def health():
     try:
         cursor.execute("SELECT 1;")
+        cursor.fetchall()
     except Exception as e:
         return jsonify({'message': "I'M NOT OK", 'status': 500})
     else:
@@ -41,16 +43,13 @@ def rates():
         return "empty"
 
     elif request.method == 'POST':
-        rf = request.form
-        path = "in/" + str(rf.get("file"))
-        # TODO save file in mysql volume?
+        updated_rates_file = str(request.form.get("file"))
+        path = "in/" + updated_rates_file
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
         cursor.execute("delete from Rates;")
         for i in range(1, sheet.nrows):
-            # print(str(sheet.row_values(i))[1:-1])
             cursor.execute("INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + ");")
-
     return "empy"
 
 
