@@ -152,21 +152,34 @@ def send_notification(success, pusher_email):
 
 
 def run_deploy():
-    result = True
     print('Run Deploy')
+    result = True
+    command = 'docker'
+    try:
+        if not run_process(command, 'stop providers_db'):
+            result = False
+        if not run_process(command, 'stop providers_be'):
+            result = False
+        if not run_process(command, 'stop weight_be'):
+            result = False
+        if not run_process(command, 'stop weight_db'):
+            result = False
+    except Exception as err:
+        print(err)
+
     docker_compose_we = os.path.join('../../weight', 'docker-compose.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        arguments_we = '--file ' + docker_compose_we + ' down'
-        arguments_pr = '--file ' + docker_compose_pr + ' down'
-        try:
-            if not run_process(command, arguments_we):
-                result = False
-            if not run_process(command, arguments_pr):
-                result = False
-        except:
-            result = False
+        # arguments_we = '--file ' + docker_compose_we + ' down'
+        # arguments_pr = '--file ' + docker_compose_pr + ' down'
+        # try:
+        #     if not run_process(command, arguments_we):
+        #         result = False
+        #     if not run_process(command, arguments_pr):
+        #         result = False
+        # except:
+        #     result = False
 
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
