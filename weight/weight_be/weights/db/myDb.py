@@ -49,6 +49,14 @@ class MyDb(object):
         except Error as e:
             raise
 
+    def __check__params(self, params):
+        if isinstance(params, tuple) or isinstance(params, dict):
+            return params
+        elif isinstance(params, list):
+            return tuple(params)
+        else:
+            raise TypeError
+
     # def init(app, filename):
     #     self.db = self.__get_db(app)
     #     with app.open_resource(filename) as f:

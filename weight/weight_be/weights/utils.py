@@ -10,12 +10,13 @@ import sys
 def get_dt_format_str():
     return '%Y-%m-%d %H:%M:%S'
 
-def get_dt(as_str=False):
+def get_dt(as_str=False, format_str=None):
     dt = datetime.now(timezone.utc)
-    return format_dt(dt) if as_str else dt
+    return format_dt(dt, format_str) if as_str else dt
 
-def format_dt(dt):
-    return dt.strftime(get_dt_format_str())
+def format_dt(dt, format_str=None):
+    fs = get_dt_format_str() if format_str is None else format_str
+    return dt.strftime(fs)
 
 def dbg_format(data,debug=False):
     if debug:
@@ -41,8 +42,20 @@ def dbg_format(data,debug=False):
 def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
         print(dbg_format(data,debug), file=file)
+        
+def check_field_in_dict(key, arg_dict, val_type):
+    return key in arg_dict and \
+            isinstance(arg_dict.get(key), val_type)
 
-# gilads utils
+def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
+    res_tmp = val_type() if default is None else default
+    if check_field_in_dict(key, arg_dict, val_type):
+        return arg_dict.get(key, res_tmp)
+    else:
+        return res_tmp        
+        
+        
+        # gilads utils
 
 def allowed_file_ext():
     return ('csv','json')
@@ -52,5 +65,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in allowed_file_ext
 
 def get_file_ext(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower()
+    return filename.rsplit('.', 1)[1].lower()
+           
+

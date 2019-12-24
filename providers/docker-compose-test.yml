@@ -1,0 +1,56 @@
+version: '3'
+
+### USED FOR TESTING IN THE CI SERVER!!! 
+
+#might need: sudo apt-get install mysql-server
+
+services:
+  db:
+    container_name: providers_db_test
+    image: mysql:8.0.18
+    ports:
+        - "3306:3306"
+    volumes:
+        - "./sql_scripts:/docker-entrypoint-initdb.d"
+        # - "./db:/var/lib/mysql"
+    restart: always
+    #volumes:
+    #  - "db_save:/var/lib/mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      # MYSQL_DATABASE: 'billdb'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: '12345678'
+      MYSQL_ROOT_PASSWORD: '12345678'
+    expose:
+      # Opens port 3307 on the container
+      - '3307'
+      # Where our data will be persisted
+    networks: 
+      - providers_net_test
+
+  providers_be:
+    container_name: providers_be_test
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        - DB_HOST='providers_db'
+        - BD_PORT='3306'
+        - DB_DB='db'
+        - DB_USER='root'
+        - DB_PW='12345678'
+    ports: 
+      - "8082:8080"
+    volumes: 
+       - "./src/in:/in"
+    depends_on:
+        - db
+    restart: always
+    networks: 
+      - providers_net_test
+      
+volumes: 
+  db_save:
+networks: 
+  providers_net_test: 
