@@ -63,12 +63,13 @@ def truck_post():
     truckid = request.form['id']
     providerid = request.form['provider']
 
-    query = "INSERT INTO db.trucks (truckid, providerid) VALUES (%s, %s);"
+    # Setup query and data.
+    cursor.execute('USE billdb;')
+    query = "INSERT INTO Trucks (id, provider_id) VALUES (%s, %s);"
     data = (truckid, providerid)
 
     # Insert the truck data in to the trucks table.
     cursor.execute(query, data)
-
     db.commit()
 
     return '', 200

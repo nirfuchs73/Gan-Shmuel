@@ -64,11 +64,36 @@ def run_checkout(branch):
 def run_build():
     print('Run Build')
     result = True
+    command = 'docker'
+    # arguments = 'stop providers_db_test'
+    try:
+        if not run_process(command, 'stop providers_db_test'):
+            result = False
+        if not run_process(command, 'stop providers_be_test'):
+            result = False
+        if not run_process(command, 'stop weight_be_test'):
+            result = False
+        if not run_process(command, 'stop weight_db_test'):
+            result = False
+    except Exception as err:
+        print(err)
+
     docker_compose_we = os.path.join('../../weight', 'docker-compose-test.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose-test.yml')
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
+    #     arguments_we = '--file ' + docker_compose_we + ' down'
+    #     arguments_pr = '--file ' + docker_compose_pr + ' down'
+    #     try:
+    #         if not run_process(command, arguments_we):
+    #             result = False
+    #         if not run_process(command, arguments_pr):
+    #             result = False
+    #     except Exception as err:
+    #         # result = False
+    #         print(err)
+
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
         try:
@@ -133,8 +158,8 @@ def run_deploy():
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        arguments_we = '--file ' + docker_compose_we + ' down -d'
-        arguments_pr = '--file ' + docker_compose_pr + ' down -d'
+        arguments_we = '--file ' + docker_compose_we + ' down'
+        arguments_pr = '--file ' + docker_compose_pr + ' down'
         try:
             if not run_process(command, arguments_we):
                 result = False
