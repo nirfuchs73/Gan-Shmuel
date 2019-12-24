@@ -6,7 +6,7 @@ version: '3'
 
 services:
   weight_be:
-    container_name: weight_be
+    container_name: weight_be_test
     build: 
       context: ./weight_be
       dockerfile: Dockerfile.gunicorn
@@ -23,7 +23,7 @@ services:
       - weight_net_test
 
   db:
-    container_name: weight_db
+    container_name: weight_db_test
     build: 
       context: ./weight_database
       dockerfile: Dockerfile

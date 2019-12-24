@@ -6,7 +6,7 @@ version: '3'
 
 services:
   db:
-    container_name: providers_db
+    container_name: providers_db_test
     image: mysql:8.0.18
     ports:
         - "3306:3306"
@@ -30,7 +30,7 @@ services:
       - providers_net_test
 
   providers_be:
-    container_name: providers_be
+    container_name: providers_be_test
     build: 
       context: .
       dockerfile: Dockerfile
