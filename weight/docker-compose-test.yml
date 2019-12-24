@@ -21,7 +21,6 @@ services:
     restart: always
     networks: 
       - weight_net_test
-    command: ["echo", "Running weight test"]
 
   weight_db_test:
     container_name: weight_db_test
@@ -52,5 +51,7 @@ volumes:
 
 networks: 
   weight_net_test:
+
+command: ["echo", "Running weight test"]
 
 
