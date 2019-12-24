@@ -51,11 +51,14 @@ def run_checkout(branch):
     arguments = 'checkout ' + branch
     command = 'git'
     try:
-        if not run_process(command, arguments):
-            result = False
+        run_process(command, arguments)
         arguments = 'pull'
-        if not run_process(command, arguments):
-            result = False
+        run_process(command, arguments)
+        # if not run_process(command, arguments):
+        #     result = False
+        # arguments = 'pull'
+        # if not run_process(command, arguments):
+        #     result = False
     except:
         result = False
     return result
@@ -211,7 +214,9 @@ def run_process(command, arguments):
     args = [command]
     arguments_list = arguments.split(' ')
     args.extend(arguments_list)
+    print('-----------------------------------------------')    
     print('Running: ' + command + ' ' + arguments)
+    print('-----------------------------------------------')    
     # file = open(globals.log_file, 'a')
     result = subprocess.call(args)
     if result == 0:

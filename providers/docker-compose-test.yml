@@ -49,6 +49,7 @@ services:
     restart: always
     networks: 
       - providers_net_test
+    command: ["echo", "Running providers test"]
       
 volumes: 
   db_save:
