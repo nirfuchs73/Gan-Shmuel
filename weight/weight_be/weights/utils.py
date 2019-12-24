@@ -42,3 +42,15 @@ def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
         print(dbg_format(data,debug), file=file)
 
+# gilads utils
+
+def allowed_file_ext():
+    return ('csv','json')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_file_ext
+
+def get_file_ext(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower()
