@@ -2,7 +2,7 @@
 
 from flask import current_app, g
 
-from . import myDb
+from . import myDb, models
 
 def get_db():
     if 'db' not in g:
