@@ -69,13 +69,24 @@ def run_build():
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        arguments_we = '--file ' + docker_compose_we + ' up --build -d'
-        arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
+        arguments_we = '--file ' + docker_compose_we + ' down -d'
+        arguments_pr = '--file ' + docker_compose_pr + ' down -d'
         try:
             if not run_process(command, arguments_we):
                 result = False
             if not run_process(command, arguments_pr):
                 result = False
+        except Exception as err:
+            # result = False
+            print(err)
+
+        arguments_we = '--file ' + docker_compose_we + ' up --build -d'
+        arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
+        try:
+            if not run_process(command, arguments_we):
+                result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
         except:
             result = False
     else:
