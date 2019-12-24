@@ -20,7 +20,7 @@ def post_git():
     branch = ref.rsplit('/', 1)[1]
     pusher = data['pusher']
     pusher_email = pusher['email']
-    
+
     success = True
 
     success = run_checkout(branch)
@@ -86,21 +86,22 @@ def run_build():
             #     result = False
         except:
             result = False
+        
+        run_process('docker', 'logs weight_be_test')
+        run_process('docker', 'logs providers_be_test')
 
-        # arguments_we = '-f ' + docker_compose_we + ' down'
-        # arguments_pr = '-f ' + docker_compose_pr + ' down'
-        # try:
-        #     run_process(command, arguments_we)
-        #     run_process(command, arguments_pr)
-        #     # if not run_process(command, arguments_we):
-        #     #     result = False
-        #     # if not run_process(command, arguments_pr):
-        #     #     result = False
-        # except Exception as err:
-        #     # result = False
-        #     print(err)
-        run_process('docker','logs weight_be_test')
-        run_process('docker','logs providers_be_test')
+        arguments_we = '-f ' + docker_compose_we + ' down'
+        arguments_pr = '-f ' + docker_compose_pr + ' down'
+        try:
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
+        except Exception as err:
+            # result = False
+            print(err)
     else:
         print('docker-compose file does not exist')
         result = False
