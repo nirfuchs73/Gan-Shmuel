@@ -21,15 +21,16 @@ services:
       - "be_logs:/app/instance"
     networks: 
       - weight_net
+    depends_on: weight_db
 
   db:
     container_name: weight_db
     build: 
-      context: ./weight_database
+      context: ./weight_tests/mocks
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - "db_save:/var/lib/mysql"
+      - "db_mocks:/var/lib/mysql"
     environment:
       MYSQL_DATABASE: 'weight'
       MYSQL_USER: 'dodo'
@@ -47,10 +48,10 @@ services:
       - weight_net
 
 volumes: 
-  db_save:
-  be_logs:
+    db_mocks:
+    be_logs:
 
 networks: 
-  weight_net:
+    weight_net:
 
 

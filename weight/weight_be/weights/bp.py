@@ -95,6 +95,7 @@ def create_views_blueprint():
                             "containers": trans.containers.split(',')
                         }
                         res.append(res_d)
+                return jsonify(res)
             else:
                 raise BadRequest()
         except Error as e:
