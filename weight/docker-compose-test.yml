@@ -5,7 +5,7 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
-  weight_be:
+  weight_be_test:
     container_name: weight_be_test
     build: 
       context: ./weight_be
@@ -21,8 +21,9 @@ services:
     restart: always
     networks: 
       - weight_net_test
+    command: ["echo", "Running weight test"]
 
-  db:
+  weight_db_test:
     container_name: weight_db_test
     build: 
       context: ./weight_database

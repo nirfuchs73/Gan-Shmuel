@@ -5,7 +5,7 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
-  db:
+  providers_db_test:
     container_name: providers_db_test
     image: mysql:8.0.18
     ports:
@@ -29,7 +29,7 @@ services:
     networks: 
       - providers_net_test
 
-  providers_be:
+  providers_be_test:
     container_name: providers_be_test
     build: 
       context: .
@@ -45,10 +45,11 @@ services:
     volumes: 
        - "./src/in:/in"
     depends_on:
-        - db
+        - providers_db_test
     restart: always
     networks: 
       - providers_net_test
+    command: ["echo", "Running providers test"]
       
 volumes: 
   db_save:
