@@ -115,9 +115,9 @@ def create_views_blueprint():
         except BadRequest as e:
             raise
             
-    #return list id of containers without weight
     @bp.route('/unknown', methods=['GET'])
     def unknown():
+        ''' return list id of containers without weight '''
         cdb = db.get_db()
         query="select container_id as id from containers_registered where weight is NULL"
         res = cdb.execute_and_get_all(query)
