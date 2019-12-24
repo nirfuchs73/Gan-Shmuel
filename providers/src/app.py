@@ -9,8 +9,7 @@ app = Flask(__name__)
 
 # Connect to the db database in the mysql container.
 db = mysql.connector.connect(
-    host="localhost",
-    # host="providers_db",
+    host="providers_db",
     port=3306,
     user="root",
     passwd="12345678",
@@ -82,18 +81,22 @@ def truck_get(truckid):
      1st of the month to the current date.
      Returns 404 if the database does not contain trucks between the specified dates"""
 
-    _from = request.args.get('from')
-    _to = request.args.get('to')
+    _from = request.args['from']
+    _to = request.args['to']
 
-    cursor.execute('USE db')
+    cursor.execute('USE db;')
 
     # Query database for sessions between the specified dates.
-    query = 'SELECT * FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
+    query = 'SELECT id, date, bruto, neto, trucks_id FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
 
     args = [truckid, _from, _to]
     cursor.execute(query, args)
 
-    report = jsonify(id=truckid, tara=0, sessions=[row[0] for row in cursor.fetchone()])
+    response = cursor.fetchall()
+    last_know_tara = response[-1][2] - response[-1][3]
+    sessions = [session[0] for session in response]
+
+    report = jsonify(id=truckid, tara=last_know_tara, sessions=sessions)
 
     return report, 200
 
