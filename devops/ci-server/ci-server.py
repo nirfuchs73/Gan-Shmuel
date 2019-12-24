@@ -89,6 +89,8 @@ def run_build():
         
         run_process('docker', 'logs weight_be_test')
         run_process('docker', 'logs providers_be_test')
+        run_process('docker', 'exec -it weight_be_test "echo hello from container"')
+        run_process('docker', 'exec -it providers_be_test "echo hello from container"')
 
         arguments_we = '-f ' + docker_compose_we + ' down'
         arguments_pr = '-f ' + docker_compose_pr + ' down'
