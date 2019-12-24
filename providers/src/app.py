@@ -8,16 +8,29 @@ import xlrd
 app = Flask(__name__)
 updated_rates_file = ""
 
-# Connect to the db database in the mysql container.
-db = mysql.connector.connect(
-    host="providers_db",
-    port=3306,
-    user="root",
-    passwd="12345678",
-    # auth_plugin='mysql_native_password',
-    database='billdb'
-)
-cursor = db.cursor()
+
+try: 
+    # Connect to the db database in the mysql container.
+    db = mysql.connector.connect(
+        host="providers_db",
+        port=3306,
+        user="root",
+        passwd="12345678",
+        auth_plugin='mysql_native_password',
+        database='billdb'
+    )
+    cursor = db.cursor()
+except:
+    # Connect to the db database in the mysql container.
+    db = mysql.connector.connect(
+        host="providers_db_test",
+        port=3306,
+        user="root",
+        passwd="12345678",
+        auth_plugin='mysql_native_password',
+        database='billdb'
+    )
+    cursor = db.cursor()
 
 
 @app.route('/health', methods=['GET'])
