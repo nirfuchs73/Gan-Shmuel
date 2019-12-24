@@ -1,5 +1,7 @@
 version: '3'
 
+### USED FOR TESTING IN THE CI SERVER!!! 
+
 #might need: sudo apt-get install mysql-server
 
 services:
@@ -25,7 +27,7 @@ services:
       - '3307'
       # Where our data will be persisted
     networks: 
-      - providers_net
+      - providers_net_test
 
   providers_be:
     container_name: providers_be
@@ -46,9 +48,9 @@ services:
         - db
     restart: always
     networks: 
-      - providers_net
+      - providers_net_test
       
 volumes: 
   db_save:
 networks: 
-  providers_net: 
+  providers_net_test: 
