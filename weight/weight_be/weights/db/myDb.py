@@ -8,11 +8,13 @@ from datetime import datetime, timezone
 
 class MyDb(object):
     def __init__(self, app):
+        self.db = None
         self.__set_db(app)
 
     def close(self):
         self.__set_db(current_app)
         self.db.close()
+        self.db = None
 
     def commit(self):
         self.__set_db(current_app)
@@ -35,15 +37,22 @@ class MyDb(object):
     
     def __set_db(self, app):
         try:
-            self.db = self.__get_db(app)
+            if self.db is None:
+                self.db = self.__get_db(app)
             return self.db
         except Error as e:
             raise
         
-    def __get_cursor(self, app):
+    def __get_cursor(self, app, trans=False):
         try:
             self.__set_db(app)
             # self.cur = self.db.cursor(prepared=True, dictionary=True)
+            if trans:
+                self.db.start_transaction(
+                    consistent_snapshot= False, 
+                    isolation_level= None,
+                    readonly=False
+                )
             self.cur = self.db.cursor(dictionary=True)
             return self.cur
         except Error as e:
@@ -100,7 +109,7 @@ class MyDb(object):
             of Rows "affected" / "inserted".
             Throws a mysql.connector.errors.Error on internal MySQL Error.
         '''
-        cur = self.__get_cursor(current_app)
+        cur = self.__get_cursor(current_app, True)
         try:
             cur.execute(query, self.__check__params(params))
             res = cur.rowcount
@@ -130,8 +139,11 @@ class MyDb(object):
             Returns an empty list on failure.
             Throws a mysql.connector.errors.Error on internal MySQL Error.
         '''
+        # return str(self.__check__params(params)), query
         cur = self.__get_cursor(current_app)
+        # return str(self.__check__params(params)), query
         try:
+            # return str(self.__check__params(params)), query
             cur.execute(query, self.__check__params(params))
             res = cur.fetchall()
             cur.close()
