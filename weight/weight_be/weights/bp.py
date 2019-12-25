@@ -133,7 +133,8 @@ def create_views_blueprint():
             return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise BadRequest() 
         except BadRequest as e:
             return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise
-        return jsonify(res, "OK", query, neto_query, conts)
+        # return jsonify(res, "OK", query, neto_query, conts)
+        return jsonify(res)
             
     # return list id of containers without weight
         
