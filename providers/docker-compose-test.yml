@@ -1,10 +1,12 @@
 version: '3'
 
+### USED FOR TESTING IN THE CI SERVER!!! 
+
 #might need: sudo apt-get install mysql-server
 
 services:
-  db:
-    container_name: 'providers_db'
+  providers_db_test:
+    container_name: providers_db_test
     image: mysql:8.0.18
     ports:
       - "3306:3306"
@@ -25,30 +27,30 @@ services:
       - '3307'
       # Where our data will be persisted
     networks: 
-      - providers_net
+      - providers_net_test
 
-  providers_be:
-    container_name: providers_be
+  providers_be_test:
+    container_name: providers_be_test
     build: 
       context: .
       dockerfile: Dockerfile
       args: 
         - DB_HOST='providers_db'
         - BD_PORT='3306'
-        - DB_DB='billdb'
+        - DB_DB='db'
         - DB_USER='root'
         - DB_PW='12345678'
     ports: 
-      - "8080:8080"
+      - "8082:8080"
     volumes: 
        - "./src/in:/in"
     depends_on:
-        - db
+        - providers_db_test
     restart: always
     networks: 
-      - providers_net
+      - providers_net_test
       
 volumes: 
   db_save:
 networks: 
-  providers_net: 
+  providers_net_test: 

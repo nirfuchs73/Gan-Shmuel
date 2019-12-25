@@ -42,7 +42,7 @@ def dbg_format(data,debug=False):
 def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
         print(dbg_format(data,debug), file=file)
-
+        
 def check_field_in_dict(key, arg_dict, val_type):
     return key in arg_dict and \
             isinstance(arg_dict.get(key), val_type)
@@ -52,4 +52,19 @@ def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
     if check_field_in_dict(key, arg_dict, val_type):
         return arg_dict.get(key, res_tmp)
     else:
-        return res_tmp
+        return res_tmp        
+        
+        
+        # gilads utils
+
+def allowed_file_ext():
+    return ('csv','json')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_file_ext()
+
+def get_file_ext(filename):
+    return filename.rsplit('.', 1)[1].lower()
+           
+

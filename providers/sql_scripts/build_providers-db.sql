@@ -123,5 +123,3 @@ CREATE TABLE `containers_has_sessions` (
   CONSTRAINT `fk_containers_has_sessions_containers1` FOREIGN KEY (`containers_id`) REFERENCES `containers` (`id`),
   CONSTRAINT `fk_containers_has_sessions_sessions1` FOREIGN KEY (`sessions_id`) REFERENCES `sessions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
