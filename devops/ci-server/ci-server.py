@@ -29,12 +29,42 @@ def post_git():
     # if success:
     #     success = run_tests()
 
-    send_notification(success, pusher_email)
-
     if success and branch == 'master':
         run_deploy()
+    
+    send_notification(success, pusher_email)
 
     return 'JSON posted'
+
+
+@app.route("/rollback")
+def rollback_post():
+    print('-----------------------------------------------')
+    print('Running Rollback')
+    print('-----------------------------------------------')
+    success = True
+    head = run_process('git', 'rev-parse --short HEAD')
+    master = run_process('git', 'rev-parse --short master')
+    # master_1 = run_process('git', 'rev-parse --short master~1')
+
+    branch = 'master'
+    if head == master:
+        branch = 'master~1'
+
+    # success = run_checkout('master')
+    if success:
+        try:
+            # run_process('git', 'checkout master~1')
+            run_process('git', 'checkout ' + branch)
+        except Exception as err:
+            print(err)
+            # success = False
+    if success:
+        run_deploy()
+
+    send_notification(success, 'nirfuchs73@gmail.com')
+
+    return 'Rolling back one version...'
 
 
 def run_checkout(branch):
@@ -86,12 +116,9 @@ def run_build():
             #     result = False
         except:
             result = False
-        
-        # run_process('docker', 'logs weight_be_test')
-        # run_process('docker', 'logs providers_be_test')
-        # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
-        # run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
-        # run_process('docker', 'exec -it providers_be_test echo "hello from container!"')
+
+        run_process('docker', 'logs weight_tests')
+        run_process('docker', 'logs providers_tests')
 
         arguments_we = '-f ' + docker_compose_we + ' down'
         arguments_pr = '-f ' + docker_compose_pr + ' down'

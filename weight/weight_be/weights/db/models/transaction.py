@@ -4,7 +4,7 @@
 from datetime import datetime
 
 from . import modelBase
-from gan_shmuel.weight.weight_be.weights.utils import check_field_in_dict
+from weights import utils
 
 class Transaction(modelBase.ModelBase):
     def __init__(self, **row_dict : dict):
@@ -16,15 +16,15 @@ class Transaction(modelBase.ModelBase):
 
     @staticmethod
     def check_row_schema(**row_dict : dict) -> bool:
-        if check_field_in_dict('id', row_dict, int) and \
-            check_field_in_dict('datetime', row_dict, datetime) and \
-            check_field_in_dict('direction', row_dict, str) and \
-            check_field_in_dict('truck', row_dict, str) and \
-            check_field_in_dict('containers', row_dict, str) and \
-            check_field_in_dict('bruto', row_dict, int) and \
-            check_field_in_dict('truckTara', row_dict, int) and \
-            check_field_in_dict('neto', row_dict, int) and \
-            check_field_in_dict('produce', row_dict, str):
+        if utils.check_field_in_dict('id', row_dict, int) and \
+            utils.check_field_in_dict('datetime', row_dict, datetime) and \
+            utils.check_field_in_dict('direction', row_dict, str) and \
+            utils.check_field_in_dict('truck', row_dict, str) and \
+            utils.check_field_in_dict('containers', row_dict, str) and \
+            utils.check_field_in_dict('bruto', row_dict, int) and \
+            utils.check_field_in_dict('truckTara', row_dict, int) and \
+            utils.check_field_in_dict('neto', row_dict, int) and \
+            utils.check_field_in_dict('produce', row_dict, str):
             return True
         else:
             return False

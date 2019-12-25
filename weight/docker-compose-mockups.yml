@@ -1,15 +1,13 @@
 version: '3'
 
-### USED FOR TESTING IN THE CI SERVER!!! 
-
 #might need: sudo apt-get install mysql-server
 
 services:
-  weight_be_test:
-    container_name: weight_be_test
+  weight_be:
+    container_name: weight_be
     build: 
       context: ./weight_be
-      dockerfile: Dockerfile.gunicorn
+      dockerfile: Dockerfile.mocks
       args: 
         - DB_HOST='weight_db'
         - BD_PORT='3306'
@@ -17,19 +15,23 @@ services:
         - DB_USER='dodo'
         - DB_PW='1111'
     ports: 
-      - "8089:8090"
+      - "8090:8090"
     restart: always
+    volumes: 
+      - "be_logs:/app/instance"
     networks: 
-      - weight_net_test
+      - weight_net
+    depends_on: 
+      - db
 
-  weight_db_test:
-    container_name: weight_db_test
+  db:
+    container_name: weight_db
     build: 
-      context: ./weight_database
+      context: ./weight_database #./weight_tests/mocks
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - "db_save:/var/lib/mysql"
+      - "db_mocks:/var/lib/mysql"
     environment:
       MYSQL_DATABASE: 'weight'
       MYSQL_USER: 'dodo'
@@ -39,28 +41,18 @@ services:
     # ports:
     #   # <Port exposed> : < MySQL Port running inside container>
     #   - '3400:3400'
-    ###expose:
+    expose:
       # Opens port 3306 on the container
-    ###  - '3306'
+      - '3306'
       # Where our data will be persisted
     networks: 
-      - weight_net_test
-
-  weight_tests:
-    container_name: weight_tests
-    build: 
-      context: ./weight_tests
-      dockerfile: Dockerfile
-    networks: 
-      - weight_net_test
-    depends_on:
-      - weight_be_test
-      - weight_db_test
+      - weight_net
 
 volumes: 
-  db_save:
+    db_mocks:
+    be_logs:
 
 networks: 
-  weight_net_test:
+    weight_net:
 
 
