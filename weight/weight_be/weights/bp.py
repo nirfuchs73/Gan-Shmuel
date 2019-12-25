@@ -31,7 +31,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest, InternalServerError
 from werkzeug.utils import secure_filename
 
-from . import db
+from . import db, utils
 # from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
@@ -200,13 +200,12 @@ def create_views_blueprint():
         # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
     #    get_container_with_no_weight
    
-
     @bp.route('/session/<id>', methods=['GET'])
     def session(id):
         cdb = db.get_db()
         query="select * from transactions where id={}".format(id)
         res = cdb.execute_and_get_one(query)
-        if res == None:
+        if res is None:
             return jsonify({'message':"session non-existent",'status':404})
         
         res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
@@ -215,6 +214,118 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
 
         return res_json
+
+
+    def calculate_neto(bruto,trackTara,list_containers):
+        sum_containers=0
+        list_containers=list_containers.split(',')
+        cdb = db.get_db()
+        for item in list_containers:
+            query="select * from containers_registered where container_id={}".format(item)
+            res = cdb.execute_and_get_one(query)
+            if res == None:
+                return None
+            if res["weight"]==None:
+                return None
+            if res["unit"]=="lbs":
+                sum_containers+= float(res["weight"])*float(0.453592)
+            else:
+                sum_containers+=float(res["weight"])
+        return float(bruto)-float(trackTara)-float(sum_containers)
+
+    @bp.route('/weight2', methods=['POST'])
+    def weightPost():
+        #get data from body
+        direction=request.form.get('direction',"none")
+        containers=request.form.get('containers')
+        truck=request.form.get('truck')
+        weight=request.form.get('weight')
+        unit=request.form.get('unit')
+        produce=request.form.get('produce')
+        produce.replace('"', '')
+        if (direction=="in" or direction=="none") and containers is None:
+            return BadRequest("in/none must get list containers")
+        if (direction=="in" or direction=="none") and produce is None:
+            return BadRequest("in/none must get produce")
+        if truck is None or weight is None or unit is None:
+            return BadRequest("error parameters send data by form with values:truck, weight, unit")
+        force=request.form.get('force',False)
+        weight=float(weight)
+        if unit=="lbs":
+            weight=(weight*float(0.453592))
+        date_session=utils.format_dt(datetime.now(),"%Y-%m-%d %H:%M:%S")
+        # return "hi".format(direction)
+
+        #get last session to this truck:
+        cdb = db.get_db()
+
+        query="select max(id) as id from transactions where truck={} group by truck".format(truck)
+        id_last_session = cdb.execute_and_get_all(query)
+        if id_last_session != []:
+            id_last_session=id_last_session[0]['id']
+            query="select * from transactions where id={}".format(id_last_session)
+            last_session = cdb.execute_and_get_all(query)[0]
+        else:
+            last_session=None
+
+
+        #in
+        if direction=="in" or direction=="none":
+            if last_session is None or last_session["direction"]=="out":
+                #insert new transaction inneto
+                query="insert into transactions (direction,datetime,truck,containers,bruto,produce) values ('{}','{}','{}','{}',{},'{}');‏".format(direction,date_session,truck,containers,weight,produce)
+                try:
+                    cdb.execute(query)
+                except:
+                    a="a"
+
+            elif last_session["direction"]=="in" or last_session["direction"]=="none":
+                if force== 'False' or direction=="none":
+                    return BadRequest("in can't arrive after in or none. for update send force=True")
+                else:
+                    #update last row in
+                    query="update transactions set direction='{}', datetime='{}',truck='{}', containers='{}', bruto={}, produce='{}' where id={};".format(direction,date_session,truck,containers,weight,produce,id_last_session)
+                    cdb.execute(query)
+
+        #out
+        elif direction=="out":
+            if last_session is None:
+                return BadRequest("there is no transaction to this truck")
+            #calaulate neto
+            neto=calculate_neto(last_session["bruto"],weight,last_session["containers"])
+
+            if last_session["direction"]=="out":
+                if force == 'False':
+                    return BadRequest("out cant arrive after out. for update send force=True")
+                else:
+                    #update last row out
+                    query="update transactions set datetime='{}',truckTara={},neto={},produce='{}' where id={};".format(date_session,weight,neto,produce,last_session["id"])
+                    res = cdb.execute(query)
+            else:
+                #insert new row out
+                if produce is None:
+                    produce=last_session["produce"]
+                query="insert into transactions (direction,datetime,truck,containers,bruto,truckTara,neto,produce) values ('{}','{}','{}','{}',{},{},{},'{}');‏".format(direction,date_session,last_session["truck"],last_session["containers"],last_session["bruto"],weight,neto,produce)
+                try:
+                    cdb.execute(query)
+                except:
+                    a="a"
+
+        #return result from db:
+        query="select max(id) as id from transactions where truck={} group by truck".format(truck)
+        id_last_session = cdb.execute_and_get_all(query)[0]['id']
+        #get details:
+        query="select * from transactions where id={}".format(id_last_session)
+        res = cdb.execute_and_get_one(query)
+        if res == None:
+            return jsonify({'message':"session non-existent",'status':404})
+        res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
+        #ONLY for OUT:
+        if res['direction']=="out":
+            res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
+        return res_json
+
+    return bp
 
 
     @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
@@ -227,3 +338,4 @@ def create_views_blueprint():
 
 
     return bp
+

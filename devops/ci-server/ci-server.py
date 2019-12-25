@@ -169,16 +169,18 @@ def send_notification(success, pusher_email):
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
 
-    files = ["weight-tests.txt", "providers-tests.txt"]
+    files = ["tests/weight-tests.txt", "tests/providers-tests.txt"]
     # get all the attachments
-    for file in files:
-        part = MIMEBase('application', "octet-stream")
-        part.set_payload(open(file, "rb").read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition',
-                        'attachment; filename="%s"' % file)
-        msg.attach(part)
-
+    try:
+        for file in files:
+            part = MIMEBase('application', "octet-stream")
+            part.set_payload(open(file, "rb").read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition',
+                            'attachment; filename="%s"' % file)
+            msg.attach(part)
+    except Exception as err:
+        print(err)
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()

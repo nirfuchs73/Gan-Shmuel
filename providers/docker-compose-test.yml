@@ -75,8 +75,8 @@ services:
     depends_on:
     - providers_db_test
     - providers_be_test
-    # volumes:
-    # - test_results
+    volumes:
+    - "/home/ubuntu/Gan-Shmuel/tests:/app/tests"
 
 volumes: 
   db_save:
