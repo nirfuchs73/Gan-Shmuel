@@ -43,10 +43,19 @@ def rollback_post():
     print('Running Rollback')
     print('-----------------------------------------------')
     success = True
-    success = run_checkout('master')
+    head = run_process('git', 'rev-parse --short HEAD')
+    master = run_process('git', 'rev-parse --short master')
+    master_1 = run_process('git', 'rev-parse --short master~1')
+
+    branch = master
+    if head == master:
+        branch = master_1
+
+    # success = run_checkout('master')
     if success:
         try:
-            run_process('git', 'checkout master~1')
+            # run_process('git', 'checkout master~1')
+            run_process('git', 'checkout ' + branch)
         except:
             success = False
     if success:
@@ -107,7 +116,7 @@ def run_build():
         except:
             result = False
 
-        # run_process('docker', 'logs weight_be_test')
+        run_process('docker', 'logs weight_tests')
         # run_process('docker', 'logs providers_be_test')
         # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
         # run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
