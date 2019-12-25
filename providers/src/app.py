@@ -10,7 +10,7 @@ from datetime import datetime
 app = Flask(__name__)
 updated_rates_file = ""
 
-try: 
+try:
     # Connect to the db database in the mysql container.
     db = mysql.connector.connect(
         host="providers_db",
@@ -32,6 +32,7 @@ except:
         database='billdb'
     )
     cursor = db.cursor()
+
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -91,10 +92,14 @@ def rates():
 
 @app.route('/truck', methods=['PUT'])
 def truck_put():
-    try:
-        truck_id = request.form['truck_id']
-        provider_id = request.form['provider_id']
+    truck_id = request.form['truck_id']
+    provider_id = request.form['provider_id']
 
+    # Check if truck_id exists in the Provider table of billdb database.
+    query = 'SELECT EXISTS (SELECT %s FROM Trucks WHERE id=%s);'
+    cursor.execute(query, [truck_id, truck_id])
+
+    if cursor.fetchone()[0]:
         query = 'UPDATE Trucks SET provider_id=%s WHERE id=%s'
         data = [provider_id, truck_id]
 
@@ -102,7 +107,7 @@ def truck_put():
         db.commit()
 
         return '', 200
-    except:
+    else:
         return '', 404
 
 
