@@ -1,9 +1,10 @@
 import random
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_file
 import requests
 import mysql.connector
 import csv
 import xlrd
+import os
 from datetime import datetime
 
 
@@ -84,18 +85,18 @@ def provider():
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
-    global updated_rates_file
+    #global updated_rates_file
 
     if request.method == 'GET':
-        path = "in/" + updated_rates_file
+        path = os.popen('cat src/bin/rates.txt').read().rstrip()
         try:
             return send_file(path, as_attachment=True)
         except FileNotFoundError:
             return "file not found 404"
 
     elif request.method == 'POST':
-        updated_rates_file = str(request.form.get("file"))
-        path = "in/" + updated_rates_file
+        path = "/in/" + str(request.form.get("file"))
+        os.system("echo '" + path + "' > " + "src/bin/rates.txt")
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
 
@@ -162,7 +163,7 @@ def truck_get(truckid):
 
     if _from == datetime.now().strftime('%Y%m01000000') and _to == datetime.now().strftime('%Y%m%d%H%M%S'):
         item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
-        
+
     return item, 200
   
 @app.route('/bill/<provider_id>', methods=['GET'])
