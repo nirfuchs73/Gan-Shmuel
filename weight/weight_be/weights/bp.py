@@ -126,6 +126,7 @@ def create_views_blueprint():
         
     @bp.route('/batch-weight', methods=['GET','POST'])
     def batch_weight():
+        #fost a csv/json file to a table in the database
         cdb = db.get_db()
         if request.method == 'POST':
             # check if the post request has the file part
@@ -201,5 +202,15 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
 
         return res_json
+
+
+    @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
+    def item():
+        #return info of a container or truck with in defined period
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify([ix['id'] for ix in res])
+
 
     return bp
