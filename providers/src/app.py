@@ -168,7 +168,7 @@ def bill(provider_id):
     transaction_list = []
 
     name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
-    
+    '''
     # transaction_list = get /weight?from=start&to=end 
     # for transaction in transaction_list: 
     # truck_id = get /session/<trans.id> 
@@ -201,7 +201,7 @@ def bill(provider_id):
     #       procudt = prod, count = 0, amout = 0, rate = 0, pay = 0
     # 
 
-
+    '''
     return "ok", 200
 
 if __name__ == '__main__':
