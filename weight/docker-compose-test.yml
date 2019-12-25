@@ -1,10 +1,12 @@
 version: '3'
 
+### USED FOR TESTING IN THE CI SERVER!!! 
+
 #might need: sudo apt-get install mysql-server
 
 services:
-  weight_be:
-    container_name: weight_be
+  weight_be_test:
+    container_name: weight_be_test
     build: 
       context: ./weight_be
       dockerfile: Dockerfile.gunicorn
@@ -15,13 +17,13 @@ services:
         - DB_USER='dodo'
         - DB_PW='1111'
     ports: 
-      - "8090:8090"
+      - "8089:8090"
     restart: always
     networks: 
-      - weight_net
+      - weight_net_test
 
-  weight_db:
-    container_name: weight_db
+  weight_db_test:
+    container_name: weight_db_test
     build: 
       context: ./weight_database
       dockerfile: Dockerfile
@@ -37,17 +39,17 @@ services:
     # ports:
     #   # <Port exposed> : < MySQL Port running inside container>
     #   - '3400:3400'
-    expose:
+    ###expose:
       # Opens port 3306 on the container
-      - '3306'
+    ###  - '3306'
       # Where our data will be persisted
     networks: 
-      - weight_net
+      - weight_net_test
 
 volumes: 
   db_save:
 
 networks: 
-  weight_net:
+  weight_net_test:
 
 
