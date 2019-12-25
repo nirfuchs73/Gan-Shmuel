@@ -104,7 +104,9 @@ def rates():
             send_to_db(query)
         except Exception as e:
             app.logger.info("ERROR: POST rates")
-    return ''
+            return 'Insert error.', 500
+
+    return '', 200
 
 
 @app.route('/truck', methods=['PUT'])
@@ -137,7 +139,7 @@ def truck_post():
 
     # Setup query and data.
     send_to_db('USE billdb;')
-    query = f"INSERT INTO Trucks (id, provider_id) VALUES ({truckid}, {providerid});"
+    query = f"INSERT INTO Trucks (id, provider_id) VALUES ('{truckid}', {providerid});"
 
     # Insert the truck data in to the trucks table.
     send_to_db(query)
@@ -151,12 +153,15 @@ def truck_get(truckid):
      1st of the month to the current date.
      Returns 404 if the database does not contain trucks between the specified dates"""
 
-    _from = datetime.now().strftime('%Y%m01000000')
-    _to = datetime.now().strftime('%Y%m%d%H%M%S')
+    _from = request.args['from']
+    _to = request.args['to']
 
-    item = requests.get(f'localhost:8090/unit/{truckid}', {'from': _from, 'to': _to})
+    if _from == datetime.now().strftime('%Y%m01000000') and _to == datetime.now().strftime('%Y%m%d%H%M%S'):
+        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
-    return item, 200
+        return item, 200
+    else:
+        return '', 404
 
 
 @app.route('/bill', methods=['GET'])
