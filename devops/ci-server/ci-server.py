@@ -43,10 +43,19 @@ def rollback_post():
     print('Running Rollback')
     print('-----------------------------------------------')
     success = True
-    success = run_checkout('master')
+    head = run_process('git', 'rev-parse --short HEAD')
+    master = run_process('git', 'rev-parse --short master')
+    master_1 = run_process('git', 'rev-parse --short master~1')
+
+    branch = master
+    if head == master:
+        branch = master_1
+
+    # success = run_checkout('master')
     if success:
         try:
-            run_process('git', 'checkout master~1')
+            # run_process('git', 'checkout master~1')
+            run_process('git', 'checkout ' + branch)
         except:
             success = False
     if success:
