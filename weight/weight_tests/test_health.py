@@ -5,7 +5,8 @@ import requests
 class FlaskTestCase(unittest.TestCase):
     def test_health(self):
         print('health_test')
-        URL = "http://ec2-54-237-240-191.compute-1.amazonaws.com:8090/health"
+        URL = "http://ec2-54-211-161-133.compute-1.amazonaws.com:8090/health"
+
         response = requests.get(url=URL)
         self.assertEqual(response.status_code, 200)
 
