@@ -16,11 +16,11 @@
       function get_bill()
         {
             var xhttp = new XMLHttpRequest();
-            var truck_id = document.getElementById("truck_id").value;
-            var from = document.getElementById("from").value;
-            var to = document.getElementById("to").value;
+            var provider_id = document.getElementById("provider_id").value;
+            var from = document.getElementById("bill_from").value;
+            var to = document.getElementById("bill_to").value;
 
-            url = "http://localhost:8080/truck/" + truck_id + "?from=" + from + "&to=" + to;
+            url = "http://localhost:8080/bill/" + provider_id + "?from=" + from + "&to=" + to;
 
             xhttp.open("GET", url);
             xhttp.send();
@@ -82,9 +82,12 @@
 <hr>
 
 <!-- Get bill -->
-<form action="http://localhost:8080/bill">
+<form>
     <h3>Get Bill</h3>
-    <input type="submit" value="?">
+    Provider Id: <input type="text" id="provider_id">
+    From: <input type="text" id="bill_from">
+    To: <input type="text" id="bill_to">
+    <button type="button" value="Get Bill" onclick="get_bill()">Get Bill</button>
 </form>
 </body>
 </html>
