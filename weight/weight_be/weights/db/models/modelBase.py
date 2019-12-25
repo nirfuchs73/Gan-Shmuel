@@ -4,8 +4,6 @@ from mysql.connector import errors, errorcode
 from functools import partialmethod
 from io import StringIO
 
-from gan_shmuel.weight.weight_be.weights.utils import check_field_in_dict
-
 class ModelBase(object):
     def __init__(self, sub_name:str, **row_dict : dict):
         if self.check_row_schema(row_dict):

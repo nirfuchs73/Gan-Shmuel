@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from . import modelBase
+from weights import utils
 
 class Container(modelBase.ModelBase):
     def __init__(self, **row_dict : dict):
@@ -8,12 +9,9 @@ class Container(modelBase.ModelBase):
 
     @staticmethod
     def check_row_schema(**row_dict : dict) -> bool:
-        if "container_id" in row_dict and \
-            isinstance(row_dict["container_id"], str) and \
-            "weight" in row_dict and \
-            isinstance(row_dict["weight"], int) and \
-            "unit" in row_dict and \
-            isinstance(row_dict["unit"], str):
+        if utils.check_field_in_dict("container_id", row_dict, str) and \
+            utils.check_field_in_dict("weight", row_dict, int) and \
+            utils.check_field_in_dict("unit", row_dict, str):
             return True
         else:
             return False
