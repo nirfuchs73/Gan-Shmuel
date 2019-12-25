@@ -174,15 +174,9 @@ def send_notification(success, pusher_email):
     for file in files:
         part = MIMEBase('application', "octet-stream")
         part.set_payload(open(file, "rb").read())
-        # part.set_payload(open("weight-tests.txt", "rb").read())
-        # part.set_payload(open("providers-tests.txt", "rb").read())
         encoders.encode_base64(part)
         part.add_header('Content-Disposition',
                         'attachment; filename="%s"' % file)
-        # part.add_header('Content-Disposition',
-        #                 'attachment; filename="weight-tests.txt"')
-        # part.add_header('Content-Disposition',
-        #                 'attachment; filename="providers-tests.txt"')
         msg.attach(part)
 
     try:
