@@ -85,7 +85,7 @@ def provider():
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
-    #global updated_rates_file
+    # global updated_rates_file
 
     if request.method == 'GET':
         path = os.popen('cat src/bin/rates.txt').read().rstrip()
@@ -161,11 +161,17 @@ def truck_get(truckid):
     _from = request.args['from']
     _to = request.args['to']
 
-    if _from == datetime.now().strftime('%Y%m01000000') and _to == datetime.now().strftime('%Y%m%d%H%M%S'):
+    time_format = '%Y%m%d%H%M%S'
+
+    if _from == datetime.now().strftime('%Y%m01000000') and datetime.strptime(_to,
+                                                                              time_format) <= datetime.now():
         item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
-    return item, 200
-  
+        return item, 200
+
+    return '', 404
+
+
 @app.route('/bill/<provider_id>', methods=['GET'])
 def bill(provider_id):
     start = request.args.get('from')
@@ -211,6 +217,7 @@ def bill(provider_id):
 
     '''
     return "ok", 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
