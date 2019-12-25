@@ -81,8 +81,13 @@ def provider():
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
+    # global updated_rates_file
     if request.method == 'GET':
         path = "in/" + updated_rates_file
+        try:
+            return send_file(path, as_attachment=True)
+        except FileNotFoundError:
+            return "file not found 404"
 
     elif request.method == 'POST':
         updated_rates_file = str(request.form.get("file"))
@@ -152,14 +157,52 @@ def truck_get(truckid):
     item = requests.get(f'localhost:8090/unit/{truckid}', {'from': _from, 'to': _to})
 
     return item, 200
+  
+@app.route('/bill/<provider_id>', methods=['GET'])
+def bill(provider_id):
+    start = request.args.get('from')
+    end = request.args.get('to')
+
+    truck_id = "77777"
+    truck_list = []
+    transaction_list = []
+
+    name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
+    
+    # transaction_list = get /weight?from=start&to=end 
+    # for transaction in transaction_list: 
+    # truck_id = get /session/<trans.id> 
+    # if truck_id!="na":
+    if (send_to_db("SELECT provider_id FROM Trucks WHERE id=" + truck_id + ";"):
+        if truck_id not in truck_list:
+            truck_list.append(truck_id)
+    else:
+        #transaction_list.remove(transaction)
+    
+    truck_count = len(truck_list)
+    session_count = len(transaction_list)
+
+    # for transaction in transaction_list:
+    transaction_list.sort(key=lambda s: s['produce'])
+    results.sort(key=lambda s: s['BOX_coordinate_LefTop_Y'])
+    lines = sorted(lines, key=lambda k: k['page']['update_time'], reverse=True)
+
+    # arrange by list.produce
+    # prod = list.produce[0]
+    # if prod == prev_prod:
+    #       count ++
+    # else:
+    #    rate = (billdb) 
+    #    if "SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope=provider_id;"
+    #    else ""SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope='ALL';"
+    #    pay = rate * count
+    #
+    #    create new json
+    #       procudt = prod, count = 0, amout = 0, rate = 0, pay = 0
+    # 
 
 
-@app.route('/bill', methods=['GET'])
-@app.route('/')
-def bill():
-    firstName = request.args.get('first_name')
-    return '', 200
-
+    return "ok", 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
