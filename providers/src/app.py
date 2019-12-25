@@ -4,31 +4,34 @@ import mysql.connector
 import csv
 import xlrd
 
-
 app = Flask(__name__)
 updated_rates_file = ""
 
-# Connect to the db database in the mysql container.
-db = mysql.connector.connect(
-    host="providers_db",
-    port=3306,
-    user="root",
-    passwd="12345678",
-    # auth_plugin='mysql_native_password',
-    database='billdb'
-)
-cursor = db.cursor()
+# Send query to the db database in the mysql container.
+def send_to_db(sql_query):
+    db = mysql.connector.connect(
+        host="providers_db",
+        port=3306,
+        user="root",
+        passwd="12345678",
+        # auth_plugin='mysql_native_password',
+        database='billdb'
+    )
+    cursor = db.cursor(buffered=True)
+    cursor.execute(sql_query)
+    cursor.close()
+    db.close()
 
 
 @app.route('/health', methods=['GET'])
 def health():
     try:
-        cursor.execute("SELECT 1;")
-        cursor.fetchall()
+        send_to_db("SELECT 1;")
     except Exception as e:
         return jsonify({'message': "I'M NOT OK", 'status': 500})
     else:
         return jsonify({'message': "OK", 'status': 200})
+    cursor.close()
     return
 
 
@@ -40,17 +43,24 @@ def provider():
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
     if request.method == 'GET':
-        return "empty"
+        path = "in/" + updated_rates_file
 
     elif request.method == 'POST':
         updated_rates_file = str(request.form.get("file"))
         path = "in/" + updated_rates_file
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
-        cursor.execute("delete from Rates;")
+
+        # create query for full table
+        query = "delete from Rates; "
         for i in range(1, sheet.nrows):
-            cursor.execute("INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + ");")
-    return "empy"
+            query += "INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + "); "
+        # execute query in db
+        try:
+            send_to_db(query)
+        except Exception as e:
+            app.logger.info("ERROR: POST rates")
+    return ''
 
 
 @app.route('/truck', methods=['POST'])
@@ -104,11 +114,11 @@ def truck_get(truckid):
 @app.route('/bill', methods=['GET'])
 @app.route('/')
 def bill():
+    firstName = request.args.get('first_name') 
     return '', 200
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
 
-cursor.close()
-db.close()
+
