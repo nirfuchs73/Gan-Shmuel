@@ -107,7 +107,7 @@ def run_build():
         except:
             result = False
 
-        # run_process('docker', 'logs weight_be_test')
+        run_process('docker', 'logs weight_tests')
         # run_process('docker', 'logs providers_be_test')
         # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
         # run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
