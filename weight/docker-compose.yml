@@ -16,6 +16,8 @@ services:
         - DB_PW='1111'
     ports: 
       - "8090:8090"
+    volumes:
+      - in_volume:/app/in     
     restart: always
     volumes: 
       - "be_logs:/app/instance"
@@ -48,6 +50,7 @@ services:
 
 volumes: 
   db_save:
+  in_volume:
   be_logs:
 
 networks: 
