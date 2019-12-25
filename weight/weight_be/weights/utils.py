@@ -62,7 +62,7 @@ def allowed_file_ext():
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_file_ext
+           filename.rsplit('.', 1)[1].lower() in allowed_file_ext()
 
 def get_file_ext(filename):
     return filename.rsplit('.', 1)[1].lower()

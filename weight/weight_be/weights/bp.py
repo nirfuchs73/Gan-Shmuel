@@ -5,11 +5,15 @@ import functools
 
 #add by gilad for batch_weight
 import os
+import json
+import csv
+
+from csv import DictReader
 #add by gilad for batch_weight
 
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
-    format_dt, get_dt
+    format_dt, get_dt, allowed_file, get_file_ext
 )
 
 from flask import (
@@ -122,9 +126,8 @@ def create_views_blueprint():
         
     @bp.route('/batch-weight', methods=['GET','POST'])
     def batch_weight():
-        title = "Batch"
         cdb = db.get_db()
-         if request.method == 'POST':
+        if request.method == 'POST':
             # check if the post request has the file part
             if 'file' not in request.files:
                 flash('No file part')
@@ -135,55 +138,42 @@ def create_views_blueprint():
             if file.filename == '':
                 flash('No selected file')
                 return redirect(request.url)
-            if file and allowed_file(file.filename):
+            if file and allowed_file(file.filename): 
+                in_folder = current_app.config.get("UPLOAD_FOLDER")#see config for upload folder
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, filename))
-                query = "DELETE * FROM container_registered"
+                filepath = os.path.join(in_folder, filename)
+                file.save(filepath)
+                query = "DELETE FROM containers_registered"
                 cdb.execute(query)
-                file_data = ""
                 if get_file_ext(filename) == 'json':
                     try:
-                        with open(UPLOAD_FOLDER + filename,'r') as f:
-                            file_data = f.read().splitlines(True)
-                            #get the data from the json file
-                            for line in file_data[1:-1]:
-                                fild1,fild2,fild3 = line.split(',')
-                                id = fild1.split(':')[1]
-                                weight = fild2.split(':')[1]
-                                prep_for_unit = fild3.split(':')[1]
-                                unit = prep_for_unit.split('}')[0]
-                            #now we got id, weight and unit arguments to insert
-                            query = "INSERT INTO container_registered VALUES (%s, %s, %s);" 
-                            cdb.execute(query,[id, weight, unit])  
+                        with open(filepath, 'r') as f:
+                            data=json.load(f)
+                            for line in data:
+                                id = line['id']
+                                weight = line['weight']
+                                unit = line['unit']
+                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)" 
+                                cdb.execute(query,[id, weight, unit])  
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 elif get_file_ext(filename) == 'csv':
                     try:
-                        with open(UPLOAD_FOLDER + filename,'r') as f:
-                            file_data = f.read().splitlines(True)
-                            first_line = file_data[0] 
-                            units = first_line.split(',') #we're only intrested in units[1].
-                            for line in file_data[1:]:
-                                lineSplit = line.split(',')
-                                if units[1] == 'kg' or units[1] == 'lbs': #could add functionality for capital letters 
-                                    query = "INSERT INTO container_registered VALUES (%s, %s, %s);"
-                                    cdb.execute(query,[lineSplit[0],lineSplit[1], units[1]])
-                                else:
-                                    return jsonify({'message':"no specified data (kg,lbs)", 'status':404})
+                        with open(filepath,'r') as f:
+                            data = csv.DictReader(f)
+                            headers = data.fieldnames # we're only intrested in the units
+                            if not headers[1] == 'kg' and not headers[1] == 'lbs':
+                                return jsonify({'message':"no specified units (kg,lbs)", 'status':404})
+                            for line in data:
+                                id = line['id']
+                                weight = line[headers[1]] #the lines in data with the kg/lbs header
+                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)"
+                                cdb.execute(query,[id,weight, headers[1]])                        
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 else:
                     return jsonify({'message':"found no existing file!", 'status':404})
-                #res_t = cdb.show_tables()
-          return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+        return render_template('batch_weight.html.j2')
 
 
     @bp.route('/unknown', methods=['GET'])
