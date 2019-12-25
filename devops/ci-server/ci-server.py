@@ -38,12 +38,10 @@ def post_git():
 
 
 @app.route("/rollback")
-def rollback_get():
-    return 'Rolling back one version...'
-
-
-@app.route("/rollback", methods=['POST'])
 def rollback_post():
+    print('-----------------------------------------------')
+    print('Running Rollback')
+    print('-----------------------------------------------')
     success = True
     success = run_checkout('master')
     if success:
@@ -56,7 +54,7 @@ def rollback_post():
 
     send_notification(success, 'nirfuchs73@gmail.com')
 
-    return 'rollback posted'
+    return 'Rolling back one version...'
 
 
 def run_checkout(branch):
