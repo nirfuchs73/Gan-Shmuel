@@ -54,7 +54,7 @@ services:
   providers_tests:
     container_name: providers_tests
     build: 
-      context: "./src"
+      context: "./test"
       dockerfile: "Dockerfile-test"
     networks: 
     - providers_net_test
