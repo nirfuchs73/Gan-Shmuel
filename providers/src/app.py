@@ -6,6 +6,7 @@ import csv
 import xlrd
 import os
 from datetime import datetime
+import json
 
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
-        return send_to_db_host("providers_db", sql_query)
+        return send_to_db_host("localhost", sql_query)
     except:
         return send_to_db_host("providers_db_test", sql_query)
 
@@ -167,10 +168,10 @@ def truck_get(truckid):
                                                                               time_format) <= datetime.now():
         item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
-        return item, 200
+    return item, 200
 
     return '', 404
-
+  
 
 @app.route('/bill/<provider_id>', methods=['GET'])
 def bill(provider_id):
@@ -183,6 +184,7 @@ def bill(provider_id):
 
     name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
     receive = requests.get('localhost:8090/weight?from=' + start + '&to=' + end)
+    
 
     '''
     # transaction_list = get /weight?from=start&to=end 
