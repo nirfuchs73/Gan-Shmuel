@@ -49,6 +49,20 @@ services:
     restart: always
     networks: 
       - providers_net_test
+
+  providers_tests:
+    container_name: providers_tests
+    build: 
+      context: ./providers_tests
+      dockerfile: Dockerfile
+    networks: 
+      - providers_net_test
+    depends_on:
+      - providers_db_test
+      - providers_be_test
+    container_name: providers_tests
+    depends_on:
+        - providers_db_test    
       
 volumes: 
   db_save:
