@@ -8,8 +8,8 @@ services:
   providers_db_test:
     container_name: providers_db_test
     image: mysql:8.0.18
-    ports:
-      - "3306:3306"
+    # ports:
+    #   - "3306:3306"
     volumes:
       - "./sql_scripts:/docker-entrypoint-initdb.d"
       # - "./db:/var/lib/mysql"
