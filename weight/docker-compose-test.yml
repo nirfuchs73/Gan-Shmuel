@@ -25,6 +25,7 @@ services:
       - "be_logs:/app/instance"
     networks: 
       - weight_net_test
+    network_mode: host
 
   weight_db_test:
     container_name: weight_db_test
