@@ -58,8 +58,8 @@ def main(out = sys.stderr, verbosity = 2):
     unittest.TextTestRunner(out, verbosity = verbosity).run(suite) 
       
 if __name__ == '__main__':
-    with open('testing.out', 'w') as f: 
+    with open('tests/weight-tests.txt', 'w') as f: 
         main(f) 
 
-    with open('testing.out', 'r') as f: 
+    with open('tests/weight-tests.txt', 'r') as f: 
         print(f.read())
