@@ -14,9 +14,9 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
-        send_to_db_host("providers_db", sql_query)
+        return send_to_db_host("providers_db", sql_query)
     except:
-        send_to_db_host("providers_db_test", sql_query)
+        return send_to_db_host("providers_db_test", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -30,8 +30,13 @@ def send_to_db_host(host_name, sql_query):
     )
     cursor = db.cursor(buffered=True)
     cursor.execute(sql_query)
+
+    query_result = cursor.fetchall()
+
     cursor.close()
     db.close()
+
+    return query_result
 
 
 @app.route('/health', methods=['GET'])
@@ -53,23 +58,23 @@ def provider():
 
     def id_in_db(id):
         """Return true if the id number is in the table."""
-        query = 'SELECT EXISTS (SELECT id FROM Provider WHERE id=%s);'
-        cursor.execute(query, [id])
+        query = f'SELECT EXISTS (SELECT id FROM Provider WHERE id={id};'
 
-        return cursor.fetchone()[0]
+        query_result = send_to_db(query)[0]
+
+        return query_result
 
 
     name = request.form['name']
     id = int(random.random() * 999)
 
-    cursor.execute('USE billdb;')
+    send_to_db('USE billdb;')
 
     # If the id number is in the table already, generate another and try again.
     while id_in_db(id):
         id = int(random.random() * 999)
 
-    cursor.execute('INSERT INTO Provider VALUES (%s, %s)', [id, name])
-    db.commit()
+    send_to_db(f'INSERT INTO Provider VALUES ({id}, {name})')
 
     return jsonify(id=id), 200
 
@@ -103,15 +108,12 @@ def truck_put():
     provider_id = request.form['provider_id']
 
     # Check if truck_id exists in the Provider table of billdb database.
-    query = 'SELECT EXISTS (SELECT %s FROM Trucks WHERE id=%s);'
-    cursor.execute(query, [truck_id, truck_id])
+    query = f'SELECT EXISTS (SELECT {truck_id} FROM Trucks WHERE id={truck_id});'
+    query_result = send_to_db(query)
 
-    if cursor.fetchone()[0]:
-        query = 'UPDATE Trucks SET provider_id=%s WHERE id=%s'
-        data = [provider_id, truck_id]
-
-        cursor.execute(query, data)
-        db.commit()
+    if query_result[0]:
+        query = 'UPDATE Trucks SET provider_id={provider_id} WHERE id={truck_id}'
+        send_to_db(query)
 
         return '', 200
     else:
@@ -129,13 +131,11 @@ def truck_post():
     providerid = request.form['provider']
 
     # Setup query and data.
-    cursor.execute('USE billdb;')
-    query = "INSERT INTO Trucks (id, provider_id) VALUES (%s, %s);"
-    data = (truckid, providerid)
+    send_to_db('USE billdb;')
+    query = f"INSERT INTO Trucks (id, provider_id) VALUES ({truckid}, {providerid});"
 
     # Insert the truck data in to the trucks table.
-    cursor.execute(query, data)
-    db.commit()
+    send_to_db(query)
 
     return '', 200
 
