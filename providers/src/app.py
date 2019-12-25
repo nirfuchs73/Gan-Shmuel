@@ -109,15 +109,15 @@ def rates():
 
 @app.route('/truck', methods=['PUT'])
 def truck_put():
-    truck_id = request.form['truck_id']
-    provider_id = request.form['provider_id']
+    truck_id = request.args['truck_id']
+    provider_id = request.args['provider_id']
 
-    # Check if truck_id exists in the Provider table of billdb database.
+    # Check if truck_id exists in the Trucks table of billdb database.
     query = f'SELECT EXISTS (SELECT {truck_id} FROM Trucks WHERE id={truck_id});'
     query_result = send_to_db(query)
 
     if query_result[0]:
-        query = 'UPDATE Trucks SET provider_id={provider_id} WHERE id={truck_id}'
+        query = f"UPDATE Trucks SET provider_id={provider_id} WHERE id='{truck_id}'"
         send_to_db(query)
 
         return '', 200
