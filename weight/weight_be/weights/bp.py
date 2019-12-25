@@ -13,7 +13,8 @@ from csv import DictReader
 
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
-    format_dt, get_dt, allowed_file, get_file_ext
+    format_dt, get_dt, build_query_str_from_seq, 
+    allowed_file, get_file_ext
 )
 
 from flask import (
@@ -23,6 +24,8 @@ from flask import (
 )
 
 from datetime import datetime, timezone, timedelta
+
+from mysql.connector import errorcode, Error
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest, InternalServerError
@@ -48,84 +51,96 @@ def create_views_blueprint():
         return jsonify({'message':"Failure", 'status':500})
         
         
-    @bp.route('/weight', methods=['GET', 'POST'])
-    def weight():
-        '''
-            POST /weight
-                - direction=in/out/none
-                - truck=<license> (If weighing a truck. Otherwise "na")
-                - containers=str1,str2,... comma delimited list of container ids
-                - weight=<int>
-                - unit=kg/lbs {precision is ~5kg, so dropping decimal is a non-issue}
-                - force=true/false { see logic below }
-                - produce=<str> { id of produce, e.g. "orange", "tomato", ... OR "na" if enpty}
-                Records data and server date-time and returns a json object with a unique weight.
-                Note that "in" & "none" will generate a new session id, and "out" will return session id of previous "in" for the truck.
-                "in" followed by "in" OR "out" followed by "out":
-                - if force=false will generate an error
-                - if force=true will over-write previous weigh of same truck
-                "out" without an "in" will generate error
-                "none" after "in" will generate error
-                Return value on success is:
-                { "id": <str>, 
-                "truck": <license> or "na",
-                "bruto": <int>,
-                ONLY for OUT:
-                "truckTara": <int>,
-                "neto": <int> or "na" // na if some of containers have unknown tara
-                }
-            GET /weight?from=t1&to=t2&filter=f
-                - t1,t2 - date-time stamps, formatted as yyyymmddhhmmss. server time is assumed.
-                - f - comma delimited list of directions. default is "in,out,none"
-                default t1 is "today at 000000". default t2 is "now". 
-                returns an array of json objects, one per weighing (batch NOT included):
-                [{ "id": <id>,
-                "direction": in/out/none,
-                "bruto": <int>, //in kg
-                "neto": <int> or "na" // na if some of containers have unknown tara
-                "produce": <str>,
-                "containers": [ id1, id2, ...]
-                },...]
-        '''
+    @bp.route('/weight', methods=['GET'])
+    def get_weight():
         errors = []
+        res = []
+        query = ''
+        neto_query = ''
+        conts = []
         try:
-            if request.method == 'GET':
-                t_td = datetime.today()
-                from_str = get_checked_field_in_dict('from', request.args, str) 
-                to_str = get_checked_field_in_dict('to', request.args, str)
-                filter_str = get_checked_field_in_dict('filter', request.args, str)
-                # time format: yyyymmddhhmmss
-                time_format = '%Y%m%d%H%M%S'
-                if len(from_str) > 0:
-                    try:
-                        from_dt = datetime.strptime(from_str, time_format)
-                    except ValueError as e:
-                        raise BadRequest
-                else:
-                    from_dt = datetime(
-                        t_td.year, t_td.month, t_td.day, 
-                        0,0,0,0, t_td.tzinfo
-                    )
-                if len(to_str) > 0:
-                    try:
-                        to_dt = datetime.strptime(to_str, time_format)
-                    except ValueError as e:
-                        raise BadRequest
-                else:
-                    to_dt = get_dt()
-                if len(filter_str) > 0:
-                    filter_lst = filter_str.split(',')
-                else:
-                    filter_lst = ['in', 'out', 'none']
-            elif request.method == 'POST':
-                pass
+            t_td = datetime.today()
+            from_str = get_checked_field_in_dict('from', request.args, str) 
+            to_str = get_checked_field_in_dict('to', request.args, str)
+            filter_str = get_checked_field_in_dict('filter', request.args, str)
+            # return jsonify(t_td, from_str, to_str, filter_str)
+            # time format: yyyymmddhhmmss
+            time_format = '%Y%m%d%H%M%S'
+            if len(from_str) > 0:
+                from_dt = datetime.strptime(from_str, time_format)
+            else:
+                from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
+            if len(to_str) > 0:
+                to_dt = datetime.strptime(to_str, time_format)
+            else:
+                to_dt = get_dt()
+            if len(filter_str) > 0:
+                filter_lst = filter_str.split(',')
+            else:
+                filter_lst = ['in', 'out', 'none']
+            # return jsonify(t_td, from_dt, to_dt, filter_lst)
+            if len(filter_lst) > 0 and '' not in filter_lst:
+                cdb = db.get_db()
+
+                # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                q_params = []
+                # q_params.extend([format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S')])
+                # q_params.extend([from_dt, to_dt])
+                # if len(filter_lst) == 1:
+                #     query = str().join([query, " direction = '%s';"])
+                #     q_params.append(filter_lst[0])
+                # else:
+                # direct = " direction IN ({});".format(build_query_str_from_seq(filter_lst, range(0, len(filter_lst))))
+                # query = query.format(from_dt, to_dt, build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                query = query.format(format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S'), build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                # query = str().join([query, direct])
+                # q_params.extend(filter_lst)
+                # return jsonify(t_td, from_dt, to_dt, filter_lst, q_params, query)
+                res_sel1 = cdb.execute_and_get_all(query, q_params)
+                # return jsonify(res_sel1)
+                if len(res_sel1) > 0:
+                    for t_trans in res_sel1:
+                        # trans = db.models.transaction(t_trans)
+                        neto_res = t_trans.get('neto')
+                        t_conts = t_trans.get('containers')
+                        if len(t_conts) > 0 :
+                            conts_t = t_conts.split(',')
+                            if len(conts_t) > 0 and '' not in conts_t:
+                                conts.extend(conts_t)
+                                conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), False)
+                                # conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), True)
+                                neto_query = "SELECT * FROM containers_registered WHERE (weight IS NULL OR unit IS NULL) AND container_id IN ({})".format(conts_qs)
+                                # neto_lst = cdb.execute_and_get_all(neto_query, conts)
+                                neto_lst = cdb.execute_and_get_all(neto_query)
+                                neto_res = neto_res if neto_res is not None and neto_res != 0 and len(neto_lst) == 0 else 'na'
+                        res_d = {
+                            'id' : t_trans.get('id'),
+                            "direction": t_trans.get('direction'),
+                            "bruto": t_trans.get('bruto'), # assuming that bruto is stored as kg..
+                            "neto": neto_res, 
+                            "produce": t_trans.get('produce'),
+                            "containers": conts
+                        }
+                        res.append(res_d)
+            # else:
+            #     raise BadRequest()
+        except Error as e:
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise InternalServerError()
+        except TypeError as e:
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise InternalServerError()
         except ValueError as e:
-            raise BadRequest 
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise BadRequest() 
         except BadRequest as e:
-            raise
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise
+        # return jsonify(res, "OK", query, neto_query, conts)
+        return jsonify(res)
+            
+    # return list id of containers without weight
         
     @bp.route('/batch-weight', methods=['GET','POST'])
     def batch_weight():
+        #fost a csv/json file to a table in the database
         cdb = db.get_db()
         if request.method == 'POST':
             # check if the post request has the file part
@@ -178,7 +193,6 @@ def create_views_blueprint():
 
     @bp.route('/unknown', methods=['GET'])
     def unknown():
-        ''' return list id of containers without weight '''
         cdb = db.get_db()
         query="select container_id as id from containers_registered where weight is NULL"
         res = cdb.execute_and_get_all(query)
@@ -200,6 +214,7 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
 
         return res_json
+
 
     def calculate_neto(bruto,trackTara,list_containers):
         sum_containers=0
@@ -312,4 +327,15 @@ def create_views_blueprint():
 
     return bp
 
+
+    @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
+    def item():
+        #return info of a container or truck with in defined period
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify([ix['id'] for ix in res])
+
+
+    return bp
 
