@@ -6,6 +6,7 @@ import csv
 import xlrd
 import os
 from datetime import datetime
+import json
 
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
-        return send_to_db_host("providers_db", sql_query)
+        return send_to_db_host("localhost", sql_query)
     except:
         return send_to_db_host("providers_db_test", sql_query)
 
