@@ -37,6 +37,28 @@ def post_git():
     return 'JSON posted'
 
 
+@app.route("/rollback")
+def rollback_get():
+    return 'Rolling back one version...'
+
+
+@app.route("/rollback", methods=['POST'])
+def rollback_post():
+    success = True
+    success = run_checkout('master')
+    if success:
+        try:
+            run_process('git', 'checkout master~1')
+        except:
+            success = False
+    if success:
+        success = run_deploy()
+
+    send_notification(success, 'nirfuchs73@gmail.com')
+
+    return 'rollback posted'
+
+
 def run_checkout(branch):
     print('-----------------------------------------------')
     print('Running Checkout')
@@ -86,7 +108,7 @@ def run_build():
             #     result = False
         except:
             result = False
-        
+
         # run_process('docker', 'logs weight_be_test')
         # run_process('docker', 'logs providers_be_test')
         # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
