@@ -46,6 +46,14 @@ services:
     networks: 
       - weight_net_test
 
+  weight_tests:
+    container_name: weight_tests
+    build: 
+      context: ./weight_tests
+      dockerfile: Dockerfile
+    networks: 
+      - weight_net_test
+
 volumes: 
   db_save:
 
