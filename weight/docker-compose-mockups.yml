@@ -32,6 +32,7 @@ services:
     restart: always
     volumes:
       - "db_mocks:/var/lib/mysql"
+      - "db_dump:/app/instance"
     environment:
       MYSQL_DATABASE: 'weight'
       MYSQL_USER: 'dodo'
@@ -51,6 +52,12 @@ services:
 volumes: 
     db_mocks:
     be_logs:
+    db_dump:
+      driver: local
+      driver_opts:
+        type: none
+        device: $PWD/db_dump
+        o: bind
 
 networks: 
     weight_net:
