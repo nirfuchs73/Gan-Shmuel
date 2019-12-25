@@ -3,11 +3,8 @@ import subprocess
 import os
 import smtplib
 # from email.mime.text import MIMEText as text
-# from email.MIMEMultipart import MIMEMultipart
 from email.mime.multipart import MIMEMultipart
-# from email.MIMEBase import MIMEBase
 from email.mime.base import MIMEBase
-# from email import Encoders
 from email import encoders
 
 app = Flask(__name__)
@@ -173,9 +170,11 @@ def send_notification(success, pusher_email):
     msg['To'] = ", ".join(to)
 
     part = MIMEBase('application', "octet-stream")
-    part.set_payload(open("results.txt", "rb").read())
+    part.set_payload(open("weight-tests.txt", "rb").read())
+    part.set_payload(open("providers-tests.txt", "rb").read())
     encoders.encode_base64(part)
-    part.add_header('Content-Disposition', 'attachment; filename="results.txt"')
+    part.add_header('Content-Disposition', 'attachment; filename="weight-tests.txt"')
+    part.add_header('Content-Disposition', 'attachment; filename="providers-tests.txt"')
     msg.attach(part)
     
     try:
