@@ -41,7 +41,7 @@ services:
         - DB_USER='root'
         - DB_PW='12345678'
     ports: 
-      - "8082:8080"
+      - "8080:8080"
     volumes: 
        - "./src/in:/in"
     depends_on:
@@ -64,18 +64,22 @@ services:
     depends_on:
         - providers_db_test    
       
-  weight_tests:
+  #TEST CONTAINER - uses the dockerfile in ./src/Dockerfile
+  providers_tests:
     container_name: providers_tests
     build: 
-      context: ./providers_tests
-      dockerfile: Dockerfile
+      context: "./test"
+      dockerfile: "Dockerfile-test"
     networks: 
-      - providers_net_test
+    - providers_net_test
     depends_on:
-      - providers_db_test
-      - providers_be_test
-  
+    - providers_db_test
+    - providers_be_test
+    # volumes:
+    # - test_results
+
 volumes: 
   db_save:
+  test_results:
 networks: 
   providers_net_test: 
