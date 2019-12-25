@@ -104,7 +104,9 @@ def rates():
             send_to_db(query)
         except Exception as e:
             app.logger.info("ERROR: POST rates")
-    return ''
+            return 'Insert error.', 500
+
+    return '', 200
 
 
 @app.route('/truck', methods=['PUT'])
@@ -137,7 +139,7 @@ def truck_post():
 
     # Setup query and data.
     send_to_db('USE billdb;')
-    query = f"INSERT INTO Trucks (id, provider_id) VALUES ({truckid}, {providerid});"
+    query = f"INSERT INTO Trucks (id, provider_id) VALUES ('{truckid}', {providerid});"
 
     # Insert the truck data in to the trucks table.
     send_to_db(query)

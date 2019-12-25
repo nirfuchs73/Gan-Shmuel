@@ -1,0 +1,62 @@
+import unittest
+import requests
+
+
+class FlaskTestCase(unittest.TestCase):
+    def test_health(self):
+        URL = f"http://localhost:8080/health"
+
+        response = requests.get(url=URL)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_provider(self):
+        URL = f"http://localhost:8080/provider"
+
+        response = requests.post(url=URL, data={'name': 'test_please_remove'})
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_rates_post(self):
+        URL = f"http://localhost:8080/rates"
+
+        response = requests.post(url=URL, data={'file': 'test_please_delete'})
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_rates_get(self):
+        URL = f"http://localhost:8080/rates"
+
+        response = requests.get(url=URL)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_truck_put(self):
+        URL = f"http://localhost:8080/truck?truck_id=77777&provider_id=2"
+
+        response = requests.put(url=URL, data={'truck_id': '77777', 'provider_id': 2})
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_truck_post(self):
+        URL = f"http://localhost:8080/truck"
+
+        response = requests.post(url=URL, data={'id': 'test', 'provider': 0})
+        self.assertEqual(response.status_code, 200)
+
+    def test_truck_get(self):
+        URL = f"http://localhost:8080/truck"
+
+        response = requests.get(url=URL, data={'from': '200001010000', 'to': '205001010000'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_bill_get(self):
+        URL = f"http://localhost:8080/bill"
+
+        response = requests.get(url=URL, data={'first_name': 'test'})
+        self.assertEqual(response.status_code, 200)
+
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
