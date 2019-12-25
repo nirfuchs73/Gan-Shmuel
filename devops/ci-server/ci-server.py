@@ -3,9 +3,12 @@ import subprocess
 import os
 import smtplib
 # from email.mime.text import MIMEText as text
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email import Encoders
+# from email.MIMEMultipart import MIMEMultipart
+from email.mime.multipart import MIMEMultipart
+# from email.MIMEBase import MIMEBase
+from email.mime.base import MIMEBase
+# from email import Encoders
+from email import encoders
 
 app = Flask(__name__)
 
@@ -171,7 +174,7 @@ def send_notification(success, pusher_email):
 
     part = MIMEBase('application', "octet-stream")
     part.set_payload(open("results.txt", "rb").read())
-    Encoders.encode_base64(part)
+    encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="results.txt"')
     msg.attach(part)
     
