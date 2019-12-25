@@ -31,7 +31,10 @@ def send_to_db_host(host_name, sql_query):
     cursor = db.cursor(buffered=True)
     cursor.execute(sql_query)
 
-    query_result = cursor.fetchall()
+    try:
+        query_result = cursor.fetchall()
+    except mysql.connector.errors.InterfaceError:
+        query_result = None
 
     cursor.close()
     db.close()
@@ -58,7 +61,7 @@ def provider():
 
     def id_in_db(id):
         """Return true if the id number is in the table."""
-        query = f'SELECT EXISTS (SELECT id FROM Provider WHERE id={id};'
+        query = f'SELECT EXISTS (SELECT id FROM Provider WHERE id={id});'
 
         query_result = send_to_db(query)[0]
 
@@ -71,16 +74,18 @@ def provider():
     send_to_db('USE billdb;')
 
     # If the id number is in the table already, generate another and try again.
-    while id_in_db(id):
+    while not id_in_db(id):
         id = int(random.random() * 999)
 
-    send_to_db(f'INSERT INTO Provider VALUES ({id}, {name})')
+    send_to_db(f'INSERT INTO Provider VALUES ("{id}", "{name}")')
 
     return jsonify(id=id), 200
 
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
+    global updated_rates_file
+
     if request.method == 'GET':
         path = "in/" + updated_rates_file
 
@@ -104,15 +109,15 @@ def rates():
 
 @app.route('/truck', methods=['PUT'])
 def truck_put():
-    truck_id = request.form['truck_id']
-    provider_id = request.form['provider_id']
+    truck_id = request.args['truck_id']
+    provider_id = request.args['provider_id']
 
-    # Check if truck_id exists in the Provider table of billdb database.
+    # Check if truck_id exists in the Trucks table of billdb database.
     query = f'SELECT EXISTS (SELECT {truck_id} FROM Trucks WHERE id={truck_id});'
     query_result = send_to_db(query)
 
     if query_result[0]:
-        query = 'UPDATE Trucks SET provider_id={provider_id} WHERE id={truck_id}'
+        query = f"UPDATE Trucks SET provider_id={provider_id} WHERE id='{truck_id}'"
         send_to_db(query)
 
         return '', 200
