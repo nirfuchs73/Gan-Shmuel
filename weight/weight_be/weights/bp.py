@@ -265,7 +265,7 @@ def create_views_blueprint():
                     a="a"
 
             elif last_session["direction"]=="in" or last_session["direction"]=="none":
-                if force==False or direction=="none":
+                if force== 'False' or direction=="none":
                     return BadRequest()
                 else:
                     #update last row in
@@ -280,8 +280,8 @@ def create_views_blueprint():
             neto=calculate_neto(last_session["bruto"],weight,last_session["containers"])
 
             if last_session["direction"]=="out":
-                if force==False:
-                    return BadRequest()
+                if force == 'False':
+                    return BadRequest("out cant arrive after for update send force=True")
                 else:
                     #update last row out
                     query="update transactions set datetime='{}',truckTara={},neto={},produce='{}' where id={};".format(date_session,weight,neto,produce,last_session["id"])
