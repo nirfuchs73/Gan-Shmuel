@@ -2,6 +2,15 @@ import unittest
 import requests
 
 
+import sys 
+  
+def main(out = sys.stderr, verbosity = 2): 
+    loader = unittest.TestLoader() 
+  
+    suite = loader.loadTestsFromModule(sys.modules[__name__]) 
+    unittest.TextTestRunner(out, verbosity = verbosity).run(suite) 
+    
+
 class FlaskTestCase(unittest.TestCase):
     def test_health(self):
         URL = f"http://localhost:8080/health"
@@ -58,5 +67,7 @@ class FlaskTestCase(unittest.TestCase):
 
 
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+if __name__ == '__main__': 
+    with open('testing.out', 'w') as f: 
+        main(f) 
+        #unittest.main(verbosity=2)
