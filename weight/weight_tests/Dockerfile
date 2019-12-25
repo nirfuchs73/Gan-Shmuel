@@ -6,6 +6,6 @@ WORKDIR /app
 
 RUN pip3 install -r requirements.txt 
 
-COPY test_*.py /app/
+COPY test*.py /app/
 
-ENTRYPOINT ["python3", "-m", "unittest"]
+ENTRYPOINT ["python3", "tests.py"]
