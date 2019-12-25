@@ -100,3 +100,17 @@ def build_query_str_from_seq(seq, indxs_as_str=tuple(), as_ps=True):
     else:
         raise TypeError
     return query_str
+        
+        # gilads utils
+
+def allowed_file_ext():
+    return ('csv','json')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_file_ext()
+
+def get_file_ext(filename):
+    return filename.rsplit('.', 1)[1].lower()
+           
+

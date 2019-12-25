@@ -3,9 +3,18 @@
 # global (system) imports
 import functools
 
+#add by gilad for batch_weight
+import os
+import json
+import csv
+
+from csv import DictReader
+#add by gilad for batch_weight
+
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
-    format_dt, get_dt, build_query_str_from_seq
+    format_dt, get_dt, build_query_str_from_seq, 
+    allowed_file, get_file_ext
 )
 
 from flask import (
@@ -13,15 +22,17 @@ from flask import (
     render_template, request, session, url_for,
     current_app, make_response, jsonify
 )
+
 from datetime import datetime, timezone, timedelta
 
 from mysql.connector import errorcode, Error
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest, InternalServerError
+from werkzeug.utils import secure_filename
 
 from . import db
-from .api.unknown import my_func as get_container_with_no_weight
+# from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
     bp = Blueprint('views', __name__)
@@ -125,6 +136,59 @@ def create_views_blueprint():
         return jsonify(res)
             
     # return list id of containers without weight
+        
+    @bp.route('/batch-weight', methods=['GET','POST'])
+    def batch_weight():
+        cdb = db.get_db()
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+            # if user does not select file
+            # browser also submit an empty part without filename 
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if file and allowed_file(file.filename): 
+                in_folder = current_app.config.get("UPLOAD_FOLDER")#see config for upload folder
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(in_folder, filename)
+                file.save(filepath)
+                query = "DELETE FROM containers_registered"
+                cdb.execute(query)
+                if get_file_ext(filename) == 'json':
+                    try:
+                        with open(filepath, 'r') as f:
+                            data=json.load(f)
+                            for line in data:
+                                id = line['id']
+                                weight = line['weight']
+                                unit = line['unit']
+                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)" 
+                                cdb.execute(query,[id, weight, unit])  
+                    except:
+                        return jsonify({'message':"could not read file!", 'status':404})
+                elif get_file_ext(filename) == 'csv':
+                    try:
+                        with open(filepath,'r') as f:
+                            data = csv.DictReader(f)
+                            headers = data.fieldnames # we're only intrested in the units
+                            if not headers[1] == 'kg' and not headers[1] == 'lbs':
+                                return jsonify({'message':"no specified units (kg,lbs)", 'status':404})
+                            for line in data:
+                                id = line['id']
+                                weight = line[headers[1]] #the lines in data with the kg/lbs header
+                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)"
+                                cdb.execute(query,[id,weight, headers[1]])                        
+                    except:
+                        return jsonify({'message':"could not read file!", 'status':404})
+                else:
+                    return jsonify({'message':"found no existing file!", 'status':404})
+        return render_template('batch_weight.html.j2')
+
+
     @bp.route('/unknown', methods=['GET'])
     def unknown():
         cdb = db.get_db()
@@ -132,6 +196,22 @@ def create_views_blueprint():
         res = cdb.execute_and_get_all(query)
         return jsonify([ix['id'] for ix in res])
         # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
-        # get_container_with_no_weight
+    #    get_container_with_no_weight
+   
+
+    @bp.route('/session/<id>', methods=['GET'])
+    def session(id):
+        cdb = db.get_db()
+        query="select * from transactions where id={}".format(id)
+        res = cdb.execute_and_get_one(query)
+        if res == None:
+            return jsonify({'message':"session non-existent",'status':404})
+        
+        res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
+        #ONLY for OUT:
+        if res['direction']=="out":
+            res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
+
+        return res_json
 
     return bp
