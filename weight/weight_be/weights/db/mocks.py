@@ -20,7 +20,7 @@ def create_mocks(cdb):
     conts_dict = []
     produce_elems = ['Navel', 'Blood', 'Mandarin', 'Shamuti', 'Tangerine', 'Clementine', 'Grapefruit', 'Valencia']
     dir_elems = ['in', 'out', 'none']
-    for i in range(0, 10000):
+    for i in range(0, 100):
         cstr = "{}-{}".format(faking.random_uppercase_letter(), faking.random_number(digits=5, fix_len=True))
         if cstr not in conts:
             conts.append(cstr)
@@ -34,10 +34,9 @@ def create_mocks(cdb):
         ror = cdb.execute(query, (i['container_id'], i['weight'], i['unit'],))
         if ror < 0:
             raise Error
-    cont_lists = [ [] for i in range(0, 100) ]
-    for i in range(0, 100):
-        beg = 100 * i
-        end = beg + 100
+    for i in range(0, 10):
+        beg = 10 * i
+        end = beg + 10
         cont_list = conts[beg:end]
         cnt2_list = conts_dict[beg:end]
         ts = faking.date_time_between(start_date="-30y", end_date="now", tzinfo=timezone.utc)
@@ -48,7 +47,7 @@ def create_mocks(cdb):
             neto_weight = sum(all_wght) 
             bruto_w = neto_weight + trck_weight
         else:
-            neto_weight = 'na'
+            neto_weight = 0
             bruto_w = trck_weight * 2
         d = {
             'datetime': ts,

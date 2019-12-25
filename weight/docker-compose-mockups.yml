@@ -7,7 +7,7 @@ services:
     container_name: weight_be
     build: 
       context: ./weight_be
-      dockerfile: Dockerfile.gunicorn
+      dockerfile: Dockerfile.mocks
       args: 
         - DB_HOST='weight_db'
         - BD_PORT='3306'
@@ -21,12 +21,13 @@ services:
       - "be_logs:/app/instance"
     networks: 
       - weight_net
-    depends_on: weight_db
+    depends_on: 
+      - db
 
   db:
     container_name: weight_db
     build: 
-      context: ./weight_tests/mocks
+      context: ./weight_database #./weight_tests/mocks
       dockerfile: Dockerfile
     restart: always
     volumes:

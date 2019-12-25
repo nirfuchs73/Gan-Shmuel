@@ -31,5 +31,6 @@ def init_mock_db():
 @with_appcontext
 def init_mock_db_command():
     """Clear the existing data and create new (Mock) tables."""
+    click.echo('CREATING the Mock Database.')
     init_mock_db()
     click.echo('Initialized the Mock Database.')

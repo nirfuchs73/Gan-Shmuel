@@ -56,7 +56,7 @@ def create_app(
         # load the instance config, if it exists, when not testing
         my_app.config.from_pyfile(
             os.path.join(my_app.root_path,'config.py'), 
-            silent=True
+            silent=False
         )
 
     else:
