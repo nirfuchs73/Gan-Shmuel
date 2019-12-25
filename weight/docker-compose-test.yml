@@ -5,7 +5,7 @@ version: '3'
 #might need: sudo apt-get install mysql-server
 
 services:
-  weight_be:
+  weight_be_test:
     container_name: weight_be_test
     build: 
       context: ./weight_be
@@ -22,7 +22,7 @@ services:
     networks: 
       - weight_net_test
 
-  db:
+  weight_db_test:
     container_name: weight_db_test
     build: 
       context: ./weight_database
@@ -45,6 +45,17 @@ services:
       # Where our data will be persisted
     networks: 
       - weight_net_test
+
+  weight_tests:
+    container_name: weight_tests
+    build: 
+      context: ./weight_tests
+      dockerfile: Dockerfile
+    networks: 
+      - weight_net_test
+    depends_on:
+      - weight_be_test
+      - weight_db_test
 
 volumes: 
   db_save:

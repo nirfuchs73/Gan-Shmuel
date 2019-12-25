@@ -1,56 +1,128 @@
+import random
 from flask import Flask, request, Response, jsonify
 import requests
 import mysql.connector
 import csv
 import xlrd
+from datetime import datetime
 
 
 app = Flask(__name__)
 updated_rates_file = ""
 
-# Connect to the db database in the mysql container.
-db = mysql.connector.connect(
-    host="providers_db",
-    port=3306,
-    user="root",
-    passwd="12345678",
-    # auth_plugin='mysql_native_password',
-    database='billdb'
-)
-cursor = db.cursor()
+
+# Send query to the db database in the mysql container.
+def send_to_db(sql_query):
+    try:
+        return send_to_db_host("providers_db", sql_query)
+    except:
+        return send_to_db_host("providers_db_test", sql_query)
+
+
+def send_to_db_host(host_name, sql_query):
+    db = mysql.connector.connect(
+        host=host_name,
+        port=3306,
+        user="root",
+        passwd="12345678",
+        # auth_plugin='mysql_native_password',
+        database='billdb'
+    )
+    cursor = db.cursor(buffered=True)
+    cursor.execute(sql_query)
+
+    try:
+        query_result = cursor.fetchall()
+    except mysql.connector.errors.InterfaceError:
+        query_result = None
+
+    cursor.close()
+    db.close()
+
+    return query_result
 
 
 @app.route('/health', methods=['GET'])
 def health():
     try:
-        cursor.execute("SELECT 1;")
-        cursor.fetchall()
+        send_to_db("SELECT 1;")
     except Exception as e:
         return jsonify({'message': "I'M NOT OK", 'status': 500})
     else:
         return jsonify({'message': "OK", 'status': 200})
+    cursor.close()
     return
 
 
 @app.route('/provider', methods=['POST'])
 def provider():
-    return "empty"
+    """Insert a provider to the Provider table in the billdb database."""
+
+
+    def id_in_db(id):
+        """Return true if the id number is in the table."""
+        query = f'SELECT EXISTS (SELECT id FROM Provider WHERE id={id});'
+
+        query_result = send_to_db(query)[0]
+
+        return query_result
+
+
+    name = request.form['name']
+    id = int(random.random() * 999)
+
+    send_to_db('USE billdb;')
+
+    # If the id number is in the table already, generate another and try again.
+    while not id_in_db(id):
+        id = int(random.random() * 999)
+
+    send_to_db(f'INSERT INTO Provider VALUES ("{id}", "{name}")')
+
+    return jsonify(id=id), 200
 
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
+    global updated_rates_file
+
     if request.method == 'GET':
-        return "empty"
+        path = "in/" + updated_rates_file
 
     elif request.method == 'POST':
         updated_rates_file = str(request.form.get("file"))
         path = "in/" + updated_rates_file
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
-        cursor.execute("delete from Rates;")
+
+        # create query for full table
+        query = "delete from Rates; "
         for i in range(1, sheet.nrows):
-            cursor.execute("INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + ");")
-    return "empy"
+            query += "INSERT INTO Rates VALUES (" + str(sheet.row_values(i))[1:-1] + "); "
+        # execute query in db
+        try:
+            send_to_db(query)
+        except Exception as e:
+            app.logger.info("ERROR: POST rates")
+    return ''
+
+
+@app.route('/truck', methods=['PUT'])
+def truck_put():
+    truck_id = request.args['truck_id']
+    provider_id = request.args['provider_id']
+
+    # Check if truck_id exists in the Trucks table of billdb database.
+    query = f'SELECT EXISTS (SELECT {truck_id} FROM Trucks WHERE id={truck_id});'
+    query_result = send_to_db(query)
+
+    if query_result[0]:
+        query = f"UPDATE Trucks SET provider_id={provider_id} WHERE id='{truck_id}'"
+        send_to_db(query)
+
+        return '', 200
+    else:
+        return '', 404
 
 
 @app.route('/truck', methods=['POST'])
@@ -64,13 +136,11 @@ def truck_post():
     providerid = request.form['provider']
 
     # Setup query and data.
-    cursor.execute('USE billdb;')
-    query = "INSERT INTO Trucks (id, provider_id) VALUES (%s, %s);"
-    data = (truckid, providerid)
+    send_to_db('USE billdb;')
+    query = f"INSERT INTO Trucks (id, provider_id) VALUES ({truckid}, {providerid});"
 
     # Insert the truck data in to the trucks table.
-    cursor.execute(query, data)
-    db.commit()
+    send_to_db(query)
 
     return '', 200
 
@@ -81,34 +151,20 @@ def truck_get(truckid):
      1st of the month to the current date.
      Returns 404 if the database does not contain trucks between the specified dates"""
 
-    _from = request.args['from']
-    _to = request.args['to']
+    _from = datetime.now().strftime('%Y%m01000000')
+    _to = datetime.now().strftime('%Y%m%d%H%M%S')
 
-    cursor.execute('USE db;')
+    item = requests.get(f'localhost:8090/unit/{truckid}', {'from': _from, 'to': _to})
 
-    # Query database for sessions between the specified dates.
-    query = 'SELECT id, date, bruto, neto, trucks_id FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
-
-    args = [truckid, _from, _to]
-    cursor.execute(query, args)
-
-    response = cursor.fetchall()
-    last_know_tara = response[-1][2] - response[-1][3]
-    sessions = [session[0] for session in response]
-
-    report = jsonify(id=truckid, tara=last_know_tara, sessions=sessions)
-
-    return report, 200
+    return item, 200
 
 
 @app.route('/bill', methods=['GET'])
 @app.route('/')
 def bill():
+    firstName = request.args.get('first_name')
     return '', 200
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
-
-cursor.close()
-db.close()

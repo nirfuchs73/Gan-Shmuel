@@ -18,24 +18,16 @@ def post_git():
     data = request.get_json(force=True)
     ref = data['ref']
     branch = ref.rsplit('/', 1)[1]
-    # repository = data['repository']
-    # repo_name = repository['name']
     pusher = data['pusher']
-    # pusher_name = pusher['name']
     pusher_email = pusher['email']
-    # print(ref)
-    # print(repo_name)
-    # print(pusher)
-    # print(pusher_name)
-    # print(pusher_email)
 
     success = True
 
     success = run_checkout(branch)
     if success:
         success = run_build()
-    if success:
-        success = run_tests()
+    # if success:
+    #     success = run_tests()
 
     send_notification(success, pusher_email)
 
@@ -45,78 +37,110 @@ def post_git():
     return 'JSON posted'
 
 
+@app.route("/rollback")
+def rollback_post():
+    print('-----------------------------------------------')
+    print('Running Rollback')
+    print('-----------------------------------------------')
+    success = True
+    success = run_checkout('master')
+    if success:
+        try:
+            run_process('git', 'checkout master~1')
+        except:
+            success = False
+    if success:
+        success = run_deploy()
+
+    send_notification(success, 'nirfuchs73@gmail.com')
+
+    return 'Rolling back one version...'
+
+
 def run_checkout(branch):
-    print('Run Checkout')
+    print('-----------------------------------------------')
+    print('Running Checkout')
+    print('-----------------------------------------------')
     result = True
     arguments = 'checkout ' + branch
     command = 'git'
     try:
-        if not run_process(command, arguments):
-            result = False
+        run_process(command, arguments)
         arguments = 'pull'
-        if not run_process(command, arguments):
-            result = False
+        run_process(command, arguments)
+        # if not run_process(command, arguments):
+        #     result = False
+        # arguments = 'pull'
+        # if not run_process(command, arguments):
+        #     result = False
     except:
         result = False
     return result
 
 
 def run_build():
-    print('Run Build')
+    print('-----------------------------------------------')
+    print('Running Build and Test')
+    print('-----------------------------------------------')
     result = True
-    command = 'docker'
-    # arguments = 'stop providers_db_test'
-    try:
-        if not run_process(command, 'stop providers_db_test'):
-            result = False
-        if not run_process(command, 'stop providers_be_test'):
-            result = False
-        if not run_process(command, 'stop weight_be_test'):
-            result = False
-        if not run_process(command, 'stop weight_db_test'):
-            result = False
-    except Exception as err:
-        print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose-test.yml')
-    docker_compose_pr = os.path.join('../../providers', 'docker-compose-test.yml')
+    if not os.path.exists(docker_compose_we):
+        docker_compose_we = os.path.join('weight', 'docker-compose-test.yml')
+    docker_compose_pr = os.path.join(
+        '../../providers', 'docker-compose-test.yml')
+    if not os.path.exists(docker_compose_pr):
+        docker_compose_pr = os.path.join(
+            'providers', 'docker-compose-test.yml')
 
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-    #     arguments_we = '--file ' + docker_compose_we + ' down'
-    #     arguments_pr = '--file ' + docker_compose_pr + ' down'
-    #     try:
-    #         if not run_process(command, arguments_we):
-    #             result = False
-    #         if not run_process(command, arguments_pr):
-    #             result = False
-    #     except Exception as err:
-    #         # result = False
-    #         print(err)
-
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
         try:
-            if not run_process(command, arguments_we):
-                result = False
-            if not run_process(command, arguments_pr):
-                result = False
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
         except:
             result = False
+
+        run_process('docker', 'logs weight_tests')
+        # run_process('docker', 'logs providers_be_test')
+        # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
+        # run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
+        # run_process('docker', 'exec -it providers_be_test echo "hello from container!"')
+
+        arguments_we = '-f ' + docker_compose_we + ' down'
+        arguments_pr = '-f ' + docker_compose_pr + ' down'
+        try:
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
+        except Exception as err:
+            # result = False
+            print(err)
     else:
         print('docker-compose file does not exist')
         result = False
     return result
 
 
-def run_tests():
-    print('Run Tests')
-    result = True
-    return result
+# def run_tests():
+#     print('Run Tests')
+#     result = True
+#     return result
 
 
 def send_notification(success, pusher_email):
-    print('Run Notification')
+    print('-----------------------------------------------')
+    print('Running Notification')
+    print('-----------------------------------------------')
     result = True
     gmail_user = 'ci.server73@gmail.com'
     gmail_password = '1q2w#E$R'
@@ -133,9 +157,9 @@ def send_notification(success, pusher_email):
     msg['Subject'] = subject
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
-    print(sent_from)
-    print(to)
-    print(msg.as_string())
+    # print(sent_from)
+    # print(to)
+    # print(msg.as_string())
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -152,42 +176,42 @@ def send_notification(success, pusher_email):
 
 
 def run_deploy():
-    print('Run Deploy')
+    print('-----------------------------------------------')
+    print('Running Deploy')
+    print('-----------------------------------------------')
     result = True
     command = 'docker'
-    try:
-        if not run_process(command, 'stop providers_db'):
-            result = False
-        if not run_process(command, 'stop providers_be'):
-            result = False
-        if not run_process(command, 'stop weight_be'):
-            result = False
-        if not run_process(command, 'stop weight_db'):
-            result = False
-    except Exception as err:
-        print(err)
 
     docker_compose_we = os.path.join('../../weight', 'docker-compose.yml')
+    if not os.path.exists(docker_compose_we):
+        docker_compose_we = os.path.join('weight', 'docker-compose.yml')
     docker_compose_pr = os.path.join('../../providers', 'docker-compose.yml')
+    if not os.path.exists(docker_compose_pr):
+        docker_compose_pr = os.path.join('providers', 'docker-compose.yml')
+
     if os.path.exists(docker_compose_we) and os.path.exists(docker_compose_pr):
         command = 'docker-compose'
-        # arguments_we = '--file ' + docker_compose_we + ' down'
-        # arguments_pr = '--file ' + docker_compose_pr + ' down'
-        # try:
-        #     if not run_process(command, arguments_we):
-        #         result = False
-        #     if not run_process(command, arguments_pr):
-        #         result = False
-        # except:
-        #     result = False
+        arguments_we = '--file ' + docker_compose_we + ' down'
+        arguments_pr = '--file ' + docker_compose_pr + ' down'
+        try:
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
+        except:
+            result = False
 
         arguments_we = '--file ' + docker_compose_we + ' up --build -d'
         arguments_pr = '--file ' + docker_compose_pr + ' up --build -d'
         try:
-            if not run_process(command, arguments_we):
-                result = False
-            if not run_process(command, arguments_pr):
-                result = False
+            run_process(command, arguments_we)
+            run_process(command, arguments_pr)
+            # if not run_process(command, arguments_we):
+            #     result = False
+            # if not run_process(command, arguments_pr):
+            #     result = False
         except:
             result = False
     else:
@@ -203,14 +227,21 @@ def run_process(command, arguments):
     args = [command]
     arguments_list = arguments.split(' ')
     args.extend(arguments_list)
+    print('-----------------------------------------------')
     print('Running: ' + command + ' ' + arguments)
+    print('-----------------------------------------------')
     # file = open(globals.log_file, 'a')
     result = subprocess.call(args)
     if result == 0:
-        print(command + ' ' + arguments + ' succeeded')
+        print('-----------------------------------------------')
+        print(command + ' ' + arguments + ' SUCCEEDED')
+        print('-----------------------------------------------')
+
         return True
     else:
-        print(command + ' ' + arguments + ' failed')
+        print('-----------------------------------------------')
+        print(command + ' ' + arguments + ' FAILED')
+        print('-----------------------------------------------')
         return False
 
 
