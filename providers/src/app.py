@@ -78,6 +78,23 @@ def rates():
     return "empy"
 
 
+@app.route('/truck', methods=['PUT'])
+def truck_put():
+    try:
+        truck_id = request.form['truck_id']
+        provider_id = request.form['provider_id']
+
+        query = 'UPDATE Trucks SET provider_id=%s WHERE id=%s'
+        data = [provider_id, truck_id]
+
+        cursor.execute(query, data)
+        db.commit()
+
+        return '', 200
+    except:
+        return '', 404
+
+
 @app.route('/truck', methods=['POST'])
 def truck_post():
     """Receives a truck id(licence plate number) and a provider from the user and insert
