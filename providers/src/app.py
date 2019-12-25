@@ -172,13 +172,6 @@ def truck_get(truckid):
     return '', 404
 
 
-@app.route('/bill', methods=['GET'])
-@app.route('/')
-def bill():
-    firstName = request.args.get('first_name')
-    return '', 200
-
-
 @app.route('/bill/<provider_id>', methods=['GET'])
 def bill(provider_id):
     start = request.args.get('from')
