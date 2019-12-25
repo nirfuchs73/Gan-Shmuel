@@ -157,7 +157,7 @@ def truck_get(truckid):
     _to = request.args['to']
 
     if _from == datetime.now().strftime('%Y%m01000000') and _to == datetime.now().strftime('%Y%m%d%H%M%S'):
-        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
+        item = requests.get(f'0.0.0.0:8090/item/{truckid}', {'from': _from, 'to': _to})
 
         return item, 200
     else:
