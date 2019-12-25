@@ -182,6 +182,8 @@ def bill(provider_id):
     transaction_list = []
 
     name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
+    receive = requests.get('localhost:8090/weight?from=' + start + '&to=' + end)
+
     '''
     # transaction_list = get /weight?from=start&to=end 
     # for transaction in transaction_list: 
