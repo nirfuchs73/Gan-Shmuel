@@ -233,7 +233,7 @@ def create_views_blueprint():
                 sum_containers+=float(res["weight"])
         return float(bruto)-float(trackTara)-float(sum_containers)
 
-    @bp.route('/weight2', methods=['POST'])
+    @bp.route('/weight', methods=['POST'])
     def weightPost():
         #get data from body
         direction=request.form.get('direction',"none")
