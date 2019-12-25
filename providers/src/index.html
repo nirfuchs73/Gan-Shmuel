@@ -1,69 +1,77 @@
 <html>
-    <head>
-        <script>
-            function get_truck(truck_id)
-            {
-                document.getElementById("");
-            }
-        </script>
-    </head>
+<script>
+        function get_truck()
+        {
+            var xhttp = new XMLHttpRequest();
+            var truck_id = document.getElementById("truck_id").value;
+            var from = document.getElementById("from").value;
+            var to = document.getElementById("to").value;
 
-    <body>
-        <!-- Check health -->
-        <form action="http://localhost:8080/health" method="get">
-            <h3>Check Health</h3>
-            <input type="submit" value="Health">
-        </form>
+            url = "http://localhost:8080/truck/" + truck_id + "?from=" + from + "&to=" + to;
 
-        <hr>
+            xhttp.open("GET", url);
+            xhttp.send();
+      }
+    </script>
+<head>
+</head>
 
-        <!-- Post provider -->
-        <form action="http://localhost:8080/provider" method="post">
-            <h3>Post Provider</h3>
-            Name: <input type="text" name="name"> <input type="submit" value="Post Provider">
-        </form>
+<body>
+<!-- Check health -->
+<form action="http://localhost:8080/health" method="get">
+    <h3>Check Health</h3>
+    <input type="submit" value="Health">
+</form>
 
-        <hr>
+<hr>
 
-        <!-- Get rates -->
-        <form action="http://localhost:8080/rates">
-            <h3>Get Rates</h3>
-            <input type="submit" value="Get Rates">
-        </form>
+<!-- Post provider -->
+<form action="http://localhost:8080/provider" method="post">
+    <h3>Post Provider</h3>
+    Name: <input type="text" name="name"> <input type="submit" value="Post Provider">
+</form>
 
-        <!-- Post rates -->
-        <form action="http://localhost:8080/rates" method="post">
-            <h3>Post Rates</h3>
-            <input type="text" name="file"> <input type="submit" value="Post file">
-        </form>
+<hr>
 
-        <hr>
+<!-- Get rates -->
+<form action="http://localhost:8080/rates">
+    <h3>Get Rates</h3>
+    <input type="submit" value="Get Rates">
+</form>
 
-        <!-- Post truck -->
-        <form action="http://localhost:8080/truck" method="post">
-            <h3>Post Truck</h3>
-            Truck Id: <input type="text" name="id">
-            Provider Id: <input type="text" name="provider">
-            <input type="submit" value="Post truck">
-        </form>
+<!-- Post rates -->
+<form action="http://localhost:8080/rates" method="post">
+    <h3>Post Rates</h3>
+    <input type="text" name="file"> <input type="submit" value="Post file">
+</form>
 
-        <hr>
+<hr>
 
-        <!-- Get truck -->
-        <form onsubmit="get_truck()">
-            <h3>Get Truck</h3>
-            Truck Id: <input type="text" id="truck_id">
-            From: <input type="text" name="from">
-            To: <input type="text" name="to">
-            <input type="submit" value="Get truck">
-        </form>
+<!-- Post truck -->
+<form action="http://localhost:8080/truck" method="post">
+    <h3>Post Truck</h3>
+    Truck Id: <input type="text" name="id">
+    Provider Id: <input type="text" name="provider">
+    <input type="submit" value="Post truck">
+</form>
 
-        <hr>
+<hr>
 
-        <!-- Get bill -->
-        <form action="http://localhost:8080/bill">
-            <h3>Get Bill</h3>
-            <input type="submit" value="?">
-        </form>
-    </body>
+<!-- Get truck -->
+<form>
+    <h3>Get Truck</h3>
+    Truck Id: <input type="text" id="truck_id">
+    From: <input type="text" id="from">
+    To: <input type="text" id="to">
+    <button type="button" value="Get truck" onclick="get_truck()">Get Truck</button>
+</form>
+
+<hr>
+
+<!-- Get bill -->
+<form action="http://localhost:8080/bill">
+    <h3>Get Bill</h3>
+    <input type="submit" value="?">
+</form>
+</body>
 </html>

@@ -156,12 +156,15 @@ def truck_get(truckid):
     _from = request.args['from']
     _to = request.args['to']
 
-    if _from == datetime.now().strftime('%Y%m01000000') and _to == datetime.now().strftime('%Y%m%d%H%M%S'):
-        item = requests.get(f'0.0.0.0:8090/item/{truckid}', {'from': _from, 'to': _to})
+    time_format = '%Y%m%d%H%M%S'
+
+    if _from == datetime.now().strftime('%Y%m01000000') and datetime.strptime(_to,
+                                                                              time_format) <= datetime.now():
+        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
         return item, 200
-    else:
-        return '', 404
+
+    return '', 404
 
 
 @app.route('/bill', methods=['GET'])

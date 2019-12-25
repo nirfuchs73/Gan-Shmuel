@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/geco.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/geco.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -200,6 +203,10 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="323" y="69" width="944" height="787" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1600.873@0.27.1600.873" timestamp="1577100908598" />
+    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup" timestamp="1577285365496">
+      <screen x="0" y="27" width="1600" height="873" />
+    </state>
+    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup/0.27.1600.873@0.27.1600.873" timestamp="1577285365496" />
     <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1577258612773">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
