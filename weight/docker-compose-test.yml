@@ -60,11 +60,14 @@ services:
     depends_on:
       - weight_be_test
       - weight_db_test
+    volumes:
+      - "tests_log:/testing.out"
 
 volumes: 
   db_save:
   in_volume:
   be_logs:
+  tests_log:
 
 networks: 
   weight_net_test:
