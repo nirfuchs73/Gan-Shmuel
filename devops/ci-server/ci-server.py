@@ -2,7 +2,10 @@ from flask import Flask, request
 import subprocess
 import os
 import smtplib
-from email.mime.text import MIMEText as text
+# from email.mime.text import MIMEText as text
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email import Encoders
 
 app = Flask(__name__)
 
@@ -31,7 +34,7 @@ def post_git():
 
     if success and branch == 'master':
         run_deploy()
-    
+
     send_notification(success, pusher_email)
 
     return 'JSON posted'
@@ -160,14 +163,18 @@ def send_notification(success, pusher_email):
     subject = message
     body = message
 
-    msg = text(body)
+    # msg = text(body)
+    msg = MIMEMultipart(body)
     msg['Subject'] = subject
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
-    # print(sent_from)
-    # print(to)
-    # print(msg.as_string())
 
+    part = MIMEBase('application', "octet-stream")
+    part.set_payload(open("results.txt", "rb").read())
+    Encoders.encode_base64(part)
+    part.add_header('Content-Disposition', 'attachment; filename="results.txt"')
+    msg.attach(part)
+    
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
