@@ -1,16 +1,24 @@
+import random
 from flask import Flask, request, Response, jsonify
 import requests
 import mysql.connector
 import csv
 import xlrd
+from datetime import datetime
 
 app = Flask(__name__)
 updated_rates_file = ""
 
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
+    try:
+        send_to_db_host("providers_db", sql_query)
+    except:
+        send_to_db_host("providers_db_test", sql_query)
+
+def send_to_db_host(host_name, sql_query):
     db = mysql.connector.connect(
-        host="providers_db",
+        host=host_name,
         port=3306,
         user="root",
         passwd="12345678",
@@ -37,7 +45,30 @@ def health():
 
 @app.route('/provider', methods=['POST'])
 def provider():
-    return "empty"
+    """Insert a provider to the Provider table in the billdb database."""
+
+
+    def id_in_db(id):
+        """Return true if the id number is in the table."""
+        query = 'SELECT EXISTS (SELECT id FROM Provider WHERE id=%s);'
+        cursor.execute(query, [id])
+
+        return cursor.fetchone()[0]
+
+
+    name = request.form['name']
+    id = int(random.random() * 999)
+
+    cursor.execute('USE billdb;')
+
+    # If the id number is in the table already, generate another and try again.
+    while id_in_db(id):
+        id = int(random.random() * 999)
+
+    cursor.execute('INSERT INTO Provider VALUES (%s, %s)', [id, name])
+    db.commit()
+
+    return jsonify(id=id), 200
 
 
 @app.route('/rates', methods=['POST', 'GET'])
@@ -91,24 +122,12 @@ def truck_get(truckid):
      1st of the month to the current date.
      Returns 404 if the database does not contain trucks between the specified dates"""
 
-    _from = request.args['from']
-    _to = request.args['to']
+    _from = datetime.now().strftime('%Y%m01000000')
+    _to = datetime.now().strftime('%Y%m%d%H%M%S')
 
-    cursor.execute('USE db;')
+    item = requests.get(f'localhost:8090/unit/{truckid}', {'from': _from, 'to': _to})
 
-    # Query database for sessions between the specified dates.
-    query = 'SELECT id, date, bruto, neto, trucks_id FROM sessions WHERE trucks_id = %s AND date > %s AND date < %s;'
-
-    args = [truckid, _from, _to]
-    cursor.execute(query, args)
-
-    response = cursor.fetchall()
-    last_know_tara = response[-1][2] - response[-1][3]
-    sessions = [session[0] for session in response]
-
-    report = jsonify(id=truckid, tara=last_know_tara, sessions=sessions)
-
-    return report, 200
+    return item, 200
 
 
 @app.route('/bill', methods=['GET'])
