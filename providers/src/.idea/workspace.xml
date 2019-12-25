@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.docker-compose.yml.swp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/rates.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,22 +35,22 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/index.html" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="src" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/PycharmProjects/Social_network_user_prediction/venv/bin/python" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -93,62 +96,66 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="474" y="52" width="642" height="820" key="#app/0.27.1600.873@0.27.1600.873" timestamp="1577295580777" />
-    <state x="258" y="121" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577295607017">
+    <state x="258" y="121" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577296508687">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="258" y="121" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1600.873@0.27.1600.873" timestamp="1577295607017" />
+    <state x="258" y="121" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1600.873@0.27.1600.873" timestamp="1577296508687" />
     <state width="760" height="466" key="DebuggerActiveHint" timestamp="1577178680724">
       <screen x="0" y="207" width="3520" height="873" />
     </state>
     <state width="760" height="466" key="DebuggerActiveHint/0.207.3520.873@0.207.3520.873" timestamp="1577178680724" />
-    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl" timestamp="1577278252295">
+    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl" timestamp="1577296057108">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577278252295" />
-    <state width="1577" height="255" key="GridCell.Tab.0.bottom" timestamp="1577287272463">
+    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577296057108" />
+    <state width="1577" height="321" key="GridCell.Tab.0.bottom" timestamp="1577301612661">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
-    <state width="1577" height="255" key="GridCell.Tab.0.center" timestamp="1577287272462">
+    <state width="1577" height="321" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577301612661" />
+    <state width="1577" height="321" key="GridCell.Tab.0.center" timestamp="1577301612660">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577287272462" />
-    <state width="1577" height="255" key="GridCell.Tab.0.left" timestamp="1577287272462">
+    <state width="1577" height="321" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577301612660" />
+    <state width="1577" height="321" key="GridCell.Tab.0.left" timestamp="1577301612657">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032799" />
-    <state width="1577" height="255" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577287272462" />
-    <state width="1577" height="255" key="GridCell.Tab.0.right" timestamp="1577287272463">
+    <state width="1577" height="321" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577301612657" />
+    <state width="1577" height="321" key="GridCell.Tab.0.right" timestamp="1577301612661">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
-    <state width="1577" height="255" key="GridCell.Tab.1.bottom" timestamp="1577287272464">
+    <state width="1577" height="321" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577301612661" />
+    <state width="1577" height="321" key="GridCell.Tab.1.bottom" timestamp="1577301612595">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
-    <state width="1577" height="255" key="GridCell.Tab.1.center" timestamp="1577287272464">
+    <state width="1577" height="321" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
+    <state width="1577" height="321" key="GridCell.Tab.1.center" timestamp="1577301612595">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
-    <state width="1577" height="255" key="GridCell.Tab.1.left" timestamp="1577287272463">
+    <state width="1577" height="321" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
+    <state width="1577" height="321" key="GridCell.Tab.1.left" timestamp="1577301612595">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032723" />
-    <state width="1577" height="255" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
-    <state width="1577" height="255" key="GridCell.Tab.1.right" timestamp="1577287272464">
+    <state width="1577" height="321" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
+    <state width="1577" height="321" key="GridCell.Tab.1.right" timestamp="1577301612595">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
-    <state x="289" y="98" key="SettingsEditor" timestamp="1577100683920">
+    <state width="1577" height="321" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
+    <state x="289" y="98" key="SettingsEditor" timestamp="1577296218916">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="289" y="98" key="SettingsEditor/0.27.1600.873@0.27.1600.873" timestamp="1577100683920" />
+    <state x="289" y="98" key="SettingsEditor/0.27.1600.873@0.27.1600.873" timestamp="1577296218916" />
+    <state width="800" height="437" key="XDebugger.FullValuePopup" timestamp="1577301789598">
+      <screen x="0" y="27" width="1600" height="873" />
+    </state>
+    <state width="800" height="437" key="XDebugger.FullValuePopup/0.27.1600.873@0.27.1600.873" timestamp="1577301789598" />
     <state x="456" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1577291888754">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
@@ -157,29 +164,35 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="323" y="69" width="944" height="787" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1600.873@0.27.1600.873" timestamp="1577100908598" />
-    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup" timestamp="1577285365496">
+    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup" timestamp="1577299222566">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup/0.27.1600.873@0.27.1600.873" timestamp="1577285365496" />
-    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1577286982666">
+    <state x="463" y="214" width="672" height="678" key="search.everywhere.popup/0.27.1600.873@0.27.1600.873" timestamp="1577299222566" />
+    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1577296299403">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.27.1600.873@0.27.1600.873" timestamp="1577286982666" />
+    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.27.1600.873@0.27.1600.873" timestamp="1577296299403" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>184</line>
-          <option name="timeStamp" value="1" />
+          <line>228</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app.py</url>
+          <line>204</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="msg" />
-        <watch expression="path" />
+        <watch expression="json.loads(receive.content)" />
+        <watch expression="transaction" />
+        <watch expression="transaction_list" />
       </configuration>
     </watches-manager>
   </component>

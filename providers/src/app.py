@@ -18,7 +18,7 @@ def send_to_db(sql_query):
     try:
         return send_to_db_host("localhost", sql_query)
     except:
-        return send_to_db_host("providers_db_test", sql_query)
+        return send_to_db_host("localhost", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -181,14 +181,56 @@ def bill(provider_id):
     truck_id = "77777"
     truck_list = []
     transaction_list = []
+    truck_count = 0
+    session_count = 0
+    output_list = []
 
     name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
-    receive = requests.get('localhost:8090/weight?from=' + start + '&to=' + end)
+    receive = requests.get('http://localhost:8090/weight?from=' + start + '&to=' + end)
+    transaction_list = json.loads(receive.content)
+    for transaction in transaction_list:
+        receive_truck = requests.get('http://localhost:8090/session/' + str(transaction['id']))
+        truck_id = str(json.loads(receive_truck.content)['id'])
+        if truck_id != "na":
+            query = send_to_db("SELECT provider_id FROM Trucks WHERE id=" + truck_id + ";")
+            if query:
+                if truck_id not in truck_list:
+                    truck_list.append(truck_id)
+
+            else:
+                transaction_list.remove(transaction)
+    truck_count = len(truck_list)
+    session_count = len(transaction_list)
+
+    transaction_list.sort(key=lambda s: s['produce'])
+
+    prev_prod = str(transaction_list[0]['produce'])
+    prod = ""
+    count = 1
+    for transaction in transaction_list[1:]:
+        prod = str(transaction['produce'])
+        if prod == prev_prod:
+            count += 1
+        else:
+            # create json for prev_db:
+            rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + " AND scope=" + provider_id + ";")
+            if not rate:
+                rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + "  AND scope='ALL';")
+            pay = rate * count
+            output_list.append(jsonify({'prod': prod, 'rate': rate, 'pay': pay}))
+
+            count = 1
+        prev_prod = prod
+
+
+
+
+
+
+
 
     '''
-    # transaction_list = get /weight?from=start&to=end 
-    # for transaction in transaction_list: 
-    # truck_id = get /session/<trans.id> 
+    
     # if truck_id!="na":
     if (send_to_db("SELECT provider_id FROM Trucks WHERE id=" + truck_id + ";"):
         if truck_id not in truck_list:
@@ -198,20 +240,22 @@ def bill(provider_id):
     
     truck_count = len(truck_list)
     session_count = len(transaction_list)
-
+    
     # for transaction in transaction_list:
     transaction_list.sort(key=lambda s: s['produce'])
-    results.sort(key=lambda s: s['BOX_coordinate_LefTop_Y'])
-    lines = sorted(lines, key=lambda k: k['page']['update_time'], reverse=True)
-
-    # arrange by list.produce
-    # prod = list.produce[0]
+    --
+    
+    # arrange by transaction_list.produce
+    # prod = transaction_list.produce[0]
+    
     # if prod == prev_prod:
     #       count ++
+    --
     # else:
     #    rate = (billdb) 
     #    if "SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope=provider_id;"
     #    else ""SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope='ALL';"
+    --
     #    pay = rate * count
     #
     #    create new json
