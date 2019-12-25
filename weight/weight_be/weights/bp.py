@@ -266,7 +266,7 @@ def create_views_blueprint():
 
             elif last_session["direction"]=="in" or last_session["direction"]=="none":
                 if force== 'False' or direction=="none":
-                    return BadRequest()
+                    return BadRequest("in can't arrive after in or none. for update send force=True")
                 else:
                     #update last row in
                     query="update transactions set direction='{}', datetime='{}',truck='{}', containers='{}', bruto={}, produce='{}' where id={};".format(direction,date_session,truck,containers,weight,produce,id_last_session)
@@ -281,7 +281,7 @@ def create_views_blueprint():
 
             if last_session["direction"]=="out":
                 if force == 'False':
-                    return BadRequest("out cant arrive after for update send force=True")
+                    return BadRequest("out cant arrive after out. for update send force=True")
                 else:
                     #update last row out
                     query="update transactions set datetime='{}',truckTara={},neto={},produce='{}' where id={};".format(date_session,weight,neto,produce,last_session["id"])
