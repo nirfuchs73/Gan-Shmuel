@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test_health.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +31,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/index.html" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager" selected="Python.test_health">
@@ -146,10 +144,10 @@
       <screen x="0" y="207" width="3520" height="873" />
     </state>
     <state width="760" height="466" key="DebuggerActiveHint/0.207.3520.873@0.207.3520.873" timestamp="1577178680724" />
-    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl" timestamp="1577100621959">
+    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl" timestamp="1577278252295">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577100621959" />
+    <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577278252295" />
     <state width="1577" height="255" key="GridCell.Tab.0.bottom" timestamp="1577270474532">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
