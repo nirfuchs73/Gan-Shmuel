@@ -12,6 +12,19 @@
             xhttp.open("GET", url);
             xhttp.send();
       }
+
+      function get_bill()
+        {
+            var xhttp = new XMLHttpRequest();
+            var truck_id = document.getElementById("truck_id").value;
+            var from = document.getElementById("from").value;
+            var to = document.getElementById("to").value;
+
+            url = "http://localhost:8080/truck/" + truck_id + "?from=" + from + "&to=" + to;
+
+            xhttp.open("GET", url);
+            xhttp.send();
+      }
     </script>
 <head>
 </head>

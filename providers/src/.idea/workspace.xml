@@ -2,49 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../providers_tests/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../providers_tests/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../providers_tests/test_health.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/rates.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/db_dump/sqldump.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/.browserslistrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/.eslintrc.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/babel.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/jest.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/public/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/App.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/assets/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/components/GetWeightItem.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/components/GetWeightTable.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/components/HelloWorld.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/shims-tsx.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/shims-vue.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/src/store/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/.eslintrc.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/custom-assertions/elementCount.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/custom-commands/customExecute.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/custom-commands/openHomepage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/custom-commands/openHomepageClass.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/globals.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/page-objects/homepage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/specs/test-with-pageobjects.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/e2e/specs/test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tests/unit/example.spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../weight/weight_fe/devweek/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose-test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../weight/docker-compose-mockups.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../weight/docker-compose-mockups.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../weight/weight_be/weights/bp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../weight/weight_be/weights/bp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../weight/weight_tests/test_health.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../weight/weight_tests/test_health.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,54 +149,54 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577278252295" />
-    <state width="1577" height="255" key="GridCell.Tab.0.bottom" timestamp="1577270474532">
+    <state width="1577" height="255" key="GridCell.Tab.0.bottom" timestamp="1577287272463">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577270474532" />
-    <state width="1577" height="255" key="GridCell.Tab.0.center" timestamp="1577270474526">
+    <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
+    <state width="1577" height="255" key="GridCell.Tab.0.center" timestamp="1577287272462">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577270474526" />
-    <state width="1577" height="255" key="GridCell.Tab.0.left" timestamp="1577270474525">
+    <state width="1577" height="255" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577287272462" />
+    <state width="1577" height="255" key="GridCell.Tab.0.left" timestamp="1577287272462">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032799" />
-    <state width="1577" height="255" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577270474525" />
-    <state width="1577" height="255" key="GridCell.Tab.0.right" timestamp="1577270474530">
+    <state width="1577" height="255" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577287272462" />
+    <state width="1577" height="255" key="GridCell.Tab.0.right" timestamp="1577287272463">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="255" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577270474530" />
-    <state width="1577" height="255" key="GridCell.Tab.1.bottom" timestamp="1577270474544">
+    <state width="1577" height="255" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
+    <state width="1577" height="255" key="GridCell.Tab.1.bottom" timestamp="1577287272464">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577270474544" />
-    <state width="1577" height="255" key="GridCell.Tab.1.center" timestamp="1577270474539">
+    <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
+    <state width="1577" height="255" key="GridCell.Tab.1.center" timestamp="1577287272464">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577270474539" />
-    <state width="1577" height="255" key="GridCell.Tab.1.left" timestamp="1577270474535">
+    <state width="1577" height="255" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
+    <state width="1577" height="255" key="GridCell.Tab.1.left" timestamp="1577287272463">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032723" />
-    <state width="1577" height="255" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577270474535" />
-    <state width="1577" height="255" key="GridCell.Tab.1.right" timestamp="1577270474542">
+    <state width="1577" height="255" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577287272463" />
+    <state width="1577" height="255" key="GridCell.Tab.1.right" timestamp="1577287272464">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="255" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577270474542" />
+    <state width="1577" height="255" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577287272464" />
     <state x="289" y="98" key="SettingsEditor" timestamp="1577100683920">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="289" y="98" key="SettingsEditor/0.27.1600.873@0.27.1600.873" timestamp="1577100683920" />
-    <state x="456" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1577256205112">
+    <state x="456" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1577291888754">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="456" y="291" key="com.intellij.ide.util.TipDialog/0.27.1600.873@0.27.1600.873" timestamp="1577256205112" />
+    <state x="456" y="291" key="com.intellij.ide.util.TipDialog/0.27.1600.873@0.27.1600.873" timestamp="1577291888754" />
     <state x="323" y="69" width="944" height="787" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1577100908598">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
