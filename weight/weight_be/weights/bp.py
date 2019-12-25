@@ -186,7 +186,6 @@ def create_views_blueprint():
         # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
     #    get_container_with_no_weight
    
-
     @bp.route('/session/<id>', methods=['GET'])
     def session(id):
         cdb = db.get_db()
