@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Regna Bootstrap Template</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="lib/animate/animate.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Regna
+    Theme URL: https://bootstrapmade.com/regna-bootstrap-onepage-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body>
+
+  <!--==========================
+  Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <a href="#post_weight">New Weight</a>
+        <!-- Uncomment below if you prefer to use a text logo -->
+        <!--<h1><a href="#hero">Regna</a></h1>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="#hero">Home</a></li>
+          <!-- <li><a href="#about">About Us</a></li> -->
+          <li><a href="#get_weight">Get weight</a></li>
+          <li><a href="#session">Get Session</a></li>
+          <li><a href="#get_item">Get Item</a></li>
+          <li class="menu-has-children"><a href="">Containers</a>
+            <ul>
+              <li><a href="#batchfile">batch file</a></li>
+              <li><a href="#unknown">unknown</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+
+
+  
+
+  <!--==========================
+    Hero Section
+  ============================-->
+  <section id="hero">
+    <div class="hero-container">
+      <h1>Welcome Gan Shmuel</h1>
+      <h2>the big company to produce fruits juices</h2>
+      <button id="button_health" class="btn-get-started">Check Health</button>
+    </div>
+  </section><!-- #hero -->
+
+  <main id="main">
+
+    <!--==========================
+        batchfile Section
+      ============================-->
+  <section id="batchfile">
+    <div class="container">
+      <div class="form-group"></div>
+      <div class="row about-container">
+        <div class="icon-box wow fadeInUp"><h1>Upload new File</h1></div>
+        <div class="icon-box wow fadeInUp">
+          <form action="/batch-weight" method="post" enctype="multipart/form-data">
+            <input id="input_file" type="file" name="file">
+            <input id="button_batch" type="submit" value="Upload">
+          </form>   
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- #batchfile -->
+
+  <!--==========================
+    unknown Section
+  ============================-->
+  <section id="unknown">
+    <div class="container">
+      <div class="form-group"></div>
+      <div class="row about-container">
+        <div class="icon-box wow fadeInUp"><h1>Unkown</h1></div>
+        <input type="button" class="button" id="button_unknown" value="select all containers without weight">
+        <h5 id="#list_unknown_containers"></h5>
+      </div>
+    </div>
+  </section>
+  <!-- #unknown -->
+
+  <!--==========================
+    get session Section
+  ============================-->
+  <section id="session">
+    <div class="container">
+      <div class="form-group"></div>
+      <div class="icon-box wow fadeInUp"><h1>session</h1></div>
+      
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="id_session">ID</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div> 
+      <div class="row about-container">
+        <input type="button" class="button" id="button_session" value="get session">
+        <h5 id="result_session"></h5>
+      </div>
+    </div>
+  </section>
+  <!-- #get session -->
+
+  <!--==========================
+    get item Section
+  ============================-->
+  <section id="get_item">
+    <div class="container">
+      <div class="form-group"></div>
+      <div class="row about-container">
+        <div class="icon-box wow fadeInUp"><h1>get item</h1></div>
+        <form>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="input_id_get_item">ID</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="input_from_get_item">Date from (yyyymmddhhmmss)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="input_to_get_item">Date To (yyyymmddhhmmss)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+          </div>
+
+         
+        <input type="button" class="button" id="button_get_item" value="get item">
+        <h5 id="item_details"></h5>
+      </div>
+    </div>
+  </section>
+  <!-- #get item -->
+
+<!--==========================
+    get weight
+  ============================-->
+  <section id="get_weight">
+    <div class="container">
+      <div class="icon-box wow fadeInUp"><h1>get weight</h1></div>
+      <form>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="input_from_get_weight">Date from (yyyymmddhhmmss)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Date from (yyyymmddhhmmss)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Filter (in/out/none)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <input type="button" class="button" id="button_get_weight" value="get weight">
+    </form>
+    <!-- for results -->
+      <table class="table" id="get_weight_table">
+        <tr>
+          <td>id</td>
+          <td>direction</td>
+          <td>bruto</td>
+          <td>neto</td>
+          <td>produce</td>
+          <td>containers</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+  <!-- #get weight -->
+
+<!--==========================
+    post weight
+  ============================-->
+  <section id="post_weight">
+    <div class="container">
+      <div class="icon-box wow fadeInUp"><h1>new weight</h1></div>
+      <form>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Directive</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Truck</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Containers</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Truck</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Weigth</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Unit</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Force</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+      <input type="button" class="button" id="button_post_weight" value="new weight">
+    </form>
+    <!-- for results -->
+      <h4 id="post_weight_result"></h4>
+    </div>
+  </section>
+  <!-- #post weight -->
+
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript Libraries -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/jquery/jquery-migrate.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/wow/wow.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/counterup/counterup.min.js"></script>
+  <script src="lib/superfish/hoverIntent.js"></script>
+  <script src="lib/superfish/superfish.min.js"></script>
+
+  <!-- Contact Form JavaScript File -->
+  <script src="contactform/contactform.js"></script>
+
+  <!-- Template Main Javascript File -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>
