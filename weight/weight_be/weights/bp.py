@@ -63,13 +63,13 @@ def create_views_blueprint():
                 from_str = get_checked_field_in_dict('from', request.args, str) 
                 to_str = get_checked_field_in_dict('to', request.args, str)
                 filter_str = get_checked_field_in_dict('filter', request.args, str)
-            # return jsonify(t_td, from_str, to_str, filter_str)
+                # return jsonify(t_td, from_str, to_str, filter_str)
                 # time format: yyyymmddhhmmss
                 time_format = '%Y%m%d%H%M%S'
                 if len(from_str) > 0:
                         from_dt = datetime.strptime(from_str, time_format)
                 else:
-                from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
+                    from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
                 if len(to_str) > 0:
                         to_dt = datetime.strptime(to_str, time_format)
                 else:
@@ -78,53 +78,53 @@ def create_views_blueprint():
                     filter_lst = filter_str.split(',')
                 else:
                     filter_lst = ['in', 'out', 'none']
-            # return jsonify(t_td, from_dt, to_dt, filter_lst)
-            if len(filter_lst) > 0 and '' not in filter_lst:
-                cdb = db.get_db()
+                # return jsonify(t_td, from_dt, to_dt, filter_lst)
+                if len(filter_lst) > 0 and '' not in filter_lst:
+                    cdb = db.get_db()
 
-                # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
-                query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
-                q_params = []
-                # q_params.extend([format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S')])
-                # q_params.extend([from_dt, to_dt])
-                # if len(filter_lst) == 1:
-                #     query = str().join([query, " direction = '%s';"])
-                #     q_params.append(filter_lst[0])
+                    # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                    query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                    q_params = []
+                    # q_params.extend([format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S')])
+                    # q_params.extend([from_dt, to_dt])
+                    # if len(filter_lst) == 1:
+                    #     query = str().join([query, " direction = '%s';"])
+                    #     q_params.append(filter_lst[0])
+                    # else:
+                    # direct = " direction IN ({});".format(build_query_str_from_seq(filter_lst, range(0, len(filter_lst))))
+                    # query = query.format(from_dt, to_dt, build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                    query = query.format(format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S'), build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                    # query = str().join([query, direct])
+                    # q_params.extend(filter_lst)
+                    # return jsonify(t_td, from_dt, to_dt, filter_lst, q_params, query)
+                    res_sel1 = cdb.execute_and_get_all(query, q_params)
+                    # return jsonify(res_sel1)
+                    if len(res_sel1) > 0:
+                        for t_trans in res_sel1:
+                            # trans = db.models.transaction(t_trans)
+                            neto_res = t_trans.get('neto')
+                            t_conts = t_trans.get('containers')
+                            if len(t_conts) > 0 :
+                                conts_t = t_conts.split(',')
+                                if len(conts_t) > 0 and '' not in conts_t:
+                                    conts.extend(conts_t)
+                                    conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), False)
+                                    # conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), True)
+                                    neto_query = "SELECT * FROM containers_registered WHERE (weight IS NULL OR unit IS NULL) AND container_id IN ({})".format(conts_qs)
+                                    # neto_lst = cdb.execute_and_get_all(neto_query, conts)
+                                    neto_lst = cdb.execute_and_get_all(neto_query)
+                                    neto_res = neto_res if neto_res is not None and neto_res != 0 and len(neto_lst) == 0 else 'na'
+                            res_d = {
+                                'id' : t_trans.get('id'),
+                                "direction": t_trans.get('direction'),
+                                "bruto": t_trans.get('bruto'), # assuming that bruto is stored as kg..
+                                "neto": neto_res, 
+                                "produce": t_trans.get('produce'),
+                                "containers": conts
+                            }
+                            res.append(res_d)
                 # else:
-                # direct = " direction IN ({});".format(build_query_str_from_seq(filter_lst, range(0, len(filter_lst))))
-                # query = query.format(from_dt, to_dt, build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
-                query = query.format(format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S'), build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
-                # query = str().join([query, direct])
-                # q_params.extend(filter_lst)
-                # return jsonify(t_td, from_dt, to_dt, filter_lst, q_params, query)
-                res_sel1 = cdb.execute_and_get_all(query, q_params)
-                # return jsonify(res_sel1)
-                if len(res_sel1) > 0:
-                    for t_trans in res_sel1:
-                        # trans = db.models.transaction(t_trans)
-                        neto_res = t_trans.get('neto')
-                        t_conts = t_trans.get('containers')
-                        if len(t_conts) > 0 :
-                            conts_t = t_conts.split(',')
-                            if len(conts_t) > 0 and '' not in conts_t:
-                                conts.extend(conts_t)
-                                conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), False)
-                                # conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), True)
-                                neto_query = "SELECT * FROM containers_registered WHERE (weight IS NULL OR unit IS NULL) AND container_id IN ({})".format(conts_qs)
-                                # neto_lst = cdb.execute_and_get_all(neto_query, conts)
-                                neto_lst = cdb.execute_and_get_all(neto_query)
-                                neto_res = neto_res if neto_res is not None and neto_res != 0 and len(neto_lst) == 0 else 'na'
-                        res_d = {
-                            'id' : t_trans.get('id'),
-                            "direction": t_trans.get('direction'),
-                            "bruto": t_trans.get('bruto'), # assuming that bruto is stored as kg..
-                            "neto": neto_res, 
-                            "produce": t_trans.get('produce'),
-                            "containers": conts
-                        }
-                        res.append(res_d)
-            # else:
-            #     raise BadRequest()
+                #     raise BadRequest()
         except Error as e:
             return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise InternalServerError()
         except TypeError as e:
