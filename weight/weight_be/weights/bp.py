@@ -13,7 +13,8 @@ from csv import DictReader
 
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
-    format_dt, get_dt, allowed_file, get_file_ext
+    format_dt, get_dt, allowed_file, get_file_ext,
+    get_dt_format_str
 )
 
 from flask import (
@@ -204,13 +205,6 @@ def create_views_blueprint():
         return res_json
 
 
-    @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
-    def item():
-        #return info of a container or truck with in defined period
-        cdb = db.get_db()
-        query="select container_id as id from containers_registered where weight is NULL"
-        res = cdb.execute_and_get_all(query)
-        return jsonify([ix['id'] for ix in res])
 
 
     return bp
