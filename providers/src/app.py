@@ -12,6 +12,8 @@ from collections import OrderedDict
 
 app = Flask(__name__)
 updated_rates_file = ""
+host_weight = "http://ec2-54-211-161-133.compute-1.amazonaws.com:8090"
+
 
 
 # Send query to the db database in the mysql container.
@@ -36,7 +38,7 @@ def send_to_db_host(host_name, sql_query):
 
     try:
         query_result = cursor.fetchall()
-    except mysql.connector.errors.InterfaceError:
+    except:
         query_result = None
 
     cursor.close()
@@ -192,7 +194,7 @@ def truck_get(truckid):
     _to_in_format = datetime.strptime(_to, '%Y%m%d%H%M%S')
 
     if _from_in_format == first_of_month and _to_in_format <= now:
-        item = requests.get(f'http://localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
+        item = requests.get(f'{host_weight}/item/{truckid}', {'from': _from, 'to': _to})
 
         return item, 200
 
@@ -215,12 +217,12 @@ def bill(provider_id):
     name = send_to_db("SELECT name FROM Provider WHERE id=" + provider_id + ";")[0][0]
 
     # get list of transactions between given dates:
-    receive = requests.get("http://localhost:8090/weight?from=" + start + "&to=" + end + "&filter=out")
+    receive = requests.get(host_weight + "/weight?from=" + start + "&to=" + end + "&filter=out")
     transaction_list = json.loads(receive.content)
     
     for transaction in transaction_list:
         # get truck id assosiated with transaction
-        receive_truck = requests.get('http://localhost:8090/session/' + str(transaction['id']))
+        receive_truck = requests.get(host_weight + "/session/" + str(transaction['id']))
         # check if truck belongs to given provider
         truck_id = str(json.loads(receive_truck.content)['truck'])
         app.logger.info("truck-id: " + truck_id)
