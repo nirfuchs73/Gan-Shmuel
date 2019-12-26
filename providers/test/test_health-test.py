@@ -26,17 +26,6 @@ class FlaskTestCase(unittest.TestCase):
         response = requests.post(url=URL, data={'name': 'test_please_remove'})
         self.assertEqual(response.status_code, 200)
 
-    def test_rates_post(self):
-       file = "in/test1.xlsx"
-        print('post/rates_test')
-
-        with open(file, 'rb') as f:
-            response = requests.post(f'http://localhost:8080/rates', files={file: f})
-            if response == "<Response [500]>":
-                self.assertEqual(response.status_code, 500)
-            else:
-                if response == "<Response [500]>":
-                    self.assertEqual(response.status_code, 200)
     def test_rates_get(self):
         URL = f"http://providers_be_test:8080/rates"
         response = requests.get(url=URL) 
