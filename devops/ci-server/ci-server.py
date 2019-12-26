@@ -33,7 +33,9 @@ def post_git():
     #     success = run_tests()
 
     if success and branch == 'master':
-        run_deploy()
+        success = check_status()
+        if success:
+            run_deploy()
 
     send_notification(success, pusher_email)
 
@@ -49,16 +51,19 @@ def rollback_post():
     head = run_process('git', 'rev-parse --short HEAD')
     master = run_process('git', 'rev-parse --short master')
     # master_1 = run_process('git', 'rev-parse --short master~1')
+    print('HEAD=', head)
+    print('master=', master)
 
     branch = 'master'
-    if head == master:
+    if str(head) == str(master):
         branch = 'master~1'
 
     # success = run_checkout('master')
     if success:
         try:
             # run_process('git', 'checkout master~1')
-            run_process('git', 'checkout ' + branch)
+            # run_process('git', 'checkout ' + branch)
+            run_process('git', 'checkout master')
         except Exception as err:
             print(err)
             # success = False
@@ -141,12 +146,6 @@ def run_build():
     return result
 
 
-# def run_tests():
-#     print('Run Tests')
-#     result = True
-#     return result
-
-
 def send_notification(success, pusher_email):
     print('-----------------------------------------------')
     print('Running Notification')
@@ -158,6 +157,7 @@ def send_notification(success, pusher_email):
     to = [pusher_email, 'nirfuchs73@gmail.com']
 
     message = 'Build completed successfully'
+    print('success=',success)
     if not success:
         message = 'Build failed'
     subject = message
@@ -169,8 +169,8 @@ def send_notification(success, pusher_email):
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
 
-    weight_tests = os.path.join('tests', 'weight-tests.log')
-    providers_tests = os.path.join('tests', 'providers-tests.log')
+    weight_tests = os.path.join('tests', 'weight-tests.txt')
+    providers_tests = os.path.join('tests', 'providers-tests.txt')
 
     files = [weight_tests, providers_tests]
     # get all the attachments
@@ -265,6 +265,21 @@ def run_process(command, arguments):
         print('-----------------------------------------------')
         print(command + ' ' + arguments + ' FAILED')
         print('-----------------------------------------------')
+        return False
+
+
+def check_status():
+    weight_tests = os.path.join('tests', 'weight-tests.txt')
+    providers_tests = os.path.join('tests', 'providers-tests.txt')
+    weight_status = subprocess.check_output(['tail', '-1', weight_tests])
+    providers_status = subprocess.check_output(['tail', '-1', providers_tests])
+
+    w_status = b'OK' in weight_status
+    p_status = b'OK' in providers_status
+
+    if w_status and p_status:
+        return True
+    else:
         return False
 
 
