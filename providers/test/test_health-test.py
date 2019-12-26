@@ -66,7 +66,7 @@ class FlaskTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    tests_log_file = os.path.join('tests', 'providers-tests.log')
+    tests_log_file = os.path.join('tests', 'providers-tests.txt')
     with open(tests_log_file, 'w') as f:
         main(f)
     with open(tests_log_file, 'r') as f:
