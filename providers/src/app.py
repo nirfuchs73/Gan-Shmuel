@@ -114,22 +114,11 @@ def provider():
 
 @app.route('/rates', methods=['POST', 'GET'])
 def rates():
-    # global updated_rates_file
-
+    global updated_rates_file
     if request.method == 'GET':
-        path = os.popen('cat bin/rates.txt').read().rstrip().replace('/', '')
-        file = os.listdir(path)[0]
-
-        wb = xlrd.open_workbook(path + '/' + file)
-        sheet = wb.sheet_by_index(0)
-        data = str(sheet.row_values(0))[1:-1] + '<br>'
-
-        for i in range(1, sheet.nrows):
-            data += str(sheet.row_values(i))[1:-1] + '<br>'
-
+        path = "in/" + updated_rates_file
         try:
-            return data
-            # return send_file(path, as_attachment=True)
+            return send_file(path, as_attachment=True)
         except FileNotFoundError:
             return "file not found 404"
 
@@ -259,6 +248,7 @@ def bill(provider_id):
     # sort transactions by produce
     transaction_list.sort(key=lambda s: s['produce'])
     # initialize vars:
+    transaction = transaction_list[-1]
     prev_prod = str(transaction['produce'])
     count = 1
     for transaction in transaction_list[1:]:

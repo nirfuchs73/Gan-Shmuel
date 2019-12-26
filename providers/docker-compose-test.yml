@@ -41,7 +41,7 @@ services:
         - DB_USER='root'
         - DB_PW='12345678'
     ports: 
-      - "8080:8080"
+      - "8082:8080"
     volumes: 
        - "./src/in:/in"
     depends_on:
@@ -50,19 +50,19 @@ services:
     networks: 
       - providers_net_test
 
-  providers_tests:
-    container_name: providers_tests
-    build: 
-      context: ./providers_tests
-      dockerfile: Dockerfile
-    networks: 
-      - providers_net_test
-    depends_on:
-      - providers_db_test
-      - providers_be_test
-    container_name: providers_tests
-    depends_on:
-        - providers_db_test    
+  # providers_tests:
+  #   container_name: providers_tests
+  #   build: 
+  #     context: ./providers_tests
+  #     dockerfile: Dockerfile
+  #   networks: 
+  #     - providers_net_test
+  #   depends_on:
+  #     - providers_db_test
+  #     - providers_be_test
+  #   container_name: providers_tests
+  #   depends_on:
+  #       - providers_db_test    
       
   #TEST CONTAINER - uses the dockerfile in ./src/Dockerfile
   providers_tests:
@@ -71,12 +71,12 @@ services:
       context: "./test"
       dockerfile: "Dockerfile-test"
     networks: 
-    - providers_net_test
+      - providers_net_test
     depends_on:
-    - providers_db_test
-    - providers_be_test
+      - providers_db_test
+      - providers_be_test
     volumes:
-    - "/home/ubuntu/Gan-Shmuel/tests:/app/tests"
+      - "/home/ubuntu/Gan-Shmuel/tests:/app/tests"
 
 volumes: 
   db_save:

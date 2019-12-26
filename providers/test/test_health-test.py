@@ -21,7 +21,7 @@ class FlaskTestCase(unittest.TestCase):
 
     URL = f"http://providers_be_test:8080/provider"
     response = requests.post(url=URL, data={'name': 'test_please_remove'})
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     def test_provider(self):
         URL = f"http://providers_be_test:8080/provider"
@@ -32,7 +32,7 @@ class FlaskTestCase(unittest.TestCase):
 
     URL = f"http://providers_be_test:8080/rates"
     response = requests.post(url=URL, data={'file': 'test_please_delete'})
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     def test_rates_post(self):
         URL = f"http://providers_be_test:8080/rates"
@@ -43,7 +43,7 @@ class FlaskTestCase(unittest.TestCase):
 
     URL = f"http://providers_be_test:8080/rates"
     response = requests.get(url=URL)
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     
     def test_rates_get(self):
@@ -58,7 +58,7 @@ class FlaskTestCase(unittest.TestCase):
     URL = f"http://providers_be_test:8080/truck?truck_id=77777&provider_id=2"
     response = requests.put(
         url=URL, data={'truck_id': '77777', 'provider_id': 2})
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     def test_truck_put(self):
         URL = f"http://providers_be_test:8080/truck?truck_id=77777&provider_id=2"
@@ -69,7 +69,7 @@ class FlaskTestCase(unittest.TestCase):
 
     URL = f"http://providers_be_test:8080/truck"
     response = requests.post(url=URL, data={'id': 'test', 'provider': 0})
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     def test_truck_post(self):
         URL = f"http://providers_be_test:8080/truck"
@@ -80,7 +80,7 @@ class FlaskTestCase(unittest.TestCase):
     URL = f"http://providers_be_test:8080/truck"
     response = requests.get(
         url=URL, data={'from': '200001010000', 'to': '205001010000'})
-    status = 'bad status code: ' + response.status_code
+    status = 'bad status code: ' + str(response.status_code)
     @unittest.skipIf(response.status_code != 200, status)
     def test_truck_get(self):
         URL = f"http://providers_be_test:8080/truck"
