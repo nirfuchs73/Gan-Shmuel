@@ -3,3 +3,5 @@ run demo 2
 run demo 3
 run demo 4
 run demo 5
+run demo 6
+
