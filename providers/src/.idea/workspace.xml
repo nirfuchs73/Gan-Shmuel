@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,46 +107,46 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577296057108" />
-    <state width="1577" height="323" key="GridCell.Tab.0.bottom" timestamp="1577350925285">
+    <state width="1577" height="334" key="GridCell.Tab.0.bottom" timestamp="1577355472329">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="323" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577350925285" />
-    <state width="1577" height="323" key="GridCell.Tab.0.center" timestamp="1577350925284">
+    <state width="1577" height="334" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577355472329" />
+    <state width="1577" height="334" key="GridCell.Tab.0.center" timestamp="1577355472328">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="323" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577350925284" />
-    <state width="1577" height="323" key="GridCell.Tab.0.left" timestamp="1577350925283">
+    <state width="1577" height="334" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577355472328" />
+    <state width="1577" height="334" key="GridCell.Tab.0.left" timestamp="1577355472328">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032799" />
-    <state width="1577" height="323" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577350925283" />
-    <state width="1577" height="323" key="GridCell.Tab.0.right" timestamp="1577350925284">
+    <state width="1577" height="334" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577355472328" />
+    <state width="1577" height="334" key="GridCell.Tab.0.right" timestamp="1577355472329">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="323" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577350925284" />
-    <state width="1577" height="323" key="GridCell.Tab.1.bottom" timestamp="1577350925189">
+    <state width="1577" height="334" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577355472329" />
+    <state width="1577" height="334" key="GridCell.Tab.1.bottom" timestamp="1577355472264">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="323" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577350925189" />
-    <state width="1577" height="323" key="GridCell.Tab.1.center" timestamp="1577350925187">
+    <state width="1577" height="334" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577355472264" />
+    <state width="1577" height="334" key="GridCell.Tab.1.center" timestamp="1577355472263">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="323" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577350925187" />
-    <state width="1577" height="323" key="GridCell.Tab.1.left" timestamp="1577350925185">
+    <state width="1577" height="334" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577355472263" />
+    <state width="1577" height="334" key="GridCell.Tab.1.left" timestamp="1577355472263">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032723" />
-    <state width="1577" height="323" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577350925185" />
-    <state width="1577" height="323" key="GridCell.Tab.1.right" timestamp="1577350925188">
+    <state width="1577" height="334" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577355472263" />
+    <state width="1577" height="334" key="GridCell.Tab.1.right" timestamp="1577355472263">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="323" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577350925188" />
+    <state width="1577" height="334" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577355472263" />
     <state x="289" y="98" key="SettingsEditor" timestamp="1577341829344">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
@@ -175,14 +177,14 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>191</line>
-          <option name="timeStamp" value="18" />
+          <line>136</line>
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="os.listdir(path)[0]" language="Python" />
+        <watch expression="jsonify(item.text)" language="Python" />
       </configuration>
     </watches-manager>
   </component>

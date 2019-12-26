@@ -187,7 +187,7 @@ def truck_get(truckid):
     if _from_in_format == first_of_month and _to_in_format <= now:
         item = requests.get(f'http://localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
-        return item, 200
+        return jsonify(item.text), 200
 
     return '', 404
 

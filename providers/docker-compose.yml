@@ -6,8 +6,8 @@ services:
   db:
     container_name: 'providers_db'
     image: mysql:8.0.18
-    # ports:
-    #   - "3306:3306"
+    ports:
+        - "3306:3306"
     volumes:
       - "./sql_scripts:/docker-entrypoint-initdb.d"
       # - "./db:/var/lib/mysql"
@@ -20,9 +20,9 @@ services:
       # MYSQL_USER: 'root'
       MYSQL_PASSWD: '12345678'
       MYSQL_ROOT_PASSWORD: '12345678'
-    #ports:
+      # ports:
       # Opens port 3307 on the container
-      # - '3306:3306'
+      # - "3306:3306"
       # Where our data will be persisted
     networks: 
       - providers_net
