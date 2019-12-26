@@ -12,14 +12,17 @@ from collections import OrderedDict
 
 app = Flask(__name__)
 updated_rates_file = ""
+host_weight = "http://ec2-54-211-161-133.compute-1.amazonaws.com:8090"
+
 
 
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
+        # return send_to_db_host("localhost", sql_query)
         return send_to_db_host("providers_db", sql_query)
     except:
-        return send_to_db_host("providers_db", sql_query)
+        return send_to_db_host("providers_db_test", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -36,7 +39,7 @@ def send_to_db_host(host_name, sql_query):
 
     try:
         query_result = cursor.fetchall()
-    except mysql.connector.errors.InterfaceError:
+    except:
         query_result = None
 
     cursor.close()
@@ -61,6 +64,12 @@ def product_json(prev_prod, provider_id, count, transaction):
     pay = rate * count * amount
     return {'prod': prev_prod, 'count': count, 'amount': amount, 'rate': rate, 'pay': pay}
 
+
+
+@app.route('/')
+def index():
+    # return open('index.html').read()
+    return open('/src/index.html').read()
 
 
 @app.route('/health', methods=['GET'])
@@ -108,9 +117,19 @@ def rates():
     # global updated_rates_file
 
     if request.method == 'GET':
-        path = os.popen('cat src/bin/rates.txt').read().rstrip()
+        path = os.popen('cat bin/rates.txt').read().rstrip().replace('/', '')
+        file = os.listdir(path)[0]
+
+        wb = xlrd.open_workbook(path + '/' + file)
+        sheet = wb.sheet_by_index(0)
+        data = str(sheet.row_values(0))[1:-1] + '<br>'
+
+        for i in range(1, sheet.nrows):
+            data += str(sheet.row_values(i))[1:-1] + '<br>'
+
         try:
-            return send_file(path, as_attachment=True)
+            return data
+            # return send_file(path, as_attachment=True)
         except FileNotFoundError:
             return "file not found 404"
 
@@ -181,15 +200,18 @@ def truck_get(truckid):
     _from = request.args['from']
     _to = request.args['to']
 
-    time_format = '%Y%m%d%H%M%S'
+    now = datetime.today()
+    first_of_month = datetime(now.year, now.month, 1)
+    _from_in_format = datetime.strptime(_from, '%Y%m01000000')
+    _to_in_format = datetime.strptime(_to, '%Y%m%d%H%M%S')
 
-    if _from == datetime.now().strftime('%Y%m01000000') and datetime.strptime(_to,
-                                                                              time_format) <= datetime.now():
-        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
+    if _from_in_format == first_of_month and _to_in_format <= now:
+        item = requests.get(f'{host_weight}/item/{truckid}', {'from': _from, 'to': _to})
 
-    return item, 200
+        return item, 200
 
-    return '', 404
+
+    return 'ERROR', 404
   
 
 @app.route('/bill/<provider_id>', methods=['GET'])
@@ -208,12 +230,12 @@ def bill(provider_id):
     name = send_to_db("SELECT name FROM Provider WHERE id=" + provider_id + ";")[0][0]
 
     # get list of transactions between given dates:
-    receive = requests.get("http://localhost:8090/weight?from=" + start + "&to=" + end + "&filter=out")
+    receive = requests.get(host_weight + "/weight?from=" + start + "&to=" + end + "&filter=out")
     transaction_list = json.loads(receive.content)
     
     for transaction in transaction_list:
         # get truck id assosiated with transaction
-        receive_truck = requests.get('http://localhost:8090/session/' + str(transaction['id']))
+        receive_truck = requests.get(host_weight + "/session/" + str(transaction['id']))
         # check if truck belongs to given provider
         truck_id = str(json.loads(receive_truck.content)['truck'])
         app.logger.info("truck-id: " + truck_id)
@@ -263,6 +285,7 @@ def bill(provider_id):
 
     bill = OrderedDict({'id': provider_id, 'name': name, 'from': start, 'to': end, 'truckCount': truck_count, 'sessionCount': session_count, 'products': prod_list, 'total': total_pay})
     return jsonify(bill)
+
 
 
 if __name__ == '__main__':

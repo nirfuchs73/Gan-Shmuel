@@ -114,7 +114,7 @@ class MyDb(object):
             cur.execute(query, self.__check__params(params))
             res = 1  #cur.rowcount
             cur.close()
-            # self.commit()
+            self.commit()
             return res
         except Error as e:
             raise

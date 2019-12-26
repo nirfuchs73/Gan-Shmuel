@@ -13,6 +13,18 @@
             xhttp.send();
       }
 
+      function put_truck()
+        {
+            var xhttp = new XMLHttpRequest();
+            var truck_id = document.getElementById("put_truck_id").value;
+            var provider_id = document.getElementById("put_provider_id").value;
+
+            url = "http://localhost:8080/truck?provider_id=" + provider_id + "&truck_id=" + truck_id;
+
+            xhttp.open("PUT", url);
+            xhttp.send();
+      }
+
       function get_bill()
         {
             var xhttp = new XMLHttpRequest();
@@ -25,7 +37,12 @@
             xhttp.open("GET", url);
             xhttp.send();
       }
-    </script>
+
+
+
+
+
+</script>
 <head>
 </head>
 
@@ -81,6 +98,15 @@
 
 <hr>
 
+<!-- Put truck -->
+<form>
+    <h3>Put Truck</h3>
+    Truck Id: <input type="text" id="put_truck_id">
+    Provider Id: <input type="text" id="put_provider_id">
+    <button type="button" value="Put truck" onclick="put_truck()">Put Truck</button>
+</form>
+
+<hr>
 <!-- Get bill -->
 <form>
     <h3>Get Bill</h3>

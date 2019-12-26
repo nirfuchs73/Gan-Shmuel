@@ -45,6 +45,7 @@ class FlaskTestCase(unittest.TestCase):
     response = requests.get(url=URL)
     status = 'bad status code: ' + response.status_code
     @unittest.skipIf(response.status_code != 200, status)
+    
     def test_rates_get(self):
         URL = f"http://providers_be_test:8080/rates"
         response = requests.get(url=URL) 
@@ -72,7 +73,7 @@ class FlaskTestCase(unittest.TestCase):
     @unittest.skipIf(response.status_code != 200, status)
     def test_truck_post(self):
         URL = f"http://providers_be_test:8080/truck"
-        response = requests.post(url=URL, data={'id': 'test', 'provider': 0})
+        response = requests.post(url=URL, data={'id': 'test', 'provider_id': 0})
         self.assertEqual(response.status_code, 200)
 
 
