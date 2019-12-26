@@ -3,8 +3,10 @@
 
 from datetime import datetime, timezone
 from io import StringIO
+from pathlib import Path
 # from sys import stdin, stderr, stdout
 import sys
+from flask import current_app, g
 
 
 def get_dt_format_str():
@@ -42,7 +44,26 @@ def dbg_format(data,debug=False):
 def dbg_print(data, debug=False, file=sys.stdout):
     if debug:
         print(dbg_format(data,debug), file=file)
-        
+
+def get_logger_path(app=current_app):
+    log_path = Path(
+        app.instance_path, 
+        'log-{}-{}.log'.format(app.config.get('SECRET_KEY'), get_dt(True))
+    )
+    return log_path
+
+def get_logger(app=current_app):
+    if 'weight_flask_app_logger' not in g:
+        log_path = get_logger_path(app)
+        g.weight_flask_app_logger = log_path.open('w')
+    return g.weight_flask_app_logger
+
+def write_to_logger(data, to_debug_str=False):
+    if to_debug_str:
+        dbg_print(data, True, file=get_logger())
+    else:
+        print(data, file=get_logger())
+
 def check_field_in_dict(key, arg_dict, val_type):
     return key in arg_dict and \
             isinstance(arg_dict.get(key), val_type)
@@ -52,8 +73,33 @@ def get_checked_field_in_dict(key, arg_dict, val_type, default=None):
     if check_field_in_dict(key, arg_dict, val_type):
         return arg_dict.get(key, res_tmp)
     else:
-        return res_tmp        
-        
+        return res_tmp
+
+def build_query_str_from_seq(seq, indxs_as_str=tuple(), as_ps=True):
+    query_str = ''
+    if isinstance(seq, list) or isinstance(seq, tuple):
+        if len(seq) > 0:
+            for i in range(0,len(seq)):
+                if as_ps:
+                    param = "%s," if i not in indxs_as_str else "'%s',"
+                    query_str = str().join([query_str, param])
+                else:
+                    param = "{}," if i not in indxs_as_str else "'{}',"
+                    query_str = str().join([query_str, param.format(seq[i])])
+            query_str = query_str.rstrip(',')
+    elif isinstance(seq, dict):
+        if len(seq) > 0:
+            for k,v in seq.items():
+                if as_ps:
+                    param = '%({})s,' if k not in indxs_as_str else "'%({})s',"
+                    query_str = str().join([query_str, param.format(k)])
+                else:
+                    param = '{},' if k not in indxs_as_str else "'{}',"
+                    query_str = str().join([query_str, param.format(v)])
+            query_str = query_str.rstrip(',')
+    else:
+        raise TypeError
+    return query_str
         
         # gilads utils
 

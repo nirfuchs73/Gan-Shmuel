@@ -18,7 +18,11 @@ services:
         - DB_PW='1111'
     ports: 
       - "8089:8090"
+    volumes:
+      - in_volume:/app/in  
     restart: always
+    volumes: 
+      - "be_logs:/app/instance"
     networks: 
       - weight_net_test
 
@@ -56,9 +60,14 @@ services:
     depends_on:
       - weight_be_test
       - weight_db_test
+    volumes:
+      - "/home/ubuntu/Gan-Shmuel/tests:/app/tests"
 
 volumes: 
   db_save:
+  in_volume:
+  be_logs:
+  tests_log:
 
 networks: 
   weight_net_test:

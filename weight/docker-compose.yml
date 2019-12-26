@@ -19,6 +19,8 @@ services:
     volumes:
       - in_volume:/app/in     
     restart: always
+    volumes: 
+      - "be_logs:/app/instance"
     networks: 
       - weight_net
 
@@ -49,6 +51,7 @@ services:
 volumes: 
   db_save:
   in_volume:
+  be_logs:
 
 networks: 
   weight_net:

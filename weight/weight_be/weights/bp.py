@@ -14,7 +14,7 @@ from csv import DictReader
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
     format_dt, get_dt, allowed_file, get_file_ext,
-    get_dt_format_str
+    get_dt_format_str,build_query_str_from_seq
 )
 
 from flask import (
@@ -25,11 +25,13 @@ from flask import (
 
 from datetime import datetime, timezone, timedelta
 
+from mysql.connector import errorcode, Error
+
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest, InternalServerError
 from werkzeug.utils import secure_filename
 
-from . import db
+from . import db, utils
 # from .api.unknown import my_func as get_container_with_no_weight
 
 def create_views_blueprint():
@@ -49,81 +51,92 @@ def create_views_blueprint():
         return jsonify({'message':"Failure", 'status':500})
         
         
-    @bp.route('/weight', methods=['GET', 'POST'])
-    def weight():
-        '''
-            POST /weight
-                - direction=in/out/none
-                - truck=<license> (If weighing a truck. Otherwise "na")
-                - containers=str1,str2,... comma delimited list of container ids
-                - weight=<int>
-                - unit=kg/lbs {precision is ~5kg, so dropping decimal is a non-issue}
-                - force=true/false { see logic below }
-                - produce=<str> { id of produce, e.g. "orange", "tomato", ... OR "na" if enpty}
-                Records data and server date-time and returns a json object with a unique weight.
-                Note that "in" & "none" will generate a new session id, and "out" will return session id of previous "in" for the truck.
-                "in" followed by "in" OR "out" followed by "out":
-                - if force=false will generate an error
-                - if force=true will over-write previous weigh of same truck
-                "out" without an "in" will generate error
-                "none" after "in" will generate error
-                Return value on success is:
-                { "id": <str>, 
-                "truck": <license> or "na",
-                "bruto": <int>,
-                ONLY for OUT:
-                "truckTara": <int>,
-                "neto": <int> or "na" // na if some of containers have unknown tara
-                }
-            GET /weight?from=t1&to=t2&filter=f
-                - t1,t2 - date-time stamps, formatted as yyyymmddhhmmss. server time is assumed.
-                - f - comma delimited list of directions. default is "in,out,none"
-                default t1 is "today at 000000". default t2 is "now". 
-                returns an array of json objects, one per weighing (batch NOT included):
-                [{ "id": <id>,
-                "direction": in/out/none,
-                "bruto": <int>, //in kg
-                "neto": <int> or "na" // na if some of containers have unknown tara
-                "produce": <str>,
-                "containers": [ id1, id2, ...]
-                },...]
-        '''
+    @bp.route('/weight', methods=['GET'])
+    def get_weight():
         errors = []
+        res = []
+        query = ''
+        neto_query = ''
+        conts = []
         try:
-            if request.method == 'GET':
                 t_td = datetime.today()
                 from_str = get_checked_field_in_dict('from', request.args, str) 
                 to_str = get_checked_field_in_dict('to', request.args, str)
                 filter_str = get_checked_field_in_dict('filter', request.args, str)
+            # return jsonify(t_td, from_str, to_str, filter_str)
                 # time format: yyyymmddhhmmss
                 time_format = '%Y%m%d%H%M%S'
                 if len(from_str) > 0:
-                    try:
                         from_dt = datetime.strptime(from_str, time_format)
-                    except ValueError as e:
-                        raise BadRequest
                 else:
-                    from_dt = datetime(
-                        t_td.year, t_td.month, t_td.day, 
-                        0,0,0,0, t_td.tzinfo
-                    )
+                from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
                 if len(to_str) > 0:
-                    try:
                         to_dt = datetime.strptime(to_str, time_format)
-                    except ValueError as e:
-                        raise BadRequest
                 else:
                     to_dt = get_dt()
                 if len(filter_str) > 0:
                     filter_lst = filter_str.split(',')
                 else:
                     filter_lst = ['in', 'out', 'none']
-            elif request.method == 'POST':
-                pass
+            # return jsonify(t_td, from_dt, to_dt, filter_lst)
+            if len(filter_lst) > 0 and '' not in filter_lst:
+                cdb = db.get_db()
+
+                # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
+                q_params = []
+                # q_params.extend([format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S')])
+                # q_params.extend([from_dt, to_dt])
+                # if len(filter_lst) == 1:
+                #     query = str().join([query, " direction = '%s';"])
+                #     q_params.append(filter_lst[0])
+                # else:
+                # direct = " direction IN ({});".format(build_query_str_from_seq(filter_lst, range(0, len(filter_lst))))
+                # query = query.format(from_dt, to_dt, build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                query = query.format(format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S'), build_query_str_from_seq(filter_lst, range(0, len(filter_lst)), False))
+                # query = str().join([query, direct])
+                # q_params.extend(filter_lst)
+                # return jsonify(t_td, from_dt, to_dt, filter_lst, q_params, query)
+                res_sel1 = cdb.execute_and_get_all(query, q_params)
+                # return jsonify(res_sel1)
+                if len(res_sel1) > 0:
+                    for t_trans in res_sel1:
+                        # trans = db.models.transaction(t_trans)
+                        neto_res = t_trans.get('neto')
+                        t_conts = t_trans.get('containers')
+                        if len(t_conts) > 0 :
+                            conts_t = t_conts.split(',')
+                            if len(conts_t) > 0 and '' not in conts_t:
+                                conts.extend(conts_t)
+                                conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), False)
+                                # conts_qs = build_query_str_from_seq(conts, range(0, len(conts)), True)
+                                neto_query = "SELECT * FROM containers_registered WHERE (weight IS NULL OR unit IS NULL) AND container_id IN ({})".format(conts_qs)
+                                # neto_lst = cdb.execute_and_get_all(neto_query, conts)
+                                neto_lst = cdb.execute_and_get_all(neto_query)
+                                neto_res = neto_res if neto_res is not None and neto_res != 0 and len(neto_lst) == 0 else 'na'
+                        res_d = {
+                            'id' : t_trans.get('id'),
+                            "direction": t_trans.get('direction'),
+                            "bruto": t_trans.get('bruto'), # assuming that bruto is stored as kg..
+                            "neto": neto_res, 
+                            "produce": t_trans.get('produce'),
+                            "containers": conts
+                        }
+                        res.append(res_d)
+            # else:
+            #     raise BadRequest()
+        except Error as e:
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise InternalServerError()
+        except TypeError as e:
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise InternalServerError()
         except ValueError as e:
-            raise BadRequest 
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise BadRequest() 
         except BadRequest as e:
-            raise
+            return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise
+        # return jsonify(res, "OK", query, neto_query, conts)
+        return jsonify(res)
+        
+    # return list id of containers without weight
         
     @bp.route('/batch-weight', methods=['GET','POST'])
     def batch_weight():
@@ -180,7 +193,6 @@ def create_views_blueprint():
 
     @bp.route('/unknown', methods=['GET'])
     def unknown():
-        ''' return list id of containers without weight '''
         cdb = db.get_db()
         query="select container_id as id from containers_registered where weight is NULL"
         res = cdb.execute_and_get_all(query)
@@ -188,13 +200,12 @@ def create_views_blueprint():
         # return jsonify({'list_id':[ix['id'] for ix in res], 'status':200})
     #    get_container_with_no_weight
    
-
     @bp.route('/session/<id>', methods=['GET'])
     def session(id):
         cdb = db.get_db()
         query="select * from transactions where id={}".format(id)
         res = cdb.execute_and_get_one(query)
-        if res == None:
+        if res is None:
             return jsonify({'message':"session non-existent",'status':404})
         
         res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
@@ -205,6 +216,123 @@ def create_views_blueprint():
         return res_json
 
 
+    @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
+    def item():
+        #return info of a container or truck with in defined period
+        cdb = db.get_db()
+        query="select container_id as id from containers_registered where weight is NULL"
+        res = cdb.execute_and_get_all(query)
+        return jsonify([ix['id'] for ix in res])
+    def calculate_neto(bruto,trackTara,list_containers):
+        sum_containers=0
+        list_containers=list_containers.split(',')
+        cdb = db.get_db()
+        for item in list_containers:
+            query="select * from containers_registered where container_id={}".format(item)
+            res = cdb.execute_and_get_one(query)
+            if res == None:
+                return None
+            if res["weight"]==None:
+                return None
+            if res["unit"]=="lbs":
+                sum_containers+= float(res["weight"])*float(0.453592)
+            else:
+                sum_containers+=float(res["weight"])
+        return float(bruto)-float(trackTara)-float(sum_containers)
 
+    @bp.route('/weight2', methods=['POST'])
+    def weightPost():
+        #get data from body
+        direction=request.form.get('direction',"none")
+        containers=request.form.get('containers')
+        truck=request.form.get('truck')
+        weight=request.form.get('weight')
+        unit=request.form.get('unit')
+        produce=request.form.get('produce')
+        produce.replace('"', '')
+        if (direction=="in" or direction=="none") and containers is None:
+            return BadRequest("in/none must get list containers")
+        if (direction=="in" or direction=="none") and produce is None:
+            return BadRequest("in/none must get produce")
+        if truck is None or weight is None or unit is None:
+            return BadRequest("error parameters send data by form with values:truck, weight, unit")
+        force=request.form.get('force',False)
+        weight=float(weight)
+        if unit=="lbs":
+            weight=(weight*float(0.453592))
+        date_session=utils.format_dt(datetime.now(),"%Y-%m-%d %H:%M:%S")
+        # return "hi".format(direction)
+
+        #get last session to this truck:
+        cdb = db.get_db()
+
+        query="select max(id) as id from transactions where truck={} group by truck".format(truck)
+        id_last_session = cdb.execute_and_get_all(query)
+        if id_last_session != []:
+            id_last_session=id_last_session[0]['id']
+            query="select * from transactions where id={}".format(id_last_session)
+            last_session = cdb.execute_and_get_all(query)[0]
+        else:
+            last_session=None
+
+
+        #in
+        if direction=="in" or direction=="none":
+            if last_session is None or last_session["direction"]=="out":
+                #insert new transaction inneto
+                query="insert into transactions (direction,datetime,truck,containers,bruto,produce) values ('{}','{}','{}','{}',{},'{}');‏".format(direction,date_session,truck,containers,weight,produce)
+                try:
+                    cdb.execute(query)
+                except:
+                    a="a"
+
+            elif last_session["direction"]=="in" or last_session["direction"]=="none":
+                if force== 'False' or direction=="none":
+                    return BadRequest("in can't arrive after in or none. for update send force=True")
+                else:
+                    #update last row in
+                    query="update transactions set direction='{}', datetime='{}',truck='{}', containers='{}', bruto={}, produce='{}' where id={};".format(direction,date_session,truck,containers,weight,produce,id_last_session)
+                    cdb.execute(query)
+
+        #out
+        elif direction=="out":
+            if last_session is None:
+                return BadRequest("there is no transaction to this truck")
+            #calaulate neto
+            neto=calculate_neto(last_session["bruto"],weight,last_session["containers"])
+
+            if last_session["direction"]=="out":
+                if force == 'False':
+                    return BadRequest("out cant arrive after out. for update send force=True")
+                else:
+                    #update last row out
+                    query="update transactions set datetime='{}',truckTara={},neto={},produce='{}' where id={};".format(date_session,weight,neto,produce,last_session["id"])
+                    res = cdb.execute(query)
+            else:
+                #insert new row out
+                if produce is None:
+                    produce=last_session["produce"]
+                query="insert into transactions (direction,datetime,truck,containers,bruto,truckTara,neto,produce) values ('{}','{}','{}','{}',{},{},{},'{}');‏".format(direction,date_session,last_session["truck"],last_session["containers"],last_session["bruto"],weight,neto,produce)
+                try:
+                    cdb.execute(query)
+                except:
+                    a="a"
+
+        #return result from db:
+        query="select max(id) as id from transactions where truck={} group by truck".format(truck)
+        id_last_session = cdb.execute_and_get_all(query)[0]['id']
+        #get details:
+        query="select * from transactions where id={}".format(id_last_session)
+        res = cdb.execute_and_get_one(query)
+        if res == None:
+            return jsonify({'message':"session non-existent",'status':404})
+        res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto']})
+        #ONLY for OUT:
+        if res['direction']=="out":
+            res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
+        return res_json
 
     return bp
+
+
+

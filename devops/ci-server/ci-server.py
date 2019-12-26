@@ -2,7 +2,10 @@ from flask import Flask, request
 import subprocess
 import os
 import smtplib
-from email.mime.text import MIMEText as text
+# from email.mime.text import MIMEText as text
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 app = Flask(__name__)
 
@@ -29,10 +32,10 @@ def post_git():
     # if success:
     #     success = run_tests()
 
-    send_notification(success, pusher_email)
-
     if success and branch == 'master':
         run_deploy()
+
+    send_notification(success, pusher_email)
 
     return 'JSON posted'
 
@@ -45,21 +48,22 @@ def rollback_post():
     success = True
     head = run_process('git', 'rev-parse --short HEAD')
     master = run_process('git', 'rev-parse --short master')
-    master_1 = run_process('git', 'rev-parse --short master~1')
+    # master_1 = run_process('git', 'rev-parse --short master~1')
 
-    branch = master
+    branch = 'master'
     if head == master:
-        branch = master_1
+        branch = 'master~1'
 
     # success = run_checkout('master')
     if success:
         try:
             # run_process('git', 'checkout master~1')
             run_process('git', 'checkout ' + branch)
-        except:
-            success = False
+        except Exception as err:
+            print(err)
+            # success = False
     if success:
-        success = run_deploy()
+        run_deploy()
 
     send_notification(success, 'nirfuchs73@gmail.com')
 
@@ -117,10 +121,7 @@ def run_build():
             result = False
 
         run_process('docker', 'logs weight_tests')
-        # run_process('docker', 'logs providers_be_test')
-        # run_process('docker', 'exec -it weight_be_test echo "hello from container!"')
-        # run_process('docker', 'exec -it weight_be_test /app/weights_tests/run_unittest.sh')
-        # run_process('docker', 'exec -it providers_be_test echo "hello from container!"')
+        run_process('docker', 'logs providers_tests')
 
         arguments_we = '-f ' + docker_compose_we + ' down'
         arguments_pr = '-f ' + docker_compose_pr + ' down'
@@ -162,14 +163,24 @@ def send_notification(success, pusher_email):
     subject = message
     body = message
 
-    msg = text(body)
+    # msg = text(body)
+    msg = MIMEMultipart(body)
     msg['Subject'] = subject
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
-    # print(sent_from)
-    # print(to)
-    # print(msg.as_string())
 
+    files = ["tests/weight-tests.txt", "tests/providers-tests.txt"]
+    # get all the attachments
+    try:
+        for file in files:
+            part = MIMEBase('application', "octet-stream")
+            part.set_payload(open(file, "rb").read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition',
+                            'attachment; filename="%s"' % file)
+            msg.attach(part)
+    except Exception as err:
+        print(err)
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
