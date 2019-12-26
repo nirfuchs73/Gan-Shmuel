@@ -28,11 +28,13 @@ INSERT INTO trucks (truckid,providerid,weight,unit) VALUES ('12365',4,854,'lbs')
 
 USE billdb
 
-INSERT INTO Trucks (id,provider_id) VALUES ('77777',2);
-INSERT INTO Trucks (id,provider_id) VALUES ('66666',2);
-INSERT INTO Trucks (id,provider_id) VALUES ('99888',1);
-INSERT INTO Trucks (id,provider_id) VALUES ('66321',3);
-INSERT INTO Trucks (id,provider_id) VALUES ('12365',4);
+INSERT INTO Trucks (id,provider_id) VALUES ('0XFP 03',2);
+INSERT INTO Trucks (id,provider_id) VALUES ('954-GTE',2);
+INSERT INTO Trucks (id,provider_id) VALUES ('599-SYF',1);
+INSERT INTO Trucks (id,provider_id) VALUES ('LJL-0735',4);
+INSERT INTO Trucks (id,provider_id) VALUES ('GZ 7826',4);
+INSERT INTO Trucks (id,provider_id) VALUES ('EOY-3175',2);
+INSERT INTO Trucks (id,provider_id) VALUES ('IAM 4454',4);
 
 INSERT INTO Provider VALUES (1,'Tapuzina');
 INSERT INTO Provider VALUES (2,'Herut');
