@@ -27,11 +27,16 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_rates_post(self):
-        URL = f"http://providers_be_test:8080/rates"
+       file = "in/test1.xlsx"
+        print('post/rates_test')
 
-        response = requests.post(url=URL, data={'file': 'test_please_delete'})
-        self.assertEqual(response.status_code, 200)
-
+        with open(file, 'rb') as f:
+            response = requests.post(f'http://localhost:8080/rates', files={file: f})
+            if response == "<Response [500]>":
+                self.assertEqual(response.status_code, 500)
+            else:
+                if response == "<Response [500]>":
+                    self.assertEqual(response.status_code, 200)
     def test_rates_get(self):
         URL = f"http://providers_be_test:8080/rates"
         response = requests.get(url=URL) 
@@ -51,7 +56,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_truck_post(self):
         URL = f"http://providers_be_test:8080/truck"
 
-        response = requests.post(url=URL, data={'id': 'test', 'provider': 0})
+        response = requests.post(url=URL, data={'id': 'test', 'provider_id': 0})
         self.assertEqual(response.status_code, 200)
 
     def test_truck_get(self):
