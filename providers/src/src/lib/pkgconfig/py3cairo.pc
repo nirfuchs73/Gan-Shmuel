@@ -1,8 +1,0 @@
-prefix=/home/geco/Gan-Shmuel/providers/src/src
-
-Name: Pycairo
-Description: Python 3 bindings for cairo
-Version: 1.16.2
-Requires: cairo
-Cflags: -I${prefix}/include/pycairo
-Libs:
