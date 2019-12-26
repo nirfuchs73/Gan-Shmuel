@@ -62,7 +62,8 @@ def rollback_post():
     if success:
         try:
             # run_process('git', 'checkout master~1')
-            run_process('git', 'checkout ' + branch)
+            # run_process('git', 'checkout ' + branch)
+            run_process('git', 'checkout master')
         except Exception as err:
             print(err)
             # success = False
