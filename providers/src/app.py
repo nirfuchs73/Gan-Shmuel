@@ -17,9 +17,10 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
+        # return send_to_db_host("localhost", sql_query)
         return send_to_db_host("providers_db", sql_query)
     except:
-        return send_to_db_host("providers_db", sql_query)
+        return send_to_db_host("providers_db_test", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -61,6 +62,12 @@ def product_json(prev_prod, provider_id, count, transaction):
     pay = rate * count * amount
     return {'prod': prev_prod, 'count': count, 'amount': amount, 'rate': rate, 'pay': pay}
 
+
+
+@app.route('/')
+def index():
+    # return open('index.html').read()
+    return open('/src/index.html').read()
 
 
 @app.route('/health', methods=['GET'])
@@ -108,9 +115,19 @@ def rates():
     # global updated_rates_file
 
     if request.method == 'GET':
-        path = os.popen('cat src/bin/rates.txt').read().rstrip()
+        path = os.popen('cat bin/rates.txt').read().rstrip().replace('/', '')
+        file = os.listdir(path)[0]
+
+        wb = xlrd.open_workbook(path + '/' + file)
+        sheet = wb.sheet_by_index(0)
+        data = str(sheet.row_values(0))[1:-1] + '<br>'
+
+        for i in range(1, sheet.nrows):
+            data += str(sheet.row_values(i))[1:-1] + '<br>'
+
         try:
-            return send_file(path, as_attachment=True)
+            return data
+            # return send_file(path, as_attachment=True)
         except FileNotFoundError:
             return "file not found 404"
 
@@ -181,13 +198,15 @@ def truck_get(truckid):
     _from = request.args['from']
     _to = request.args['to']
 
-    time_format = '%Y%m%d%H%M%S'
+    now = datetime.today()
+    first_of_month = datetime(now.year, now.month, 1)
+    _from_in_format = datetime.strptime(_from, '%Y%m01000000')
+    _to_in_format = datetime.strptime(_to, '%Y%m%d%H%M%S')
 
-    if _from == datetime.now().strftime('%Y%m01000000') and datetime.strptime(_to,
-                                                                              time_format) <= datetime.now():
-        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
+    if _from_in_format == first_of_month and _to_in_format <= now:
+        item = requests.get(f'http://localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
-    return item, 200
+        return jsonify(item.text), 200
 
     return '', 404
   
