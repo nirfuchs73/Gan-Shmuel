@@ -23,6 +23,7 @@ services:
       - "be_logs:/app/instance"
     networks: 
       - weight_net
+      - ext
 
   weight_db:
     container_name: weight_db
@@ -55,5 +56,7 @@ volumes:
 
 networks: 
   weight_net:
-
+  ext:
+    external:
+      name: ext
 
