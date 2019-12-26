@@ -1,2 +1,3 @@
 run demo 1
 run demo 2
+run demo 3
