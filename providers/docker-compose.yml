@@ -54,7 +54,4 @@ volumes:
   db_save:
 networks: 
   providers_net:
-  ext:
-    external:
-      name: ext
 

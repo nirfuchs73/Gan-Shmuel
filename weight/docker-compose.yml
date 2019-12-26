@@ -56,7 +56,4 @@ volumes:
 
 networks: 
   weight_net:
-  ext:
-    external:
-      name: ext
 
