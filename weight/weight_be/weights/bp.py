@@ -69,7 +69,7 @@ def create_views_blueprint():
                 if len(from_str) > 0:
                         from_dt = datetime.strptime(from_str, time_format)
                 else:
-                from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
+                    from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
                 if len(to_str) > 0:
                         to_dt = datetime.strptime(to_str, time_format)
                 else:
@@ -79,8 +79,8 @@ def create_views_blueprint():
                 else:
                     filter_lst = ['in', 'out', 'none']
             # return jsonify(t_td, from_dt, to_dt, filter_lst)
-            if len(filter_lst) > 0 and '' not in filter_lst:
-                cdb = db.get_db()
+                if len(filter_lst) > 0 and '' not in filter_lst:
+                    cdb = db.get_db()
 
                 # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
                 query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
