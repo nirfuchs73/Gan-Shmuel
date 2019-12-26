@@ -68,8 +68,8 @@ class FlaskTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__': 
-    with open('testing.out', 'w') as f: 
+    with open('tests/providers-tests.txt', 'w') as f: 
         main(f)
-    with open('testing.out', 'r') as f: 
+    with open('tests/providers-tests.txt', 'r') as f: 
         print(f.read()) 
         #unittest.main(verbosity=2)
