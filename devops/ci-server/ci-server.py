@@ -33,7 +33,9 @@ def post_git():
     #     success = run_tests()
 
     if success and branch == 'master':
-        run_deploy()
+        success = check_status()
+        if success:
+            run_deploy()
 
     send_notification(success, pusher_email)
 
@@ -261,6 +263,17 @@ def run_process(command, arguments):
         print('-----------------------------------------------')
         print(command + ' ' + arguments + ' FAILED')
         print('-----------------------------------------------')
+        return False
+
+
+def check_status():
+    weight_tests = os.path.join('tests', 'weight-tests.txt')
+    providers_tests = os.path.join('tests', 'providers-tests.txt')
+    weight_status = subprocess.check_output(['tail', '-1', weight_tests])
+    providers_status = subprocess.check_output(['tail', '-1', providers_tests])
+    if b'OK' in weight_status and b'OK' in providers_status:
+        return True
+    else:
         return False
 
 

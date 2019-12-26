@@ -72,12 +72,8 @@ def main(out=sys.stderr, verbosity=2):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    with open('tests/weight-tests.txt', 'w') as f: 
-=======
     tests_log_file = os.path.join('tests', 'weight-tests.txt')
     with open(tests_log_file, 'w') as f:
->>>>>>> master
         main(f)
 
     with open(tests_log_file, 'r') as f:
