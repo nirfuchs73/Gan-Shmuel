@@ -16,9 +16,9 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
-        return send_to_db_host("localhost", sql_query)
+        return send_to_db_host("providers_db", sql_query)
     except:
-        return send_to_db_host("localhost", sql_query)
+        return send_to_db_host("providers_db_test", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -46,7 +46,7 @@ def send_to_db_host(host_name, sql_query):
 
 @app.route('/')
 def index():
-    return open('index.html').read()
+    return open('/src/index.html').read()
 
 
 @app.route('/health', methods=['GET'])
