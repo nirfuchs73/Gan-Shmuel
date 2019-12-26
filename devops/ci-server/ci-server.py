@@ -273,7 +273,11 @@ def check_status():
     providers_tests = os.path.join('tests', 'providers-tests.txt')
     weight_status = subprocess.check_output(['tail', '-1', weight_tests])
     providers_status = subprocess.check_output(['tail', '-1', providers_tests])
-    if b'OK' in weight_status and b'OK' in providers_status:
+
+    w_status = b'OK' in weight_status
+    p_status = b'OK' in providers_status
+
+    if w_status and p_status:
         return True
     else:
         return False
