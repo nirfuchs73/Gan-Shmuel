@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/in/rates.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/in/rates2.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../devops/ci-server/ci-server.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../devops/ci-server/ci-server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../sql_scripts/pop_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../sql_scripts/pop_db.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/test_health-test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../test/test_health-test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weight/weight_tests/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../weight/weight_tests/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,17 +171,17 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="463" y="214" width="672" height="678" key="search.everywhere.popup/0.27.1600.873@0.27.1600.873" timestamp="1577299222566" />
-    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1577296299403">
+    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1577355706092">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.27.1600.873@0.27.1600.873" timestamp="1577296299403" />
+    <state x="525" y="377" width="540" height="170" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.27.1600.873@0.27.1600.873" timestamp="1577355706092" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>136</line>
+          <line>155</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
