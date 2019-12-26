@@ -13,8 +13,8 @@ from csv import DictReader
 
 from .utils import (
     check_field_in_dict, get_checked_field_in_dict, 
-    format_dt, get_dt, build_query_str_from_seq, 
-    allowed_file, get_file_ext
+    format_dt, get_dt, allowed_file, get_file_ext,
+    get_dt_format_str,build_query_str_from_seq
 )
 
 from flask import (
@@ -59,25 +59,25 @@ def create_views_blueprint():
         neto_query = ''
         conts = []
         try:
-            t_td = datetime.today()
-            from_str = get_checked_field_in_dict('from', request.args, str) 
-            to_str = get_checked_field_in_dict('to', request.args, str)
-            filter_str = get_checked_field_in_dict('filter', request.args, str)
+                t_td = datetime.today()
+                from_str = get_checked_field_in_dict('from', request.args, str) 
+                to_str = get_checked_field_in_dict('to', request.args, str)
+                filter_str = get_checked_field_in_dict('filter', request.args, str)
             # return jsonify(t_td, from_str, to_str, filter_str)
-            # time format: yyyymmddhhmmss
-            time_format = '%Y%m%d%H%M%S'
-            if len(from_str) > 0:
-                from_dt = datetime.strptime(from_str, time_format)
-            else:
+                # time format: yyyymmddhhmmss
+                time_format = '%Y%m%d%H%M%S'
+                if len(from_str) > 0:
+                        from_dt = datetime.strptime(from_str, time_format)
+                else:
                 from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
-            if len(to_str) > 0:
-                to_dt = datetime.strptime(to_str, time_format)
-            else:
-                to_dt = get_dt()
-            if len(filter_str) > 0:
-                filter_lst = filter_str.split(',')
-            else:
-                filter_lst = ['in', 'out', 'none']
+                if len(to_str) > 0:
+                        to_dt = datetime.strptime(to_str, time_format)
+                else:
+                    to_dt = get_dt()
+                if len(filter_str) > 0:
+                    filter_lst = filter_str.split(',')
+                else:
+                    filter_lst = ['in', 'out', 'none']
             # return jsonify(t_td, from_dt, to_dt, filter_lst)
             if len(filter_lst) > 0 and '' not in filter_lst:
                 cdb = db.get_db()
@@ -135,7 +135,7 @@ def create_views_blueprint():
             return jsonify(str(type(e)), str(e), query, neto_query, conts) # raise
         # return jsonify(res, "OK", query, neto_query, conts)
         return jsonify(res)
-            
+        
     # return list id of containers without weight
         
     @bp.route('/batch-weight', methods=['GET','POST'])
@@ -325,6 +325,7 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
         return res_json
 
+
     @bp.route('/item/<id>', methods=['GET'])
     def item(id):
         cdb = db.get_db()
@@ -368,4 +369,5 @@ def create_views_blueprint():
             return jsonify({'id':id,'tara':weight_truck,'session':list_sessions})
 
     return bp
+
 
