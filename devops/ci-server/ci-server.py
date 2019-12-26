@@ -48,22 +48,16 @@ def rollback_post():
     print('Running Rollback')
     print('-----------------------------------------------')
     success = True
-    head = run_process('git', 'rev-parse --short HEAD')
-    master = run_process('git', 'rev-parse --short master')
-    # master_1 = run_process('git', 'rev-parse --short master~1')
-    print('HEAD=', head)
-    print('master=', master)
+    head = os.popen('git rev-parse --short HEAD').read()
+    master = os.popen('git rev-parse --short master').read()
 
     branch = 'master'
-    if str(head) == str(master):
+    if head == master:
         branch = 'master~1'
 
-    # success = run_checkout('master')
     if success:
         try:
-            # run_process('git', 'checkout master~1')
-            # run_process('git', 'checkout ' + branch)
-            run_process('git', 'checkout master')
+            run_process('git', 'checkout ' + branch)
         except Exception as err:
             print(err)
             # success = False
@@ -157,7 +151,7 @@ def send_notification(success, pusher_email):
     to = [pusher_email, 'nirfuchs73@gmail.com']
 
     message = 'Build completed successfully'
-    print('success=',success)
+    print('success=', success)
     if not success:
         message = 'Build failed'
     subject = message
