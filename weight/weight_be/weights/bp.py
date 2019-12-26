@@ -360,13 +360,18 @@ def create_views_blueprint():
 
         #for truck
         else:
+            flag_exist_truck=0
             weight_truck=None
             for line in list_transaction:
                 if id == line['truck']:
+                    flag_exist_truck=1
                     list_sessions.append(line['id'])
                     if line['truckTara'] != "NULL":
                         weight_truck=line['truckTara']
-            return jsonify({'id':id,'tara':weight_truck,'session':list_sessions})
+            if flag_exist_truck==0:
+                return BadRequest("id not found")
+            else:
+                return jsonify({'id':id,'tara':weight_truck,'session':list_sessions})
 
     return bp
 
