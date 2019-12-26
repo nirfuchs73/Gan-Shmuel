@@ -325,17 +325,47 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
         return res_json
 
-    return bp
-
-
-    @bp.route('/item/<id>?from=t1&to=t2', methods=['GET'])
-    def item():
-        #return info of a container or truck with in defined period
+    @bp.route('/item/<id>', methods=['GET'])
+    def item(id):
         cdb = db.get_db()
-        query="select container_id as id from containers_registered where weight is NULL"
-        res = cdb.execute_and_get_all(query)
-        return jsonify([ix['id'] for ix in res])
+        list_sessions=[]
+        date_now=datetime.now()
+    
+        t1 = request.args.get('from', datetime(date_now.year,date_now.month,1,0,0,0),type = str)
+        t2 = request.args.get('to',default = date_now,type = str)
 
+        #convert str to datetime:
+        if type(t1) ==str:
+            if len(t1)!= 14:
+                return BadRequest("date isn't in the format yyyymmddhhmmss")
+            t1 = datetime(int(t1[0:4]),int(t1[4:6]),int(t1[6:8]),int(t1[8:10]),int(t1[10:12]),int(t1[12:14]))
+        if type(t2) ==str:
+            if len(t2)!= 14:
+                return BadRequest("date isn't in the format yyyymmddhhmmss")
+            t2 = datetime(int(t2[0:4]),int(t2[4:6]),int(t2[6:8]),int(t2[8:10]),int(t2[10:12]),int(t2[12:14]))
+
+        #list transactions
+        query="select * from transactions where datetime>='{}' and datetime<='{}';".format(t1,t2)
+        list_transaction = cdb.execute_and_get_all(query)
+        
+        #try to find container
+        query="select * from containers_registered where container_id='{}';".format(id)
+        container_object = cdb.execute_and_get_one(query)
+        if container_object is not None:
+            for line in list_transaction:
+                if id in line['containers'].split(','):
+                    list_sessions.append(line['id'])
+            return jsonify({'id':id,'tara':container_object['weight'],'session':list_sessions})
+
+        #for truck
+        else:
+            weight_truck=None
+            for line in list_transaction:
+                if id == line['truck']:
+                    list_sessions.append(line['id'])
+                    if line['truckTara'] != "NULL":
+                        weight_truck=line['truckTara']
+            return jsonify({'id':id,'tara':weight_truck,'session':list_sessions})
 
     return bp
 
