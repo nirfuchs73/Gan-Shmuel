@@ -169,7 +169,10 @@ def send_notification(success, pusher_email):
     msg['From'] = sent_from
     msg['To'] = ", ".join(to)
 
-    files = ["tests/weight-tests.txt", "tests/providers-tests.txt"]
+    weight_tests = os.path.join('tests', 'weight-tests.txt')
+    providers_tests = os.path.join('tests', 'providers-tests.txt')
+
+    files = [weight_tests, providers_tests]
     # get all the attachments
     try:
         for file in files:

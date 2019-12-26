@@ -1,6 +1,7 @@
 import unittest
 import sys
 import requests
+import os
 
 
 
@@ -13,6 +14,7 @@ class HealthTestCase(unittest.TestCase):
 
 class SessionIdTestCase(unittest.TestCase):
 
+<<<<<<< HEAD
     URL = "http://weight_be_test:8090/session1"
     response = requests.get(url=URL)
     @unittest.skipIf(response.status_code != 200, 'cannot get to url')
@@ -27,18 +29,25 @@ class SessionIdTestCase(unittest.TestCase):
     URL = "http://weight_be_test:8090/session2"
     response = requests.get(url=URL)
     @unittest.skipIf(response.status_code != 200, 'cannot get to url')
+=======
+        r1 = requests.get(url=URL1)
+        data = r1.json()
+        self.assertEqual(data['id'], 1)
+        self.assertEqual(data['bruto'], 500)
+        self.assertEqual(data['truck'], "524330122")
+
+>>>>>>> master
     def test_session_id2(self):
         URL = "http://weight_be_test:8090/session2"
         URL2 = "{}2".format(URL)
-        
-        r2 = requests.get(url = URL2) 
-        data = r2.json()
-        self.assertEqual(data['id'] , 2)
-        self.assertEqual(data['bruto'] , 500)
-        self.assertEqual(data['truck'] , "524330122")
-        self.assertEqual(data['truckTara'] , 200)
-        self.assertEqual(data['neto'] , 300)
 
+        r2 = requests.get(url=URL2)
+        data = r2.json()
+        self.assertEqual(data['id'], 2)
+        self.assertEqual(data['bruto'], 500)
+        self.assertEqual(data['truck'], "524330122")
+        self.assertEqual(data['truckTara'], 200)
+        self.assertEqual(data['neto'], 300)
 
     URL = "http://weight_be_test:8090/session3"
     response = requests.get(url=URL)
@@ -47,10 +56,10 @@ class SessionIdTestCase(unittest.TestCase):
         URL = "http://weight_be_test:8090/session"
         URL3 = "{}3".format(URL)
 
-        r3 = requests.get(url = URL3)
+        r3 = requests.get(url=URL3)
 
         data = r3.json()
-        self.assertEqual(data['status'] , 404)
+        self.assertEqual(data['status'], 404)
 
 
 class UnknowTestCase(unittest.TestCase):
@@ -60,18 +69,25 @@ class UnknowTestCase(unittest.TestCase):
     @unittest.skipIf(response.status_code != 200, 'cannot get to url')
     def test_unknow(self):
         URL = "http://weight_be_test:8090/unknown"
-        r = requests.get(url = URL) 
+        r = requests.get(url=URL)
         data = r.json()
-        self.assertEqual(data['list_id'] , ["22","33"])
+        self.assertEqual(data['list_id'], ["22", "33"])
 
-def main(out = sys.stderr, verbosity = 2): 
-    loader = unittest.TestLoader() 
+
+def main(out=sys.stderr, verbosity=2):
+    loader = unittest.TestLoader()
     suite = loader.loadTestsFromModule(sys.modules[__name__])
-    unittest.TextTestRunner(out, verbosity = verbosity).run(suite) 
-      
+    unittest.TextTestRunner(out, verbosity=verbosity).run(suite)
+
+
 if __name__ == '__main__':
+<<<<<<< HEAD
     with open('tests/weight-tests.txt', 'w') as f: 
+=======
+    tests_log_file = os.path.join('tests', 'weight-tests.txt')
+    with open(tests_log_file, 'w') as f:
+>>>>>>> master
         main(f)
 
-    with open('tests/weight-tests.txt', 'r') as f: 
+    with open(tests_log_file, 'r') as f:
         print(f.read())
