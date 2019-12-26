@@ -7,7 +7,7 @@
             var from = document.getElementById("from").value;
             var to = document.getElementById("to").value;
 
-            url = "http://localhost:8080/truck/" + truck_id + "?from=" + from + "&to=" + to;
+            url = "/truck/" + truck_id + "?from=" + from + "&to=" + to;
 
             xhttp.open("GET", url);
             xhttp.send();
@@ -19,7 +19,7 @@
             var truck_id = document.getElementById("put_truck_id").value;
             var provider_id = document.getElementById("put_provider_id").value;
 
-            url = "http://localhost:8080/truck?provider_id=" + provider_id + "&truck_id=" + truck_id;
+            url = "/truck?provider_id=" + provider_id + "&truck_id=" + truck_id;
 
             xhttp.open("PUT", url);
             xhttp.send();
@@ -32,7 +32,7 @@
             var from = document.getElementById("bill_from").value;
             var to = document.getElementById("bill_to").value;
 
-            url = "http://localhost:8080/bill/" + provider_id + "?from=" + from + "&to=" + to;
+            url = "/bill/" + provider_id + "?from=" + from + "&to=" + to;
 
             xhttp.open("GET", url);
             xhttp.send();
@@ -48,7 +48,7 @@
 
 <body>
 <!-- Check health -->
-<form action="http://localhost:8080/health" method="get">
+<form action="/health" method="get">
     <h3>Check Health</h3>
     <input type="submit" value="Health">
 </form>
@@ -56,7 +56,7 @@
 <hr>
 
 <!-- Post provider -->
-<form action="http://localhost:8080/provider" method="post">
+<form action="/provider" method="post">
     <h3>Post Provider</h3>
     Name: <input type="text" name="name"> <input type="submit" value="Post Provider">
 </form>
@@ -64,13 +64,13 @@
 <hr>
 
 <!-- Get rates -->
-<form action="http://localhost:8080/rates">
+<form action="/rates">
     <h3>Get Rates</h3>
     <input type="submit" value="Get Rates">
 </form>
 
 <!-- Post rates -->
-<form action="http://localhost:8080/rates" method="post">
+<form action="/rates" method="post">
     <h3>Post Rates</h3>
     <input type="text" name="file"> <input type="submit" value="Post file">
 </form>
@@ -78,7 +78,7 @@
 <hr>
 
 <!-- Post truck -->
-<form action="http://localhost:8080/truck" method="post">
+<form action="/truck" method="post">
     <h3>Post Truck</h3>
     Truck Id: <input type="text" name="id">
     Provider Id: <input type="text" name="provider">
