@@ -14,7 +14,6 @@ class HealthTestCase(unittest.TestCase):
 
 class SessionIdTestCase(unittest.TestCase):
 
-<<<<<<< HEAD
     URL = "http://weight_be_test:8090/session1"
     response = requests.get(url=URL)
     @unittest.skipIf(response.status_code != 200, 'cannot get to url')
@@ -29,14 +28,6 @@ class SessionIdTestCase(unittest.TestCase):
     URL = "http://weight_be_test:8090/session2"
     response = requests.get(url=URL)
     @unittest.skipIf(response.status_code != 200, 'cannot get to url')
-=======
-        r1 = requests.get(url=URL1)
-        data = r1.json()
-        self.assertEqual(data['id'], 1)
-        self.assertEqual(data['bruto'], 500)
-        self.assertEqual(data['truck'], "524330122")
-
->>>>>>> master
     def test_session_id2(self):
         URL = "http://weight_be_test:8090/session2"
         URL2 = "{}2".format(URL)
