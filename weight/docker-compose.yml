@@ -56,4 +56,3 @@ volumes:
 networks: 
   weight_net:
 
-

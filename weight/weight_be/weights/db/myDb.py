@@ -112,7 +112,7 @@ class MyDb(object):
         cur = self.__get_cursor(current_app, True)
         try:
             cur.execute(query, self.__check__params(params))
-            res = cur.rowcount
+            res = 1  #cur.rowcount
             cur.close()
             self.commit()
             return res
