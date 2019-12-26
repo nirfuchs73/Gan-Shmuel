@@ -48,7 +48,6 @@ services:
     restart: always
     networks: 
       - providers_net
-      - ext
       
 volumes: 
   db_save:
