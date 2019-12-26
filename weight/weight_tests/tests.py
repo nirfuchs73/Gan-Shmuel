@@ -59,7 +59,7 @@ def main(out=sys.stderr, verbosity=2):
 
 
 if __name__ == '__main__':
-    tests_log_file = os.path.join('tests', 'weight-tests.log')
+    tests_log_file = os.path.join('tests', 'weight-tests.txt')
     with open(tests_log_file, 'w') as f:
         main(f)
 
