@@ -78,7 +78,6 @@ def create_views_blueprint():
                     filter_lst = filter_str.split(',')
                 else:
                     filter_lst = ['in', 'out', 'none']
-<<<<<<< HEAD
                 # return jsonify(t_td, from_dt, to_dt, filter_lst)
                 if len(filter_lst) > 0 and '' not in filter_lst:
                     cdb = db.get_db()
@@ -124,20 +123,6 @@ def create_views_blueprint():
                                 "containers": conts
                             }
                             res.append(res_d)
-=======
-            # return jsonify(t_td, from_dt, to_dt, filter_lst)
-                if len(filter_lst) > 0 and '' not in filter_lst:
-                    cdb = db.get_db()
-
-                # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
-                query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
-                q_params = []
-                # q_params.extend([format_dt(from_dt,'%Y-%m-%d %H:%M:%S'), format_dt(to_dt,'%Y-%m-%d %H:%M:%S')])
-                # q_params.extend([from_dt, to_dt])
-                # if len(filter_lst) == 1:
-                #     query = str().join([query, " direction = '%s';"])
-                #     q_params.append(filter_lst[0])
->>>>>>> master
                 # else:
                 #     raise BadRequest()
         except Error as e:

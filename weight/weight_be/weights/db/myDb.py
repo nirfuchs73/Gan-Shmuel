@@ -20,6 +20,10 @@ class MyDb(object):
         self.__set_db(current_app)
         self.db.commit()
 
+    def rollback(self):
+        self.__set_db(current_app)
+        self.db.rollback()
+
     @staticmethod
     def __get_db(app):
         try:
@@ -92,7 +96,7 @@ class MyDb(object):
 
     # a few general SQL command execution methods
 
-    def execute(self, query, params=[]):
+    def execute(self, query, params=[], do_commit=True, rollback_on_error=False):
         '''
             Run a non-"Select" or other Data Retrival Query with optional parameters.
             usage: 
@@ -112,14 +116,21 @@ class MyDb(object):
         cur = self.__get_cursor(current_app, True)
         try:
             cur.execute(query, self.__check__params(params))
-            res = 1  #cur.rowcount
+            res = cur.rowcount
             cur.close()
-            self.commit()
+            if do_commit:
+                self.commit()
             return res
         except Error as e:
-            raise
+            if do_commit and rollback_on_error:
+                self.rollback()
+            else:
+                raise
         except TypeError as t:
-            raise
+            if do_commit and rollback_on_error:
+                self.rollback()
+            else:
+                raise
         
 
     def execute_and_get_all(self, query, params=[]):
