@@ -59,25 +59,25 @@ def create_views_blueprint():
         neto_query = ''
         conts = []
         try:
-                t_td = datetime.today()
-                from_str = get_checked_field_in_dict('from', request.args, str) 
-                to_str = get_checked_field_in_dict('to', request.args, str)
-                filter_str = get_checked_field_in_dict('filter', request.args, str)
+            t_td = datetime.today()
+            from_str = get_checked_field_in_dict('from', request.args, str) 
+            to_str = get_checked_field_in_dict('to', request.args, str)
+            filter_str = get_checked_field_in_dict('filter', request.args, str)
             # return jsonify(t_td, from_str, to_str, filter_str)
-                # time format: yyyymmddhhmmss
-                time_format = '%Y%m%d%H%M%S'
-                if len(from_str) > 0:
-                        from_dt = datetime.strptime(from_str, time_format)
-                else:
+            # time format: yyyymmddhhmmss
+            time_format = '%Y%m%d%H%M%S'
+            if len(from_str) > 0:
+                    from_dt = datetime.strptime(from_str, time_format)
+            else:
                 from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
-                if len(to_str) > 0:
-                        to_dt = datetime.strptime(to_str, time_format)
-                else:
-                    to_dt = get_dt()
-                if len(filter_str) > 0:
-                    filter_lst = filter_str.split(',')
-                else:
-                    filter_lst = ['in', 'out', 'none']
+            if len(to_str) > 0:
+                    to_dt = datetime.strptime(to_str, time_format)
+            else:
+                to_dt = get_dt()
+            if len(filter_str) > 0:
+                filter_lst = filter_str.split(',')
+            else:
+                filter_lst = ['in', 'out', 'none']
             # return jsonify(t_td, from_dt, to_dt, filter_lst)
             if len(filter_lst) > 0 and '' not in filter_lst:
                 cdb = db.get_db()

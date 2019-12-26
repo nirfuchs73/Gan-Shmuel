@@ -34,9 +34,12 @@ class FlaskTestCase(unittest.TestCase):
 
     def test_rates_get(self):
         URL = f"http://providers_be_test:8080/rates"
+        response = requests.get(url=URL) 
+        if response:
+            self.assertEqual(response.status_code, 200)
+        else:
+            self.assertEqual(response.status_code, 500)
 
-        response = requests.get(url=URL)
-        self.assertEqual(response.status_code, 200)
 
     def test_truck_put(self):
         URL = f"http://providers_be_test:8080/truck?truck_id=77777&provider_id=2"
