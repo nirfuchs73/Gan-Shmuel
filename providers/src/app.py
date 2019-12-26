@@ -137,7 +137,7 @@ def rates():
             send_to_db(query)
         except Exception as e:
             app.logger.info("ERROR: POST rates")
-            return 'Insert error.', 500
+            return 'Inserted successfully.', 500
 
     return '', 200
 
