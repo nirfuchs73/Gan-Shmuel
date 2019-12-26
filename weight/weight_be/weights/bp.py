@@ -69,7 +69,7 @@ def create_views_blueprint():
                 if len(from_str) > 0:
                         from_dt = datetime.strptime(from_str, time_format)
                 else:
-                    from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
+                from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
                 if len(to_str) > 0:
                         to_dt = datetime.strptime(to_str, time_format)
                 else:
@@ -79,8 +79,8 @@ def create_views_blueprint():
                 else:
                     filter_lst = ['in', 'out', 'none']
             # return jsonify(t_td, from_dt, to_dt, filter_lst)
-                if len(filter_lst) > 0 and '' not in filter_lst:
-                    cdb = db.get_db()
+            if len(filter_lst) > 0 and '' not in filter_lst:
+                cdb = db.get_db()
 
                 # query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST ( '%s' AS DATETIME ) AND CAST ( '%s' AS DATETIME ) ) AND t.direction IN ( {} );" 
                 query = "SELECT * FROM transactions AS t WHERE ( t.datetime BETWEEN CAST( '{}' AS DATETIME ) AND CAST( '{}' AS DATETIME ) ) AND t.direction IN ( {} );" 
@@ -168,11 +168,11 @@ def create_views_blueprint():
                                 unit = line['unit']
                                 #try:
                                 query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s);"
-                                cdb.execute(query,[id, weight, unit])
+                                cdb.execute(query,[id, weight, unit])  
                                 #except:
                                 #query = "UPDATE containers_registered SET weight = %s , unit = '%s' WHERE container_id = '%s'"
                                 #Scdb.execute(query,[weight, unit, id])
-                    except: 
+                    except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 elif get_file_ext(filename) == 'csv':
                     try:
@@ -241,7 +241,7 @@ def create_views_blueprint():
                 sum_containers+=float(res["weight"])
         return float(bruto)-float(trackTara)-float(sum_containers)
 
-    @bp.route('/weight2', methods=['POST'])
+    @bp.route('/weight', methods=['POST'])
     def weightPost():
         #get data from body
         direction=request.form.get('direction',"none")
@@ -333,7 +333,54 @@ def create_views_blueprint():
             res_json=jsonify({"id":res['id'],"truck":res['truck'],"bruto":res['bruto'],"truckTara":res['truckTara'],"neto":res['neto']})
         return res_json
 
-    return bp
 
+    @bp.route('/item/<id>', methods=['GET'])
+    def item(id):
+        cdb = db.get_db()
+        list_sessions=[]
+        date_now=datetime.now()
+    
+        t1 = request.args.get('from', datetime(date_now.year,date_now.month,1,0,0,0),type = str)
+        t2 = request.args.get('to',default = date_now,type = str)
+
+        #convert str to datetime:
+        if type(t1) ==str:
+            if len(t1)!= 14:
+                return BadRequest("date isn't in the format yyyymmddhhmmss")
+            t1 = datetime(int(t1[0:4]),int(t1[4:6]),int(t1[6:8]),int(t1[8:10]),int(t1[10:12]),int(t1[12:14]))
+        if type(t2) ==str:
+            if len(t2)!= 14:
+                return BadRequest("date isn't in the format yyyymmddhhmmss")
+            t2 = datetime(int(t2[0:4]),int(t2[4:6]),int(t2[6:8]),int(t2[8:10]),int(t2[10:12]),int(t2[12:14]))
+
+        #list transactions
+        query="select * from transactions where datetime>='{}' and datetime<='{}';".format(t1,t2)
+        list_transaction = cdb.execute_and_get_all(query)
+
+        #try to find container
+        query="select * from containers_registered where container_id='{}';".format(id)
+        container_object = cdb.execute_and_get_one(query)
+        if container_object is not None:
+            for line in list_transaction:
+                if id in line['containers'].split(','):
+                    list_sessions.append(line['id'])
+            return jsonify({'id':id,'tara':container_object['weight'],'session':list_sessions})
+
+        #for truck
+        else:
+            flag_exist_truck=0
+            weight_truck=None
+            for line in list_transaction:
+                if id == line['truck']:
+                    flag_exist_truck=1
+                    list_sessions.append(line['id'])
+                    if line['truckTara'] != "NULL":
+                        weight_truck=line['truckTara']
+            if flag_exist_truck==0:
+                return BadRequest("id not found")
+            else:
+                return jsonify({'id':id,'tara':weight_truck,'session':list_sessions})
+
+    return bp
 
 

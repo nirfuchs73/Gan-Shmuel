@@ -6,7 +6,7 @@ class testClass(unittest.TestCase):
 	URL = "http://localhost:8090/unknown"
         r = requests.get(url = URL) 
         data = r.json()
-        self.assertEqual(data, ["22","33"])
+        self.assertEqual(data, ["33"])
 
 
 if __name__ == '__main__':
