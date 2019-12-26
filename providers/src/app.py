@@ -16,6 +16,7 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
+        # return send_to_db_host("localhost", sql_query)
         return send_to_db_host("providers_db", sql_query)
     except:
         return send_to_db_host("providers_db_test", sql_query)
@@ -46,6 +47,7 @@ def send_to_db_host(host_name, sql_query):
 
 @app.route('/')
 def index():
+    # return open('index.html').read()
     return open('/src/index.html').read()
 
 
@@ -94,9 +96,19 @@ def rates():
     # global updated_rates_file
 
     if request.method == 'GET':
-        path = os.popen('cat src/bin/rates.txt').read().rstrip()
+        path = os.popen('cat bin/rates.txt').read().rstrip().replace('/', '')
+        file = os.listdir(path)[0]
+
+        wb = xlrd.open_workbook(path + '/' + file)
+        sheet = wb.sheet_by_index(0)
+        data = str(sheet.row_values(0))[1:-1] + '<br>'
+
+        for i in range(1, sheet.nrows):
+            data += str(sheet.row_values(i))[1:-1] + '<br>'
+
         try:
-            return send_file(path, as_attachment=True)
+            return data
+            # return send_file(path, as_attachment=True)
         except FileNotFoundError:
             return "file not found 404"
 
