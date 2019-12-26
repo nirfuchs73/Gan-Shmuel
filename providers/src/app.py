@@ -7,6 +7,7 @@ import xlrd
 import os
 from datetime import datetime
 import json
+from collections import OrderedDict
 
 
 app = Flask(__name__)
@@ -16,9 +17,9 @@ updated_rates_file = ""
 # Send query to the db database in the mysql container.
 def send_to_db(sql_query):
     try:
-        return send_to_db_host("localhost", sql_query)
+        return send_to_db_host("providers_db", sql_query)
     except:
-        return send_to_db_host("localhost", sql_query)
+        return send_to_db_host("providers_db", sql_query)
 
 
 def send_to_db_host(host_name, sql_query):
@@ -42,6 +43,24 @@ def send_to_db_host(host_name, sql_query):
     db.close()
 
     return query_result
+
+# create json for prev_db
+def product_json(prev_prod, provider_id, count, transaction):
+    rate = send_to_db("select rate from Rates where product_id='" + prev_prod + "' and scope='" + provider_id + "';")
+    amount = transaction['bruto']
+    if amount=="na":
+        amount = 1
+    if not rate:
+        rate = send_to_db("select rate from Rates where product_id='" + prev_prod + "' and scope='All';")
+        if not rate:
+            rate = 0
+        else:
+            rate = rate[0][0]
+    else:
+        rate = rate[0][0]
+    pay = rate * count * amount
+    return {'prod': prev_prod, 'count': count, 'amount': amount, 'rate': rate, 'pay': pay}
+
 
 
 @app.route('/health', methods=['GET'])
@@ -178,89 +197,72 @@ def bill(provider_id):
     start = request.args.get('from')
     end = request.args.get('to')
 
-    truck_id = "77777"
+    name = ""
     truck_list = []
     transaction_list = []
     truck_count = 0
     session_count = 0
-    output_list = []
+    total_pay = 0
+    prod_list = []
 
-    name_query = "SELECT name FROM Provider WHERE id=" + provider_id + ";"
+    name = send_to_db("SELECT name FROM Provider WHERE id=" + provider_id + ";")[0][0]
 
-    receive = requests.get('http://localhost:8090/weight?from=' + start + '&to=' + end)
+    # get list of transactions between given dates:
+    receive = requests.get("http://localhost:8090/weight?from=" + start + "&to=" + end + "&filter=out")
     transaction_list = json.loads(receive.content)
+    
     for transaction in transaction_list:
+        # get truck id assosiated with transaction
         receive_truck = requests.get('http://localhost:8090/session/' + str(transaction['id']))
-        truck_id = str(json.loads(receive_truck.content)['id'])
+        # check if truck belongs to given provider
+        truck_id = str(json.loads(receive_truck.content)['truck'])
+        app.logger.info("truck-id: " + truck_id)
         if truck_id != "na":
-            query = send_to_db("SELECT provider_id FROM Trucks WHERE id=" + truck_id + ";")
-            if query:
+            q = send_to_db("SELECT provider_id FROM Trucks WHERE id='" + truck_id + "' AND provider_id='" + provider_id + "';")
+            if q:
+                app.logger.info("provider found")
                 if truck_id not in truck_list:
                     truck_list.append(truck_id)
-
+                    app.logger.info("truck added")
             else:
                 transaction_list.remove(transaction)
+                app.logger.info("transaction removed")
+        else:
+            transaction_list.remove(transaction)
+   
     truck_count = len(truck_list)
     session_count = len(transaction_list)
+    app.logger.info("truck-count: " + str(truck_count) + " sessions: " + str(session_count))
 
+    # sort transactions by produce
     transaction_list.sort(key=lambda s: s['produce'])
-
-    prev_prod = str(transaction_list[0]['produce'])
-    prod = ""
+    # initialize vars:
+    prev_prod = str(transaction['produce'])
     count = 1
     for transaction in transaction_list[1:]:
         prod = str(transaction['produce'])
         if prod == prev_prod:
             count += 1
+            app.logger.info("prod counted: " + prod + " " + str(count))
         else:
-            # create json for prev_db:
-            rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + " AND scope=" + provider_id + ";")
-            if not rate:
-                rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + "  AND scope='ALL';")
-            pay = rate * count
-            output_list.append(jsonify({'prod': prod, 'rate': rate, 'pay': pay}))
-
+            # create product json
+            spec_prod_data = product_json(prev_prod, provider_id, count, transaction)
+            total_pay += spec_prod_data['pay']
+            prod_list.append(spec_prod_data)
             count = 1
         prev_prod = prod
 
+    spec_prod_data = product_json(prev_prod, provider_id, count, transaction)
+    total_pay += spec_prod_data['pay']
+    prod_list.append(spec_prod_data)
 
+    start = datetime.strptime(start, '%Y%m%d%H%M%S')
+    start.strftime("%m/%d/%Y, %H:%M:%S")
+    end = datetime.strptime(end, '%Y%m%d%H%M%S')
+    end.strftime("%m/%d/%Y, %H:%M:%S")
 
-
-    '''
-    
-    # if truck_id!="na":
-    if (send_to_db("SELECT provider_id FROM Trucks WHERE id=" + truck_id + ";"):
-        if truck_id not in truck_list:
-            truck_list.append(truck_id)
-    else:
-        #transaction_list.remove(transaction)
-    
-    truck_count = len(truck_list)
-    session_count = len(transaction_list)
-    
-    # for transaction in transaction_list:
-    transaction_list.sort(key=lambda s: s['produce'])
-    --
-    
-    # arrange by transaction_list.produce
-    # prod = transaction_list.produce[0]
-    
-    # if prod == prev_prod:
-    #       count ++
-    --
-    # else:
-    #    rate = (billdb) 
-    #    if "SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope=provider_id;"
-    #    else ""SELECT rate FROM Rates WHERE product_id=" + prev_prod +" AND scope='ALL';"
-    --
-    #    pay = rate * count
-    #
-    #    create new json
-    #       procudt = prod, count = 0, amout = 0, rate = 0, pay = 0
-    # 
-
-    '''
-    return "ok", 200
+    bill = OrderedDict({'id': provider_id, 'name': name, 'from': start, 'to': end, 'truckCount': truck_count, 'sessionCount': session_count, 'products': prod_list, 'total': total_pay})
+    return jsonify(bill)
 
 
 if __name__ == '__main__':
