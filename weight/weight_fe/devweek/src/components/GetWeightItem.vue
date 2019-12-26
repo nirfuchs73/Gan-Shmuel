@@ -14,10 +14,9 @@
             </BTr>
           </BThead>
           <BTbody>
-            <BTr v-for="(cid, idx) in item.containers" :key="idx">
-              <BTd>{{ cid }}</BTd>
-              <BTd>{{ getContainerData(cid, 'unknown') }}</BTd>
-            </BTr>
+            <GetWeightContainerItem v-for="(cid, idx) in item.containers" :key="idx"
+              :cid="cid" :urlPath="urlPath" :from="from" :to="to"
+            ></GetWeightContainerItem>
           </BTbody>
       </BTableSimple>
     </BTd>
@@ -33,10 +32,11 @@ import {
 } from 'bootstrap-vue';
 import axios from 'axios';
 import { ErrorObject, GetWeightItemObject } from '@/lib';
+import GetWeightContainerItem from './GetWeightContainerItem.vue';
 
 @Component({
   components: {
-    BTr, BTd,
+    BTr, BTd, GetWeightContainerItem,
   },
 })
 export default class GetWeightItem extends Vue {
@@ -48,38 +48,42 @@ export default class GetWeightItem extends Vue {
 
   @Prop() private to!: string;
 
-  private conWgt: Map<string, number | null> = new Map<string, number | null>();
+  // private conWgt: Map<string, number | null> = new Map<string, number | null>();
 
-  getCntWeght(cid:string): number | null | undefined {
-    if (this.conWgt.has(cid)) {
-      return this.conWgt.get(cid);
-    }
-    return null;
-  }
+  // getCntWeght(cid:string): number | null | undefined {
+  //   if (this.conWgt.has(cid)) {
+  //     return this.conWgt.get(cid);
+  //   }
+  //   return null;
+  // }
 
-  setCntWeght(cid:string, tara: number | null) {
-    this.conWgt.set(cid, tara);
-  }
+  // get myReactiveCW() : (cid:string, def:string) => string | number {
+  //   return (cid:string, def:string = '') => this.getContainerData(cid, def);
+  // }
 
-  getContainerData(cid:string, def:string = '') {
-    const p = '/item/'.concat(cid);
-    const url = new URL(p, this.urlPath);
-    if (this.from) {
-      url.searchParams.append('from', this.from);
-    }
-    if (this.to) {
-      url.searchParams.append('to', this.to);
-    }
-    axios.get(url.href).then(({ data }) => {
-      if (data.tara) {
-        this.setCntWeght(cid, data.tara);
-      }
-    }).catch((res) => {
-      const { response } = res;
-      this.setCntWeght(cid, null);
-    });
-    const tara = this.getCntWeght(cid);
-    return tara !== null && tara !== undefined ? tara : def;
-  }
+  // setCntWeght(cid:string, tara: number | null) {
+  //   this.conWgt.set(cid, tara);
+  // }
+
+  // getContainerData(cid:string, def:string = '') {
+  //   const p = '/item/'.concat(cid);
+  //   const url = new URL(p, this.urlPath);
+  //   if (this.from && this.from !== '') {
+  //     url.searchParams.append('from', this.from);
+  //   }
+  //   if (this.to && this.to !== '') {
+  //     url.searchParams.append('to', this.to);
+  //   }
+  //   axios.get(url.href).then(({ data }) => {
+  //     if (data.tara) {
+  //       this.setCntWeght(cid, data.tara);
+  //     }
+  //   }).catch((res) => {
+  //     const { response } = res;
+  //     this.setCntWeght(cid, null);
+  //   });
+  //   const tara = this.getCntWeght(cid);
+  //   return tara !== null && tara !== undefined ? tara : def;
+  // }
 }
 </script>

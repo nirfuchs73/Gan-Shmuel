@@ -23,7 +23,7 @@
               <p>git!</p>
             </BTab>
 
-            <BTab title="Tab 1">
+            <BTab title="Upload a new Container Registry">
               <p>git!</p>
             </BTab>
           </BTabs>

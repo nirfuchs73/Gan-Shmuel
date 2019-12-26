@@ -72,7 +72,7 @@
             </BThead>
             <BTbody>
               <GetWeightItem v-for="(item, idex) in getItems"
-                :key="idex" :item="item" :from="from" :to="to"
+                :key="idex" :item="item" :from="fromParam" :to="toParam"
                 :urlPath="appUrlPath"
               ></GetWeightItem>
             </BTbody>
@@ -322,6 +322,20 @@ export default class GetWeightTable extends Vue {
     { value: 'none', text: 'Other' },
   ];
 
+  get fromParam(): string {
+    if (this.fromUsing) {
+      return DtFormater.fromISO(this.from).toFormat('yyyyMMddhhmmss');
+    }
+    return '';
+  }
+
+  get toParam(): string {
+    if (this.toUsing) {
+      return DtFormater.fromISO(this.to).toFormat('yyyyMMddhhmmss');
+    }
+    return '';
+  }
+
   checkWeights() {
     this.items = [];
     // const dtf = new DtFormater();
@@ -333,10 +347,10 @@ export default class GetWeightTable extends Vue {
     };
     const url = new URL('/weight', this.appUrlPath);
     if (this.fromUsing) {
-      url.searchParams.append('from', DtFormater.fromISO(this.from).toFormat('yyyyMMddhhmmss'));
+      url.searchParams.append('from', this.fromParam);
     }
     if (this.toUsing) {
-      url.searchParams.append('to', DtFormater.fromISO(this.to).toFormat('yyyyMMddhhmmss'));
+      url.searchParams.append('to', this.toParam);
     }
     if (this.filters) {
       const filters = this.filters.join(',');
