@@ -51,7 +51,7 @@ def rollback_post():
     # master_1 = run_process('git', 'rev-parse --short master~1')
 
     branch = 'master'
-    if head == master:
+    if head is master:
         branch = 'master~1'
 
     # success = run_checkout('master')
@@ -139,12 +139,6 @@ def run_build():
         print('docker-compose file does not exist')
         result = False
     return result
-
-
-# def run_tests():
-#     print('Run Tests')
-#     result = True
-#     return result
 
 
 def send_notification(success, pusher_email):
