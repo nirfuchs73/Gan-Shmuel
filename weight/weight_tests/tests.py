@@ -4,6 +4,7 @@ import requests
 import os
 
 
+
 class HealthTestCase(unittest.TestCase):
     def test_health(self):
         URL = "http://weight_be_test:8090/health"
@@ -12,18 +13,23 @@ class HealthTestCase(unittest.TestCase):
 
 
 class SessionIdTestCase(unittest.TestCase):
+
+    URL = "http://weight_be_test:8090/session1"
+    response = requests.get(url=URL)
+    @unittest.skipIf(response.status_code != 200, 'cannot get to url')
     def test_session_id1(self):
-        URL = "http://weight_be_test:8090/session/"
-        URL1 = "{}1".format(URL)
+        URL = "http://weight_be_test:8090/session1"
+        response = requests.get(url=URL)
+        data = response.json()
+        self.assertEqual(data['id'] , 1)
+        self.assertEqual(data['bruto'] , 500)
+        self.assertEqual(data['truck'] , "524330122")
 
-        r1 = requests.get(url=URL1)
-        data = r1.json()
-        self.assertEqual(data['id'], 1)
-        self.assertEqual(data['bruto'], 500)
-        self.assertEqual(data['truck'], "524330122")
-
+    URL = "http://weight_be_test:8090/session2"
+    response = requests.get(url=URL)
+    @unittest.skipIf(response.status_code != 200, 'cannot get to url')
     def test_session_id2(self):
-        URL = "http://weight_be_test:8090/session/"
+        URL = "http://weight_be_test:8090/session2"
         URL2 = "{}2".format(URL)
 
         r2 = requests.get(url=URL2)
@@ -34,8 +40,11 @@ class SessionIdTestCase(unittest.TestCase):
         self.assertEqual(data['truckTara'], 200)
         self.assertEqual(data['neto'], 300)
 
+    URL = "http://weight_be_test:8090/session3"
+    response = requests.get(url=URL)
+    @unittest.skipIf(response.status_code != 200, 'cannot get to url')
     def test_session_id3(self):
-        URL = "http://weight_be_test:8090/session/"
+        URL = "http://weight_be_test:8090/session"
         URL3 = "{}3".format(URL)
 
         r3 = requests.get(url=URL3)
@@ -45,6 +54,10 @@ class SessionIdTestCase(unittest.TestCase):
 
 
 class UnknowTestCase(unittest.TestCase):
+
+    URL = "http://weight_be_test:8090/unknown"
+    response = requests.get(url=URL)
+    @unittest.skipIf(response.status_code != 200, 'cannot get to url')
     def test_unknow(self):
         URL = "http://weight_be_test:8090/unknown"
         r = requests.get(url=URL)
