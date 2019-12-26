@@ -44,6 +44,11 @@ def send_to_db_host(host_name, sql_query):
     return query_result
 
 
+@app.route('/')
+def index():
+    return open('index.html').read()
+
+
 @app.route('/health', methods=['GET'])
 def health():
     try:
@@ -162,11 +167,13 @@ def truck_get(truckid):
     _from = request.args['from']
     _to = request.args['to']
 
-    time_format = '%Y%m%d%H%M%S'
+    now = datetime.today()
+    first_of_month = datetime(now.year, now.month, 1)
+    _from_in_format = datetime.strptime(_from, '%Y%m01000000')
+    _to_in_format = datetime.strptime(_to, '%Y%m%d%H%M%S')
 
-    if _from == datetime.now().strftime('%Y%m01000000') and datetime.strptime(_to,
-                                                                              time_format) <= datetime.now():
-        item = requests.get(f'localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
+    if _from_in_format == first_of_month and _to_in_format <= now:
+        item = requests.get(f'http://localhost:8090/item/{truckid}', {'from': _from, 'to': _to})
 
         return item, 200
 
@@ -213,7 +220,8 @@ def bill(provider_id):
             count += 1
         else:
             # create json for prev_db:
-            rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + " AND scope=" + provider_id + ";")
+            rate = send_to_db(
+                "SELECT rate FROM Rates WHERE product_id=" + prev_prod + " AND scope=" + provider_id + ";")
             if not rate:
                 rate = send_to_db("SELECT rate FROM Rates WHERE product_id=" + prev_prod + "  AND scope='ALL';")
             pay = rate * count
@@ -221,13 +229,6 @@ def bill(provider_id):
 
             count = 1
         prev_prod = prod
-
-
-
-
-
-
-
 
     '''
     

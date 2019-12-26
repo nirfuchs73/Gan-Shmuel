@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31e4fcd3-9ed9-4b95-8efa-653e88d94be2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.docker-compose.yml.swp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rates.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,58 +105,58 @@
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="583" y="234" width="424" height="482" key="FileChooserDialogImpl/0.27.1600.873@0.27.1600.873" timestamp="1577296057108" />
-    <state width="1577" height="321" key="GridCell.Tab.0.bottom" timestamp="1577301612661">
+    <state width="1577" height="321" key="GridCell.Tab.0.bottom" timestamp="1577343286176">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="321" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577301612661" />
-    <state width="1577" height="321" key="GridCell.Tab.0.center" timestamp="1577301612660">
+    <state width="1577" height="321" key="GridCell.Tab.0.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577343286176" />
+    <state width="1577" height="321" key="GridCell.Tab.0.center" timestamp="1577343286176">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="321" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577301612660" />
-    <state width="1577" height="321" key="GridCell.Tab.0.left" timestamp="1577301612657">
+    <state width="1577" height="321" key="GridCell.Tab.0.center/0.27.1600.873@0.27.1600.873" timestamp="1577343286176" />
+    <state width="1577" height="321" key="GridCell.Tab.0.left" timestamp="1577343286175">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032799" />
-    <state width="1577" height="321" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577301612657" />
-    <state width="1577" height="321" key="GridCell.Tab.0.right" timestamp="1577301612661">
+    <state width="1577" height="321" key="GridCell.Tab.0.left/0.27.1600.873@0.27.1600.873" timestamp="1577343286175" />
+    <state width="1577" height="321" key="GridCell.Tab.0.right" timestamp="1577343286176">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.0.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032802" />
-    <state width="1577" height="321" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577301612661" />
-    <state width="1577" height="321" key="GridCell.Tab.1.bottom" timestamp="1577301612595">
+    <state width="1577" height="321" key="GridCell.Tab.0.right/0.27.1600.873@0.27.1600.873" timestamp="1577343286176" />
+    <state width="1577" height="321" key="GridCell.Tab.1.bottom" timestamp="1577343286072">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.bottom/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="321" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
-    <state width="1577" height="321" key="GridCell.Tab.1.center" timestamp="1577301612595">
+    <state width="1577" height="321" key="GridCell.Tab.1.bottom/0.27.1600.873@0.27.1600.873" timestamp="1577343286072" />
+    <state width="1577" height="321" key="GridCell.Tab.1.center" timestamp="1577343286071">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.center/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="321" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
-    <state width="1577" height="321" key="GridCell.Tab.1.left" timestamp="1577301612595">
+    <state width="1577" height="321" key="GridCell.Tab.1.center/0.27.1600.873@0.27.1600.873" timestamp="1577343286071" />
+    <state width="1577" height="321" key="GridCell.Tab.1.left" timestamp="1577343286071">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.left/0.207.3520.873@0.207.3520.873" timestamp="1577180032723" />
-    <state width="1577" height="321" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
-    <state width="1577" height="321" key="GridCell.Tab.1.right" timestamp="1577301612595">
+    <state width="1577" height="321" key="GridCell.Tab.1.left/0.27.1600.873@0.27.1600.873" timestamp="1577343286071" />
+    <state width="1577" height="321" key="GridCell.Tab.1.right" timestamp="1577343286072">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="1577" height="255" key="GridCell.Tab.1.right/0.207.3520.873@0.207.3520.873" timestamp="1577180032724" />
-    <state width="1577" height="321" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577301612595" />
-    <state x="289" y="98" key="SettingsEditor" timestamp="1577296218916">
+    <state width="1577" height="321" key="GridCell.Tab.1.right/0.27.1600.873@0.27.1600.873" timestamp="1577343286072" />
+    <state x="289" y="98" key="SettingsEditor" timestamp="1577341829344">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="289" y="98" key="SettingsEditor/0.27.1600.873@0.27.1600.873" timestamp="1577296218916" />
+    <state x="289" y="98" key="SettingsEditor/0.27.1600.873@0.27.1600.873" timestamp="1577341829344" />
     <state width="800" height="437" key="XDebugger.FullValuePopup" timestamp="1577301789598">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state width="800" height="437" key="XDebugger.FullValuePopup/0.27.1600.873@0.27.1600.873" timestamp="1577301789598" />
-    <state x="456" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1577291888754">
+    <state x="456" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1577341487173">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
-    <state x="456" y="291" key="com.intellij.ide.util.TipDialog/0.27.1600.873@0.27.1600.873" timestamp="1577291888754" />
+    <state x="456" y="291" key="com.intellij.ide.util.TipDialog/0.27.1600.873@0.27.1600.873" timestamp="1577341487173" />
     <state x="323" y="69" width="944" height="787" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1577100908598">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
@@ -178,21 +175,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>228</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app.py</url>
-          <line>204</line>
-          <option name="timeStamp" value="12" />
+          <line>174</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="json.loads(receive.content)" />
-        <watch expression="transaction" />
-        <watch expression="transaction_list" />
+        <watch expression="datetime.strptime(_from, time_format)" />
+        <watch expression="datetime.now().strftime('%Y%m01000000')" />
+        <watch expression="datetime.strptime(_to,&#10;                                                                                                              time_format)" />
+        <watch expression="datetime.now()" />
       </configuration>
     </watches-manager>
   </component>
