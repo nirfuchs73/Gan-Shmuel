@@ -156,6 +156,7 @@ def send_notification(success, pusher_email):
     to = [pusher_email, 'nirfuchs73@gmail.com']
 
     message = 'Build completed successfully'
+    print('success=',success)
     if not success:
         message = 'Build failed'
     subject = message
