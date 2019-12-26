@@ -3,6 +3,7 @@ FROM python:3.6.9-alpine3.10
 COPY requirements.txt make_config.sh /app/
 
 WORKDIR /app
+RUN mkdir in
 
 RUN pip3 install -r requirements.txt 
 
