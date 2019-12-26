@@ -181,12 +181,8 @@ def create_views_blueprint():
                                 id = line['id']
                                 weight = line['weight']
                                 unit = line['unit']
-                                #try:
                                 query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s);"
-                                cdb.execute(query,[id, weight, unit])  
-                                #except:
-                                #query = "UPDATE containers_registered SET weight = %s , unit = '%s' WHERE container_id = '%s'"
-                                #Scdb.execute(query,[weight, unit, id])
+                                cdb.execute(query,[id, weight, unit])
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 elif get_file_ext(filename) == 'csv':
@@ -199,14 +195,8 @@ def create_views_blueprint():
                             for line in data:
                                 id = line['id']
                                 weight = line[headers[1]] #the lines in data with the kg/lbs header
-                                #try:
                                 query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)"
                                 cdb.execute(query,[id, weight, headers[1]])
-                                #except:
-                                    #try:
-                                        #query = "UPDATE containers_registered SET weight = %s , unit = '%s' WHERE container_id = '%s'"
-                                        #cdb.execute(query,[weight, headers[1], id])
-                                        #cdb.execute("COMMIT")
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 else:
