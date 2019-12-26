@@ -59,25 +59,25 @@ def create_views_blueprint():
         neto_query = ''
         conts = []
         try:
-            t_td = datetime.today()
-            from_str = get_checked_field_in_dict('from', request.args, str) 
-            to_str = get_checked_field_in_dict('to', request.args, str)
-            filter_str = get_checked_field_in_dict('filter', request.args, str)
+                t_td = datetime.today()
+                from_str = get_checked_field_in_dict('from', request.args, str) 
+                to_str = get_checked_field_in_dict('to', request.args, str)
+                filter_str = get_checked_field_in_dict('filter', request.args, str)
             # return jsonify(t_td, from_str, to_str, filter_str)
-            # time format: yyyymmddhhmmss
-            time_format = '%Y%m%d%H%M%S'
-            if len(from_str) > 0:
-                    from_dt = datetime.strptime(from_str, time_format)
-            else:
+                # time format: yyyymmddhhmmss
+                time_format = '%Y%m%d%H%M%S'
+                if len(from_str) > 0:
+                        from_dt = datetime.strptime(from_str, time_format)
+                else:
                 from_dt = datetime(t_td.year, t_td.month, t_td.day, 0,0,0,0, t_td.tzinfo)
-            if len(to_str) > 0:
-                    to_dt = datetime.strptime(to_str, time_format)
-            else:
-                to_dt = get_dt()
-            if len(filter_str) > 0:
-                filter_lst = filter_str.split(',')
-            else:
-                filter_lst = ['in', 'out', 'none']
+                if len(to_str) > 0:
+                        to_dt = datetime.strptime(to_str, time_format)
+                else:
+                    to_dt = get_dt()
+                if len(filter_str) > 0:
+                    filter_lst = filter_str.split(',')
+                else:
+                    filter_lst = ['in', 'out', 'none']
             # return jsonify(t_td, from_dt, to_dt, filter_lst)
             if len(filter_lst) > 0 and '' not in filter_lst:
                 cdb = db.get_db()
@@ -140,7 +140,7 @@ def create_views_blueprint():
         
     @bp.route('/batch-weight', methods=['GET','POST'])
     def batch_weight():
-        #fost a csv/json file to a table in the database
+        #post a csv/json file to a table in the database
         cdb = db.get_db()
         if request.method == 'POST':
             # check if the post request has the file part
@@ -158,8 +158,6 @@ def create_views_blueprint():
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(in_folder, filename)
                 file.save(filepath)
-                query = "DELETE FROM containers_registered"
-                cdb.execute(query)
                 if get_file_ext(filename) == 'json':
                     try:
                         with open(filepath, 'r') as f:
@@ -168,8 +166,12 @@ def create_views_blueprint():
                                 id = line['id']
                                 weight = line['weight']
                                 unit = line['unit']
-                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)" 
+                                #try:
+                                query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s);"
                                 cdb.execute(query,[id, weight, unit])  
+                                #except:
+                                #query = "UPDATE containers_registered SET weight = %s , unit = '%s' WHERE container_id = '%s'"
+                                #Scdb.execute(query,[weight, unit, id])
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 elif get_file_ext(filename) == 'csv':
@@ -182,8 +184,14 @@ def create_views_blueprint():
                             for line in data:
                                 id = line['id']
                                 weight = line[headers[1]] #the lines in data with the kg/lbs header
+                                #try:
                                 query = "INSERT INTO containers_registered(container_id,weight,unit) VALUES (%s, %s, %s)"
-                                cdb.execute(query,[id,weight, headers[1]])                        
+                                cdb.execute(query,[id, weight, headers[1]])
+                                #except:
+                                    #try:
+                                        #query = "UPDATE containers_registered SET weight = %s , unit = '%s' WHERE container_id = '%s'"
+                                        #cdb.execute(query,[weight, headers[1], id])
+                                        #cdb.execute("COMMIT")
                     except:
                         return jsonify({'message':"could not read file!", 'status':404})
                 else:
@@ -348,7 +356,7 @@ def create_views_blueprint():
         #list transactions
         query="select * from transactions where datetime>='{}' and datetime<='{}';".format(t1,t2)
         list_transaction = cdb.execute_and_get_all(query)
-        
+
         #try to find container
         query="select * from containers_registered where container_id='{}';".format(id)
         container_object = cdb.execute_and_get_one(query)
